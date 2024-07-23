@@ -9,10 +9,39 @@
 
 // collor palette
 $blue-btn: #5680e9;
+$dark-blue-btn: #446fda;
+$grey: #3f4045;
+$grey-placeholder: #e1e1e1;
 
 .App {
-    width: auto;
+    // background: url('../../assets/main-bg1.png') no-repeat center center;
+    background-color: black;
+    color: white;
     height: auto;
+    width: auto;
+}
+
+.Main {
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+.gradient {
+    position: fixed;
+    height: 150px;
+    width: 200px;
+    background-image: linear-gradient(to right, #392e4d, #b8ffff, #5a5c87);
+    filter: blur(50px);
+}
+
+.MainContent {
+    margin-top: 30px;
+}
+
+ul {
+    li {
+        list-style-type: none;
+    }
 }
 
 main,
@@ -30,6 +59,32 @@ button {
     border: none;
     outline: none;
     cursor: pointer;
+    background-color: $blue-btn;
+    color: white;
+}
+
+input {
+    outline: none;
+    border: none;
+    background-color: $grey;
+    padding: 10px;
+    border-radius: 5px;
+    caret-color: $grey-placeholder;
+    color: white;
+}
+
+input::placeholder {
+    color: $grey-placeholder;
+    opacity: 1;
 }
 
 @import './Student/Student.scss';
+@import './Dashboard/Dashboard.scss';
+@import './Teacher/Teacher.scss';
+
+// common
+@import './Common/Header.scss';
+@import './Common/BtnWithRobot.scss';
+@import './Common/LandingPage.scss';
+@import './Common/Login.scss';
+@import './Common/Main.scss';

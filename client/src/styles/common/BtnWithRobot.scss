@@ -1,0 +1,18 @@
+.BtnWithRobot {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    img {
+        // position: absolute;
+        width: 120px;
+        z-index: 10;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px 50px;
+        border-radius: 5px;
+        margin-left: -50px;
+    }
+}

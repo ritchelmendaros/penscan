@@ -2,10 +2,11 @@ import robot from '../../assets/robot.svg';
 import logo from '../../assets/penscan-logo.svg';
 
 import { Link } from 'react-router-dom';
+import Gradients from '../Common/Gradients';
 
 const LandingPage = () => {
     return (
-        <div className='LandingPage'>
+        <div className='LandingPage Main'>
             <header>
                 <div className='logo-container'>
                     <img src={logo} alt='' />
@@ -22,6 +23,9 @@ const LandingPage = () => {
                 </div>
                 <img src={robot} alt='' />
             </main>
+
+            {/* styles */}
+            <Gradients />
         </div>
     );
 };

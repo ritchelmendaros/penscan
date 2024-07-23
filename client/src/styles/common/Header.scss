@@ -1,0 +1,30 @@
+.Header {
+    padding: 20px 100px;
+    border-bottom: 1px solid white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+
+        img {
+            height: 50px;
+        }
+    }
+
+    .user-container {
+        display: flex;
+        align-items: center;
+        .user-icon {
+            font-size: 2rem;
+        }
+
+        a {
+            font-size: 1rem;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+    }
+}

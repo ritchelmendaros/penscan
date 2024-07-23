@@ -1,0 +1,56 @@
+.LandingPage {
+    min-height: 100vh;
+    position: relative;
+
+    header {
+        z-index: 10; // Reduced z-index to prevent overlap issues
+        position: relative; // Ensure z-index works as expected
+        padding-top: 20px;
+
+        .logo-container {
+            display: flex;
+            align-items: flex-end;
+
+            img {
+                padding-top: 20px;
+                height: 70px;
+            }
+
+            h2 {
+                padding-bottom: 15px;
+            }
+        }
+    }
+
+    main {
+        padding-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        img {
+            height: 500px;
+        }
+
+        h1 {
+            font-size: 5rem;
+        }
+
+        h1:nth-child(3) {
+            margin-bottom: 50px;
+        }
+
+        a {
+            padding: 10px 30px;
+            font-weight: bold;
+            background-color: $blue-btn;
+            border-radius: 20px;
+
+            &:hover {
+                padding: 12px 35px;
+                border-radius: 30px;
+                transition: 0.3s;
+            }
+        }
+    }
+}
