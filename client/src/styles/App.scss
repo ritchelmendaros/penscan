@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+// collor palette
+$blue-btn: #5680e9;
+
+.App {
+    width: auto;
+    height: auto;
+}
+
+main,
+header {
+    padding: 0px 200px;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+button {
+    padding: 5px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+@import './Student/Student.scss';
