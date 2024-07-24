@@ -1,9 +1,14 @@
+import React from 'react';
 import robot from '../../assets/smiling-robot.svg';
 
-const BtnWithRobot = ({ name }) => {
+interface BtnWithRobotProps {
+    name: string;
+}
+
+const BtnWithRobot: React.FC<BtnWithRobotProps> = ({ name }) => {
     return (
         <div className='BtnWithRobot'>
-            <img src={robot} alt='' />
+            <img src={robot} alt='Smiling Robot' />
             <button>{name}</button>
         </div>
     );

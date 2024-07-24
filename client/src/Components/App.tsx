@@ -12,7 +12,7 @@ import AddQuiz from './Dashboard/Teacher/Class/ClassFiles/AddQuiz';
 import Signup from './Authentication/Signup';
 
 const App = () => {
-    const [currentUser, setCurrentUser] = useState({
+    const [currentUser] = useState({
         accessType: 'teacher',
     });
 

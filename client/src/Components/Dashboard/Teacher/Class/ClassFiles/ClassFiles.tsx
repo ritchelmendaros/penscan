@@ -19,7 +19,7 @@ const ClassFiles = () => {
         <div className='ClassFiles'>
             <ul>
                 {quizzes.map((item, i) => (
-                    <li>
+                    <li key={i}>
                         <Thumbnail />
                         <p>{item.name}</p>
                     </li>

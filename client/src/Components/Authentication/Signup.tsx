@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Gradients from '../Common/Gradients';
 import InputContainer from '../Common/InputContainer';
 import {
@@ -9,11 +8,12 @@ import {
 
 import robotHeart from '../../assets/robot-with-heart.svg';
 import { Link } from 'react-router-dom';
+import React, { useState, ChangeEvent } from 'react';
 
-const Signup = () => {
+const Signup: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
-    const handleOptionChange = (event) => {
+    const handleOptionChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSelectedOption(event.target.value);
     };
     return (
