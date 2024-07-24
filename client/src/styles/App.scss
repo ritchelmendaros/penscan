@@ -7,6 +7,9 @@
     font-family: 'Inter', sans-serif;
 }
 
+// dimensions
+$header-height: 90px;
+
 // collor palette
 $blue-btn: #5680e9;
 $dark-blue-btn: #446fda;
@@ -19,6 +22,7 @@ $grey-placeholder: #e1e1e1;
     color: white;
     height: auto;
     width: auto;
+    overflow-x: hidden;
 }
 
 .Main {
@@ -32,10 +36,6 @@ $grey-placeholder: #e1e1e1;
     width: 200px;
     background-image: linear-gradient(to right, #392e4d, #b8ffff, #5a5c87);
     filter: blur(50px);
-}
-
-.MainContent {
-    margin-top: 30px;
 }
 
 ul {
@@ -83,8 +83,4 @@ input::placeholder {
 @import './Teacher/Teacher.scss';
 
 // common
-@import './Common/Header.scss';
-@import './Common/BtnWithRobot.scss';
-@import './Common/LandingPage.scss';
-@import './Common/Login.scss';
-@import './Common/Main.scss';
+@import './Common/common.scss';

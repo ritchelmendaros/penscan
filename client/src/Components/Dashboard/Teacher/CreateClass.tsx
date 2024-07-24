@@ -1,8 +1,8 @@
-import BtnWithRobot from '../Common/BtnWithRobot';
-import Header from '../Common/Header';
+import BtnWithRobot from '../../Common/BtnWithRobot';
+import Header from '../../Common/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
-import Gradients from '../Common/Gradients';
+import Gradients from '../../Common/Gradients';
 
 const CreateClass = () => {
     return (

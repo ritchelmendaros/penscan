@@ -1,0 +1,12 @@
+.Thumbnail {
+    background-color: $grey;
+    height: 150px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+
+    &:hover {
+        background-color: grey;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+}

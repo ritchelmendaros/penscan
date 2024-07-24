@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Thumbnail from '../Common/Thumbnail';
 
 const TeacherDashboard = ({ classes }) => {
     return (
@@ -11,10 +12,12 @@ const TeacherDashboard = ({ classes }) => {
             <div>
                 <ul className='classes'>
                     {classes.map((item, i) => (
-                        <li>
-                            <div className='box' />
-                            <div>{item.title}</div>
-                        </li>
+                        <Link to={'/dashboard/class'}>
+                            <li>
+                                <Thumbnail />
+                                <div>{item.title}</div>
+                            </li>
+                        </Link>
                     ))}
                 </ul>
             </div>

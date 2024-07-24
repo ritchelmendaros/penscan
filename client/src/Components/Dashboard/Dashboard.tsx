@@ -31,7 +31,7 @@ const Dashboard = () => {
         },
     ];
     return (
-        <div className='Dashboard Main'>
+        <div className='Dashboard Main MainContent'>
             <Header />
             <main>
                 <TeacherDashboard classes={classes} />

@@ -9,6 +9,7 @@ const Header = () => {
             <div className='logo-container'>
                 <img src={logo} alt='' />
                 <h3>PenScan</h3>
+                <div className='gradient' />
             </div>
             <div className='user-container'>
                 <FontAwesomeIcon icon={faCircleUser} className='user-icon' />
