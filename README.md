@@ -10,13 +10,13 @@
 
 -   [x] Landing page
 -   [x] Login
--   [ ] Signup
+-   [x] Signup
 
 **Teacher**
 
 -   [x] Teacher Dashboard
--   [ ] Add student
--   [ ] Add quiz
+-   [x] Add student
+-   [x] Add quiz
 -   [ ] Upload image
 -   [ ] Scan result
 -   [ ] Score ranking & item analysis
@@ -25,8 +25,8 @@
 
 -   [x] Create Class
 -   below are the pages to be shown when a class is clicked
--   [ ] Expanded Class 1 - List of students
--   [ ] Expanded Class 2 - Quizzes
+-   [x] Expanded Class 1 - List of students
+-   [x] Expanded Class 2 - Quizzes
 
 **Student**
 
@@ -40,8 +40,23 @@
 **Login page**
 ![Login Page](./client/src/assets/ScreeshotPages/login-page.png)
 
+**Signup page**
+![Login Page](./client/src/assets/ScreeshotPages/signup.png)
+
 **Teacher Dashboard**
 ![Login Page](./client/src/assets/ScreeshotPages/teacher-dashboard.png)
 
 **Create Class**
 ![Login Page](./client/src/assets/ScreeshotPages/create-class.png)
+
+**Class Files**
+![Login Page](./client/src/assets/ScreeshotPages/class-files.png)
+
+**Class Students**
+![Login Page](./client/src/assets/ScreeshotPages/class-students.png)
+
+**Add Quiz**
+![Login Page](./client/src/assets/ScreeshotPages/add-quiz.png)
+
+**Add Student**
+![Login Page](./client/src/assets/ScreeshotPages/add-student.png)
