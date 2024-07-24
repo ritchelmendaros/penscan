@@ -14,5 +14,10 @@
         padding: 10px 50px;
         border-radius: 5px;
         margin-left: -50px;
+
+        &:hover {
+            background-color: #3e6ab7;
+            transition: 0.3s;
+        }
     }
 }

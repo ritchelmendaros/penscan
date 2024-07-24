@@ -7,6 +7,8 @@ import CreateClass from './Dashboard/Teacher/CreateClass';
 import { useState } from 'react';
 import NotFoundPage from './NotFoundPage/NotFoundPage';
 import Class from './Dashboard/Teacher/Class/Class';
+import AddStudent from './Dashboard/Teacher/Class/ClassStudents/AddStudent';
+import AddQuiz from './Dashboard/Teacher/Class/ClassFiles/AddQuiz';
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState({
@@ -29,6 +31,14 @@ const App = () => {
                             <Route
                                 path='/dashboard/class'
                                 element={<Class />}
+                            />
+                            <Route
+                                path='/dashboard/class/add-student'
+                                element={<AddStudent />}
+                            />
+                            <Route
+                                path='/dashboard/class/add-quiz'
+                                element={<AddQuiz />}
                             />
                         </>
                     ) : null}

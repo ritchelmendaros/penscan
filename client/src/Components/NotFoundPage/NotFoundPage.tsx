@@ -2,7 +2,7 @@ import Header from '../Common/Header';
 
 const NotFoundPage = () => {
     return (
-        <div className='NotFoundPage Main'>
+        <div className='NotFoundPage Main MainContent'>
             <Header />
             <main>NotFoundPage</main>
         </div>

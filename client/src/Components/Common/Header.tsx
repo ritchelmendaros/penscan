@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 const Header = () => {
     return (
         <header className='Header'>
-            <div className='logo-container'>
-                <img src={logo} alt='' />
-                <h3>PenScan</h3>
-                <div className='gradient' />
-            </div>
+            <Link to={'/dashboard'}>
+                <div className='logo-container'>
+                    <img src={logo} alt='' />
+                    <h3>PenScan</h3>
+                    <div className='gradient' />
+                </div>
+            </Link>
             <div className='user-container'>
                 <FontAwesomeIcon icon={faCircleUser} className='user-icon' />
                 <Link to={'/login'}>Logout</Link>

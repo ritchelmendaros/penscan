@@ -1,23 +1,26 @@
 import BtnWithRobot from '../../Common/BtnWithRobot';
 import Header from '../../Common/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import Gradients from '../../Common/Gradients';
+import InputContainer from '../../Common/InputContainer';
+import { Link } from 'react-router-dom';
 
 const CreateClass = () => {
     return (
-        <div className='CreateClass Main'>
+        <div className='CreateClass Main MainContent'>
             <Header />
             <main>
                 <div className='content'>
                     <h2>Create class</h2>
 
-                    <div className='input-container'>
-                        <FontAwesomeIcon icon={faFolder} />
-                        <input type='text' placeholder='Create class' />
-                    </div>
+                    <InputContainer
+                        icon={faFolder}
+                        placeholder={'Create class'}
+                    />
 
-                    <BtnWithRobot name={'Create'} />
+                    <Link to={'/dashboard'}>
+                        <BtnWithRobot name={'Create'} />
+                    </Link>
                 </div>
             </main>
 

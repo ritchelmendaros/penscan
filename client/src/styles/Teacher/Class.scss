@@ -22,6 +22,12 @@
 
         .add-btn {
             border-radius: 5px;
+
+            &:hover {
+                padding-right: 35px;
+                padding-left: 35px;
+                transition: 0.3s;
+            }
         }
     }
 }

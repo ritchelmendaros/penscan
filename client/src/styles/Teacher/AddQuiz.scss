@@ -1,0 +1,29 @@
+.AddQuiz {
+    main {
+        display: flex;
+        justify-content: center;
+
+        .content {
+            margin-top: 50px;
+            width: 50%;
+        }
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .file-input-container {
+        display: flex;
+        flex-direction: column;
+        background-color: $grey;
+
+        padding: 10px;
+        label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: $grey-placeholder;
+            padding-left: 10px;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.AddStudent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    main {
+        margin-top: -100px;
+        display: flex;
+        justify-content: center;
+        .content {
+            width: 500px;
+        }
+    }
+}
