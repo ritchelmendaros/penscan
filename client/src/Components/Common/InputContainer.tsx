@@ -1,6 +1,18 @@
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-const InputContainer = ({ icon, type, placeholder }) => {
+interface InputContainerProps {
+    icon: IconProp;
+    type?: string;
+    placeholder: string;
+}
+
+const InputContainer: React.FC<InputContainerProps> = ({
+    icon,
+    type,
+    placeholder,
+}) => {
     return (
         <div className='InputContainer'>
             <FontAwesomeIcon icon={icon} className='icon' />
