@@ -9,6 +9,7 @@ import NotFoundPage from './NotFoundPage/NotFoundPage';
 import Class from './Dashboard/Teacher/Class/Class';
 import AddStudent from './Dashboard/Teacher/Class/ClassStudents/AddStudent';
 import AddQuiz from './Dashboard/Teacher/Class/ClassFiles/AddQuiz';
+import Signup from './Authentication/Signup';
 
 const App = () => {
     const [currentUser, setCurrentUser] = useState({
@@ -21,6 +22,7 @@ const App = () => {
                 <Routes>
                     <Route path='/' element={<LandingPage />} />
                     <Route path='/login' element={<Login />} />
+                    <Route path='/sign-up' element={<Signup />} />
                     <Route path='/dashboard' element={<Dashboard />} />
                     {currentUser.accessType === 'teacher' ? (
                         <>

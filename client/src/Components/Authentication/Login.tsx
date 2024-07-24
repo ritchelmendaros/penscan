@@ -10,7 +10,10 @@ const Login = () => {
             <main>
                 <div className='form-container Main'>
                     <div>
-                        <img src={logo} alt='' />
+                        <Link to={'/'}>
+                            <img src={logo} alt='' />
+                        </Link>
+
                         <h2>LOGIN</h2>
                     </div>
                     <form action=''>

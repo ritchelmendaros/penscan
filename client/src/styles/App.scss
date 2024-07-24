@@ -84,3 +84,7 @@ input::placeholder {
 
 // common
 @import './Common/common.scss';
+
+// auth styles
+@import './Auth/Login.scss';
+@import './Auth/Signup.scss';

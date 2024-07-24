@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const InputContainer = ({ icon, placeholder }) => {
+const InputContainer = ({ icon, type, placeholder }) => {
     return (
         <div className='InputContainer'>
             <FontAwesomeIcon icon={icon} className='icon' />
-            <input type='text' placeholder={placeholder} />
+            <input type={type ? type : 'text'} placeholder={placeholder} />
         </div>
     );
 };

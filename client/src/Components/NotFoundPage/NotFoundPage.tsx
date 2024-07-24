@@ -1,10 +1,10 @@
-import Header from '../Common/Header';
-
 const NotFoundPage = () => {
     return (
         <div className='NotFoundPage Main MainContent'>
-            <Header />
-            <main>NotFoundPage</main>
+            {/* <Header /> */}
+            <main>
+                <h1>Page Not Found.</h1>
+            </main>
         </div>
     );
 };

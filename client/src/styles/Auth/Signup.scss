@@ -1,0 +1,75 @@
+.Signup.Main {
+    display: flex;
+    justify-content: center;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        border-right: 1px solid white;
+        width: 500px;
+        text-align: center;
+        padding: 50px;
+        h1 {
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        button {
+            margin-top: 30px;
+            padding: 10px 50px;
+            border-radius: 10px;
+
+            &:hover {
+                padding: 10px 60px;
+                transition: 0.3s;
+            }
+        }
+    }
+
+    .img-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+
+        img {
+            margin-top: -50px;
+        }
+
+        p {
+            margin-top: -40px;
+        }
+
+        a {
+            font-weight: bold;
+        }
+    }
+
+    .InputContainer {
+        margin: 0px !important;
+        margin-bottom: 10px !important;
+    }
+    .radio-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+
+        .radio {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        input {
+            margin-right: 5px;
+        }
+
+        input,
+        label {
+            cursor: pointer;
+        }
+    }
+}
