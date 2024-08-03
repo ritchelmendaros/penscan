@@ -22,3 +22,22 @@ export const getUserType = async (username: string) => {
   const response = await axios.get(`${API_BASE_URL}/getusertype?username=${username}`);
   return response.data;
 };
+
+export const registerUser = async (firstname: string, lastname: string, username: string, password: string, userType: string) => {
+  const response = await axios.post(
+    `${API_BASE_URL}/register`,
+    {
+      firstname,
+      lastname,
+      username,
+      password,
+      userType,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};
