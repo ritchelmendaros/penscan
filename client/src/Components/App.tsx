@@ -4,7 +4,6 @@ import LandingPage from './LandingPage/LandingPage';
 import Login from './Authentication/Login';
 import Dashboard from './Dashboard/Dashboard';
 import CreateClass from './Teacher/CreateClass';
-import { useState } from 'react';
 import NotFoundPage from './NotFoundPage/NotFoundPage';
 import Class from './Teacher/Class/Class';
 import AddStudent from './Teacher/Class/ClassStudents/AddStudent';
