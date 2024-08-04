@@ -1,4 +1,4 @@
-import Thumbnail from '../../../../Common/Thumbnail';
+import Thumbnail from '../../../Common/Thumbnail';
 
 const ClassFiles = () => {
     const quizzes = [

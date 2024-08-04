@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Gradients from '../../../Common/Gradients';
-import Header from '../../../Common/Header';
+import Gradients from '../../Common/Gradients';
+import Header from '../../Common/Header';
 import { Link } from 'react-router-dom';
 import ClassFiles from './ClassFiles/ClassFiles';
 import ClassStudents from './ClassStudents/ClassStudents';
-import SmilingRobot from '../../../Common/SmilingRobot';
+import SmilingRobot from '../../Common/SmilingRobot';
 
 const Class = () => {
     const [option, setOption] = useState('class-files');

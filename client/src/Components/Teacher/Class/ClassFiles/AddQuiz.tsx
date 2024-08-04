@@ -1,8 +1,8 @@
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import Gradients from '../../../../Common/Gradients';
-import Header from '../../../../Common/Header';
-import InputContainer from '../../../../Common/InputContainer';
-import BtnWithRobot from '../../../../Common/BtnWithRobot';
+import Gradients from '../../../Common/Gradients';
+import Header from '../../../Common/Header';
+import InputContainer from '../../../Common/InputContainer';
+import BtnWithRobot from '../../../Common/BtnWithRobot';
 import { Link } from 'react-router-dom';
 
 const AddQuiz = () => {

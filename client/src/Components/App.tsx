@@ -3,18 +3,17 @@ import '../styles/App.scss';
 import LandingPage from './LandingPage/LandingPage';
 import Login from './Authentication/Login';
 import Dashboard from './Dashboard/Dashboard';
-import CreateClass from './Dashboard/Teacher/CreateClass';
+import CreateClass from './Teacher/CreateClass';
 import { useState } from 'react';
 import NotFoundPage from './NotFoundPage/NotFoundPage';
-import Class from './Dashboard/Teacher/Class/Class';
-import AddStudent from './Dashboard/Teacher/Class/ClassStudents/AddStudent';
-import AddQuiz from './Dashboard/Teacher/Class/ClassFiles/AddQuiz';
+import Class from './Teacher/Class/Class';
+import AddStudent from './Teacher/Class/ClassStudents/AddStudent';
+import AddQuiz from './Teacher/Class/ClassFiles/AddQuiz';
 import Signup from './Authentication/Signup';
+import { useCurrUser } from './Context/UserContext';
 
 const App = () => {
-    const [currentUser] = useState({
-        accessType: 'teacher',
-    });
+    const { userType } = useCurrUser();
 
     return (
         <BrowserRouter>
@@ -23,9 +22,10 @@ const App = () => {
                     <Route path='/' element={<LandingPage />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/sign-up' element={<Signup />} />
-                    <Route path='/dashboard' element={<Dashboard />} />
-                    {currentUser.accessType === 'teacher' ? (
+                    {userType === 'Teacher' ? (
                         <>
+                            <Route path='/dashboard' element={<Dashboard />} />
+
                             <Route
                                 path='/dashboard/create-class'
                                 element={<CreateClass />}
@@ -42,6 +42,10 @@ const App = () => {
                                 path='/dashboard/class/add-quiz'
                                 element={<AddQuiz />}
                             />
+                        </>
+                    ) : userType === 'Student' ? (
+                        <>
+                            <Route path='/dashboard' element={<Dashboard />} />
                         </>
                     ) : null}
                     <Route path='*' element={<NotFoundPage />} />

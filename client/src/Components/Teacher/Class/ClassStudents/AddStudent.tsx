@@ -1,9 +1,9 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import Header from '../../../../Common/Header';
-import BtnWithRobot from '../../../../Common/BtnWithRobot';
-import Gradients from '../../../../Common/Gradients';
+import Header from '../../../Common/Header';
+import BtnWithRobot from '../../../Common/BtnWithRobot';
+import Gradients from '../../../Common/Gradients';
 import { Link } from 'react-router-dom';
-import InputContainer from '../../../../Common/InputContainer';
+import InputContainer from '../../../Common/InputContainer';
 
 const AddStudent = () => {
     return (

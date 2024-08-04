@@ -1,8 +1,8 @@
-import BtnWithRobot from '../../Common/BtnWithRobot';
-import Header from '../../Common/Header';
+import BtnWithRobot from '../Common/BtnWithRobot';
+import Header from '../Common/Header';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
-import Gradients from '../../Common/Gradients';
-import InputContainer from '../../Common/InputContainer';
+import Gradients from '../Common/Gradients';
+import InputContainer from '../Common/InputContainer';
 import { Link } from 'react-router-dom';
 
 const CreateClass = () => {

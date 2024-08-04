@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import { loginUser, getUserType } from '../../apiCalls/userApi'
+import { loginUser, getUserType } from '../../apiCalls/userApi';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/penscan-logo.svg';
+import { useCurrUser } from '../Context/UserContext';
 
 const Login = () => {
-
     const navigate = useNavigate();
+    const { setUserType } = useCurrUser();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -17,17 +18,26 @@ const Login = () => {
         e.preventDefault();
         try {
             const loginResponse = await loginUser(username, password);
-
             const userType = await getUserType(username);
-
-            if (userType === 'Student') {
-                navigate(`/studentdashboard/${username}`);
-            } else if (userType === 'Teacher') {
-                navigate(`/teacherdashboard/${username}`);
+            if (userType === 'Teacher' || userType === 'Student') {
+                setUserType(userType);
+                navigate('/dashboard');
             } else {
                 console.log('Unknown user type');
             }
             console.log('Login successful:', loginResponse);
+
+            // ! NOTE: If the above code works, delete the code below.
+            // const loginResponse = await loginUser(username, password);
+            // const userType = await getUserType(username);
+            // if (userType === 'Student') {
+            //     navigate(`/studentdashboard/${username}`);
+            // } else if (userType === 'Teacher') {
+            //     navigate(`/teacherdashboard/${username}`);
+            // } else {
+            //     console.log('Unknown user type');
+            // }
+            // console.log('Login successful:', loginResponse);
         } catch (error) {
             console.error('Error logging in:', error);
             setErrorMessage('Incorrect username or password');
@@ -55,20 +65,20 @@ const Login = () => {
                                 icon={faEnvelope}
                                 className='icon'
                             />
-                            <input 
-                            type='text' 
-                            placeholder='username' 
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)} 
+                            <input
+                                type='text'
+                                placeholder='username'
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
                         <div className='input-container'>
                             <FontAwesomeIcon icon={faLock} className='icon' />
-                            <input 
-                            type='password' 
-                            placeholder='password' 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)} 
+                            <input
+                                type='password'
+                                placeholder='password'
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
 
@@ -88,7 +98,10 @@ const Login = () => {
                     <div className='popup'>
                         <div className='popup-content'>
                             <p className='error-message'>{errorMessage}</p>
-                            <button className='ok-button' onClick={handleCloseError}>
+                            <button
+                                className='ok-button'
+                                onClick={handleCloseError}
+                            >
                                 OK
                             </button>
                         </div>
