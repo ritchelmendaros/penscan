@@ -29,88 +29,112 @@ const Signup: React.FC = () => {
         e.preventDefault();
 
         // Client-side validation
-        if (!firstname || !lastname || !username || !password || !selectedOption) {
+        if (
+            !firstname ||
+            !lastname ||
+            !username ||
+            !password ||
+            !selectedOption
+        ) {
             toast.error('All fields are required.');
             return;
         }
 
         try {
-            const response = await registerUser(firstname, lastname, username, password, selectedOption);
+            const response = await registerUser(
+                firstname,
+                lastname,
+                username,
+                password,
+                selectedOption,
+            );
             console.log('Registration successful:', response);
             navigate('/login');
         } catch (error) {
             console.error('Error registering user:', error);
-            toast.error('Username already exists or there was an error with the registration.');
+            toast.error(
+                'Username already exists or there was an error with the registration.',
+            );
         }
     };
-    
+
     return (
         <div className='Signup Main'>
             {/* <main> */}
-            <form action='' onSubmit={handleSignUp}>
-                <h1>SIGN UP</h1>
-                <InputContainer 
-                    icon={faCircleUser} 
-                    placeholder={'firstname'}
-                    value={firstname}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)} 
-                />
-                <InputContainer 
-                    icon={faCircleUser} 
-                    placeholder={'lastname'} 
-                    value={lastname}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
-               />
-                <InputContainer
-                    icon={faEnvelope}
-                    type={'text'}
-                    placeholder={'username'}
-                    value={username}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                />
-                <InputContainer
-                    icon={faLock}
-                    type={'password'}
-                    placeholder={'password'}
-                    value={password}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                />
-                <div className='radio-container'>
-                    <div className='radio'>
-                        <input
-                            type='radio'
-                            id='student'
-                            name='options'
-                            value='Student'
-                            checked={selectedOption === 'Student'}
-                            onChange={handleOptionChange}
-                        />
-                        <label htmlFor='student'>Student</label>
+            <div className='container'>
+                <form action='' onSubmit={handleSignUp}>
+                    <h1>SIGN UP</h1>
+                    <InputContainer
+                        icon={faCircleUser}
+                        placeholder={'firstname'}
+                        value={firstname}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            setFirstName(e.target.value)
+                        }
+                    />
+                    <InputContainer
+                        icon={faCircleUser}
+                        placeholder={'lastname'}
+                        value={lastname}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            setLastName(e.target.value)
+                        }
+                    />
+                    <InputContainer
+                        icon={faEnvelope}
+                        type={'text'}
+                        placeholder={'username'}
+                        value={username}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            setUsername(e.target.value)
+                        }
+                    />
+                    <InputContainer
+                        icon={faLock}
+                        type={'password'}
+                        placeholder={'password'}
+                        value={password}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            setPassword(e.target.value)
+                        }
+                    />
+                    <div className='radio-container'>
+                        <div className='radio'>
+                            <input
+                                type='radio'
+                                id='student'
+                                name='options'
+                                value='Student'
+                                checked={selectedOption === 'Student'}
+                                onChange={handleOptionChange}
+                            />
+                            <label htmlFor='student'>Student</label>
+                        </div>
+                        <div className='radio'>
+                            <input
+                                type='radio'
+                                id='teacher'
+                                name='options'
+                                value='Teacher'
+                                checked={selectedOption === 'Teacher'}
+                                onChange={handleOptionChange}
+                            />
+                            <label htmlFor='teacher'>Teacher</label>
+                        </div>
                     </div>
-                    <div className='radio'>
-                        <input
-                            type='radio'
-                            id='teacher'
-                            name='options'
-                            value='Teacher'
-                            checked={selectedOption === 'Teacher'}
-                            onChange={handleOptionChange}
-                        />
-                        <label htmlFor='teacher'>Teacher</label>
-                    </div>
+
+                    <button type='submit'>Signup</button>
+                </form>
+
+                <div className='img-container'>
+                    <img src={robotHeart} alt='' />
+                    <p>
+                        Have an account?{' '}
+                        <span>
+                            <Link to={'/login'}>Login</Link>
+                        </span>
+                    </p>
                 </div>
-
-                <button type="submit">Signup</button>
-            </form>
-
-            <div className='img-container'>
-                <img src={robotHeart} alt='' />
-                <p>
-                    Have an account?{' '}
-                    <span>
-                        <Link to={'/login'}>Login</Link>
-                    </span>
-                </p>
             </div>
 
             <Gradients />
