@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { CurrUser } from '../Components/Interface/CurrUser';
 
 const API_BASE_URL = 'http://localhost:8080/api/users';
+const USER_DETAILS = 'http://localhost:8080/api/users/getuserdetails?username=';
 
 export const loginUser = async (username: string, password: string) => {
     const response = await axios.post(
@@ -23,6 +25,20 @@ export const getUserType = async (username: string) => {
         `${API_BASE_URL}/getusertype?username=${username}`,
     );
     return response.data;
+};
+
+export const getDetailsByUsername = async (
+    username: string,
+): Promise<CurrUser> => {
+    try {
+        const response = await axios.get<CurrUser>(
+            `${USER_DETAILS}${username}`,
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        throw error;
+    }
 };
 
 export const registerUser = async (

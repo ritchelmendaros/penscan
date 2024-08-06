@@ -1,13 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Thumbnail from '../Common/Thumbnail';
-
-interface ClassItem {
-    title: string;
-}
+import { Class } from '../Interface/Class';
 
 interface TeacherDashboardProps {
-    classes: ClassItem[];
+    classes: Class[];
 }
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
@@ -24,7 +21,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
                         <Link to='/dashboard/class' key={i}>
                             <li>
                                 <Thumbnail />
-                                <div>{item.title}</div>
+                                <div>{item.classname}</div>
                             </li>
                         </Link>
                     ))}

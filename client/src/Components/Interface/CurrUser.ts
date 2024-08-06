@@ -1,10 +1,9 @@
 interface CurrUser {
-    id: string;
-    firstname: string;
     lastname: string;
-    username: string;
     password: string;
     userType: string;
+    userid: string;
+    username: string;
 }
 
 export type { CurrUser };

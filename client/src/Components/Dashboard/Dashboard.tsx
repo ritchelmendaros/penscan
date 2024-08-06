@@ -4,36 +4,30 @@ import robot from '../../assets/robot.svg';
 import Gradients from '../Common/Gradients';
 import StudentDashboard from './StudentDashboard';
 import { useCurrUser } from '../Context/UserContext';
+import { useEffect, useState } from 'react';
+import { getAllClasses } from '../../apiCalls/classAPIs';
+import { Class } from '../Interface/Class';
 
 const Dashboard = () => {
-    const classes = [
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-        {
-            title: 'Grade 1 - A',
-        },
-    ];
+    const [classes, setClasses] = useState<Class[]>([]);
 
-    const { userType } = useCurrUser();
+    const { userType, user } = useCurrUser();
+
+    useEffect(() => {
+        console.log(user);
+        console.log(user?.userid);
+
+        if (user?.userid) {
+            getAllClasses(user.userid)
+                .then((classes) => {
+                    // Set classes state
+                    setClasses(classes);
+                })
+                .catch((error) => {
+                    console.error('Failed to get user details:', error);
+                });
+        }
+    }, [user]);
 
     return (
         <div className='Dashboard Main MainContent'>

@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import { loginUser, getUserType } from '../../apiCalls/userApi';
+import {
+    loginUser,
+    getUserType,
+    getDetailsByUsername,
+} from '../../apiCalls/userApi';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/penscan-logo.svg';
+
+// CONTEXT API
 import { useCurrUser } from '../Context/UserContext';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { setUserType } = useCurrUser();
+    const { setUserType, setUser } = useCurrUser(); /// context api for global states
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -19,25 +25,22 @@ const Login = () => {
         try {
             const loginResponse = await loginUser(username, password);
             const userType = await getUserType(username);
+
             if (userType === 'Teacher' || userType === 'Student') {
                 setUserType(userType);
+                getDetailsByUsername(username)
+                    .then((userDetails) => {
+                        // get user details
+                        setUser(userDetails);
+                    })
+                    .catch((error) => {
+                        console.error('Failed to get user details:', error);
+                    });
                 navigate('/dashboard');
             } else {
                 console.log('Unknown user type');
             }
             console.log('Login successful:', loginResponse);
-
-            // ! NOTE: If the above code works, delete the code below.
-            // const loginResponse = await loginUser(username, password);
-            // const userType = await getUserType(username);
-            // if (userType === 'Student') {
-            //     navigate(`/studentdashboard/${username}`);
-            // } else if (userType === 'Teacher') {
-            //     navigate(`/teacherdashboard/${username}`);
-            // } else {
-            //     console.log('Unknown user type');
-            // }
-            // console.log('Login successful:', loginResponse);
         } catch (error) {
             console.error('Error logging in:', error);
             setErrorMessage('Incorrect username or password');
