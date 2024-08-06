@@ -42,8 +42,7 @@ const ClassFiles = () => {
                 {quizzes.length > 0 ? (
                     quizzes.map((quiz, i) => (
                         <li onClick={() => handleClick(quiz)} key={i}>
-                            <Thumbnail />
-                            <p>{quiz.quizname}</p>
+                            <Thumbnail name={quiz.quizname}/>
                         </li>
                     ))
                 ) : (
