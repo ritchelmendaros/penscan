@@ -29,10 +29,11 @@
 
             div {
                 display: flex;
-                display: none;
 
                 button {
                     padding: 7px 20px;
+                    border-radius: 10px;
+                    margin-left: 10px;
                 }
 
                 .view {
