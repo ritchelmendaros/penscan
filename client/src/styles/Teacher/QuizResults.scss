@@ -1,0 +1,48 @@
+.QuizResults {
+    .student-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        button {
+            width: 125px;
+            padding: 7px 10px;
+        }
+    }
+
+    .main-results {
+        display: grid;
+        grid-template-columns: 270px 1fr;
+        gap: 20px;
+        margin-top: 20px;
+
+        img {
+            width: 250px;
+        }
+
+        .table {
+            .th,
+            .tr {
+                display: grid;
+                grid-template-columns: 1fr 1fr 3fr 3fr 1fr;
+                text-align: left;
+            }
+
+            .thead {
+                background-color: #e8e8e8;
+                color: grey;
+            }
+
+            .tbody {
+                background-color: rgb(53, 53, 53);
+                height: 350px;
+                max-height: 350px;
+                overflow-y: auto;
+            }
+
+            .td {
+                padding: 7px 0;
+            }
+        }
+    }
+}

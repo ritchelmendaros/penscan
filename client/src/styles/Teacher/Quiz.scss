@@ -1,0 +1,87 @@
+.Quiz {
+    .table {
+        .tbody {
+            background-color: rgb(42, 42, 42);
+            border-radius: 0 0 10px 10px;
+            height: 500px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .th {
+            background-color: #eaeaea;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .th {
+            color: black;
+            font-weight: bold;
+        }
+
+        .tr {
+            background-color: #383838;
+            border-bottom: 1px solid #cdcdcd;
+            cursor: pointer;
+            &:hover {
+                div {
+                    display: flex;
+                }
+            }
+
+            div {
+                display: flex;
+                display: none;
+
+                button {
+                    padding: 7px 20px;
+                }
+
+                .view {
+                    &:hover {
+                        background-color: #416edf;
+                    }
+                }
+
+                .edit {
+                    background-color: white;
+                    color: grey;
+
+                    &:hover {
+                        background-color: #f0f0f0;
+                    }
+                }
+            }
+        }
+
+        .tr:last-child {
+            border-bottom: none;
+        }
+
+        .th,
+        .tr {
+            display: grid;
+            grid-template-columns: 3fr 3fr 1fr;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .td {
+            padding: 15px;
+        }
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        button {
+            padding: 10px 20px;
+        }
+
+        div {
+            button:last-child {
+                background-color: #d4d4d4;
+                color: black;
+            }
+        }
+    }
+}
