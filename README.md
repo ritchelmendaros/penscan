@@ -6,13 +6,13 @@
 
 ## UIs Only (Logic not yet implemented)
 
-**Integration Roadmap**
+**Integration (Feature) Roadmap**
 
 -   [x] Login
 -   [ ] Signup
--   [x] get all class according to user
--   [x] get all quiz according to teacher and class id
--   [ ]
+-   [x] can now get all classes associated with a user
+-   [x] can now get a quiz according to class and teacher id
+-   [x] can now create a class
 -   [ ]
 -   [ ]
 -   [ ]
