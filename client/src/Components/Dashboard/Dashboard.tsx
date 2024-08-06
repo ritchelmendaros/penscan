@@ -6,26 +6,30 @@ import StudentDashboard from './StudentDashboard';
 import { useCurrUser } from '../Context/UserContext';
 import { useEffect, useState } from 'react';
 import { getAllClasses } from '../../apiCalls/classAPIs';
-import { Class } from '../Interface/Class';
+import { ClassInterface } from '../Interface/ClassInterface';
+import { useClass } from '../Context/ClassContext';
 
 const Dashboard = () => {
-    const [classes, setClasses] = useState<Class[]>([]);
+    const [classes, setClasses] = useState<ClassInterface[]>([]);
+    const { setClassList } = useClass();
 
     const { userType, user } = useCurrUser();
 
     useEffect(() => {
         if (user?.userid) {
             getAllClasses(user.userid)
-                .then((classes) => {
-                    // Set classes state
-                    setClasses(classes);
+                .then((classes: ClassInterface[]) => {
+                    setClasses(classes); // Set classes state
+                    setClassList(classes); // Update class list context
                     console.log(classes);
+                    console.log(user.userid);
+                    console.log(user.username);
                 })
                 .catch((error) => {
                     console.error('Failed to get user details:', error);
                 });
         }
-    }, [user]);
+    }, [setClassList, user]); // Only include setClassList and user.userid
 
     return (
         <div className='Dashboard Main MainContent'>

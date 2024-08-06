@@ -1,4 +1,4 @@
-interface Class {
+interface ClassInterface {
     classid: string;
     classname: string;
     teacherid: string;
@@ -6,4 +6,4 @@ interface Class {
     studentid: string[]; // Assuming `studentid` should be an array of strings
 }
 
-export type { Class };
+export type { ClassInterface };

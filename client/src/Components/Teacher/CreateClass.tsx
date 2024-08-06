@@ -3,9 +3,35 @@ import Header from '../Common/Header';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import Gradients from '../Common/Gradients';
 import InputContainer from '../Common/InputContainer';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import React, { useState, ChangeEvent } from 'react';
+import { useCurrUser } from '../Context/UserContext';
+import { postCreateClass } from '../../apiCalls/classAPIs';
 
-const CreateClass = () => {
+const CreateClass: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [className, setClassName] = useState('');
+    const { user } = useCurrUser();
+
+    // Handle input change
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setClassName(e.target.value);
+    };
+
+    const handleClick = () => {
+        if (user?.userid) {
+            postCreateClass(className, user.userid)
+                .then(() => {
+                    // Navigate only after successful creation
+                    navigate('/dashboard');
+                })
+                .catch((err) => {
+                    console.error('Error creating class:', err);
+                });
+        }
+    };
+
     return (
         <div className='CreateClass Main MainContent'>
             <Header />
@@ -16,11 +42,11 @@ const CreateClass = () => {
                     <InputContainer
                         icon={faFolder}
                         placeholder={'Create class'}
+                        value={className}
+                        onChange={handleInputChange}
                     />
 
-                    <Link to={'/dashboard'}>
-                        <BtnWithRobot name={'Create'} />
-                    </Link>
+                    <BtnWithRobot name={'Create'} onClick={handleClick} />
                 </div>
             </main>
 

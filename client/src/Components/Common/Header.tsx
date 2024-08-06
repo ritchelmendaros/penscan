@@ -3,9 +3,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useCurrUser } from '../Context/UserContext';
+import { CurrUser } from '../Interface/CurrUser';
 
 const Header = () => {
-    const { user } = useCurrUser();
+    const { user, setUser } = useCurrUser();
+    const handleLogout = () => {
+        const currUser: CurrUser = {
+            firstname: '',
+            lastname: '',
+            password: '',
+            userType: '',
+            userid: '',
+            username: '',
+        };
+        setUser(currUser);
+    };
     return (
         <header className='Header'>
             <Link to={'/dashboard'}>
@@ -20,7 +32,9 @@ const Header = () => {
                     Welcome, {user?.firstname} {user?.lastname}!
                 </p>
                 <FontAwesomeIcon icon={faCircleUser} className='user-icon' />
-                <Link to={'/login'}>Logout</Link>
+                <Link to={'/login'} onClick={() => handleLogout()}>
+                    Logout
+                </Link>
             </div>
         </header>
     );

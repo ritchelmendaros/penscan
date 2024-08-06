@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Thumbnail from '../Common/Thumbnail';
-import { Class } from '../Interface/Class';
+import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
 
 interface TeacherDashboardProps {
-    classes: Class[];
+    classes: ClassInterface[];
 }
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
