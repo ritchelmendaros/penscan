@@ -14,14 +14,12 @@ const Dashboard = () => {
     const { userType, user } = useCurrUser();
 
     useEffect(() => {
-        console.log(user);
-        console.log(user?.userid);
-
         if (user?.userid) {
             getAllClasses(user.userid)
                 .then((classes) => {
                     // Set classes state
                     setClasses(classes);
+                    console.log(classes);
                 })
                 .catch((error) => {
                     console.error('Failed to get user details:', error);

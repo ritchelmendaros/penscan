@@ -2,12 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Thumbnail from '../Common/Thumbnail';
 import { Class } from '../Interface/Class';
+import { useClass } from '../Context/ClassContext';
 
 interface TeacherDashboardProps {
     classes: Class[];
 }
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
+    const { setClass } = useClass();
     return (
         <div className='TeacherDashboard MainContent'>
             <div className='title-container'>
@@ -19,7 +21,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
                 <ul className='classes'>
                     {classes.map((item, i) => (
                         <Link to='/dashboard/class' key={i}>
-                            <li>
+                            <li onClick={() => setClass(item)}>
                                 <Thumbnail />
                                 <div>{item.classname}</div>
                             </li>
