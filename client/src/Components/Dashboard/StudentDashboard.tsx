@@ -18,14 +18,20 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ classes }) => {
 
             <div>
                 <ul className='classes'>
-                    {classes.map((item, i) => (
-                        <Link to='/dashboard/class' key={i}>
-                            <li onClick={() => setClass(item)}>
-                                <Thumbnail />
-                                <div>{item.classname}</div>
-                            </li>
-                        </Link>
-                    ))}
+                    {classes.length > 0 ? (
+                        classes.map((item, i) => (
+                            <Link to='/dashboard/class' key={i}>
+                                <li onClick={() => setClass(item)}>
+                                    <Thumbnail />
+                                    <div>{item.classname}</div>
+                                </li>
+                            </Link>
+                        ))
+                    ) : (
+                        <h1 className='empty-state'>
+                            You have not enrolled to any classes yet.
+                        </h1>
+                    )}
                 </ul>
             </div>
         </div>
