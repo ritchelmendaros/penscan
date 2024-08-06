@@ -4,4 +4,11 @@
         gap: 20px;
         grid-template-columns: repeat(5, 1fr);
     }
+
+    .empty-state {
+        min-width: 700px;
+        font-weight: 500;
+        color: #d1d1d1;
+        font-size: 1.5rem;
+    }
 }

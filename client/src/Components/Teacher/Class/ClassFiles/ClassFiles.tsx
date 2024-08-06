@@ -29,12 +29,18 @@ const ClassFiles = () => {
     return (
         <div className='ClassFiles'>
             <ul>
-                {quizzes.map((quiz, i) => (
-                    <li key={i}>
-                        <Thumbnail />
-                        <p>{quiz.quizname}</p>
-                    </li>
-                ))}
+                {quizzes.length > 0 ? (
+                    quizzes.map((quiz, i) => (
+                        <li key={i}>
+                            <Thumbnail />
+                            <p>{quiz.quizname}</p>
+                        </li>
+                    ))
+                ) : (
+                    <h1 className='empty-state'>
+                        There are no quizzes in this class yet.
+                    </h1>
+                )}
             </ul>
         </div>
     );
