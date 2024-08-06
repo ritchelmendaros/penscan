@@ -3,9 +3,19 @@
     height: 150px;
     border-radius: 5px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c7c7c7;
+
+    h2 {
+        font-weight: 400;
+        font-size: 1.15rem;
+        letter-spacing: 1px;
+    }
 
     &:hover {
-        background-color: grey;
+        border: 3px solid $blue-btn;
         transition: 0.2s;
         cursor: pointer;
     }

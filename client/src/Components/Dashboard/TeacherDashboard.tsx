@@ -23,8 +23,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
                         classes.map((item, i) => (
                             <Link to='/dashboard/class' key={i}>
                                 <li onClick={() => setClass(item)}>
-                                    <Thumbnail />
-                                    <div>{item.classname}</div>
+                                    <Thumbnail name={item.classname} />
+                                    {/* <div>{item.classname}</div> */}
                                 </li>
                             </Link>
                         ))
