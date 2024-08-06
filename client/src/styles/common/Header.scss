@@ -28,6 +28,10 @@
     .user-container {
         display: flex;
         align-items: center;
+
+        .user {
+            margin-right: 10px;
+        }
         .user-icon {
             font-size: 2rem;
         }
