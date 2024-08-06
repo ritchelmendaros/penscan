@@ -6,6 +6,32 @@
 
 ## UIs Only (Logic not yet implemented)
 
+**Integration Roadmap**
+
+-   [x] Login
+-   [ ] Signup
+-   [x] get all class according to user
+-   [x] get all quiz according to teacher and class id
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+-   [ ]
+
 **Common**
 
 -   [x] Landing page
