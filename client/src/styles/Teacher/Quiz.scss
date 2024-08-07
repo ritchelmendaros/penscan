@@ -1,4 +1,14 @@
 .Quiz {
+    button.active {
+        background-color: $blue-btn !important;
+        color: white !important;
+    }
+
+    button.inactive {
+        background-color: grey !important;
+        color: white !important;
+    }
+
     .table {
         max-height: 500px;
         overflow-y: hidden;
@@ -106,7 +116,6 @@
                 color: white;
                 border-radius: 5px;
             }
-            
         }
     }
     .modal-overlay {
@@ -119,7 +128,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000; 
+        z-index: 1000;
     }
 
     .modal-content {
@@ -128,7 +137,7 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
         text-align: center;
-        width: 400px; 
+        width: 400px;
     }
 
     .modal-buttons {
@@ -136,8 +145,8 @@
         justify-content: space-between;
         margin-top: 20px;
         button {
-            border-radius: 10px; 
-            padding: 10px 15px; 
+            border-radius: 10px;
+            padding: 10px 15px;
         }
     }
 

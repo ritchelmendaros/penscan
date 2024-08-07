@@ -2,10 +2,12 @@ import React, { createContext, useContext, ReactNode, useState } from 'react';
 import { Quiz, StudentQuiz } from '../Interface/Quiz';
 
 interface QuizContextType {
+    studentScoreResults: StudentQuiz[];
     selectedStudentResult: StudentQuiz | undefined;
     selectedQuiz: Quiz | undefined;
     setSelectedQuiz: (quiz: Quiz) => void;
     setSelectedStudentResult: (selectedStudent: StudentQuiz) => void;
+    setStudentScoreResults: (results: StudentQuiz[]) => void;
 }
 
 interface QuizProviderProps {
@@ -29,10 +31,15 @@ const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
     const [selectedStudentResult, setSelectedStudentResult] = useState<
         StudentQuiz | undefined
     >(undefined);
+    const [studentScoreResults, setStudentScoreResults] = useState<
+        StudentQuiz[]
+    >([]);
 
     return (
         <QuizContext.Provider
             value={{
+                studentScoreResults,
+                setStudentScoreResults,
                 selectedStudentResult,
                 selectedQuiz,
                 setSelectedQuiz,

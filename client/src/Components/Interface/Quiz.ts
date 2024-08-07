@@ -27,4 +27,12 @@ interface StudentImageResult {
     base64Image: string;
 }
 
-export type { Quiz, StudentQuiz, StudentImageResult };
+interface ItemAnalysisInterface {
+    correctCount: number;
+    incorrectCount: number;
+    itemNumber: number;
+    itemanalysisid: string;
+    quizid: string;
+}
+
+export type { Quiz, StudentQuiz, StudentImageResult, ItemAnalysisInterface };
