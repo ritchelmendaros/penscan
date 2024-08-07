@@ -43,3 +43,22 @@ export const getQuizResults = async (studentID: string, quizID: string) => {
         throw error;
     }
 };
+
+export const addQuiz = async (classid: string, quizName: string, userId: string, correctAnswer: string) => {
+    try {
+        const response = await axios.post(
+            "http://localhost:8080/api/quiz/addquiz",
+            {
+                classid: classid,
+                quizname: quizName,
+                teacherid: userId,
+                quizanswerkey: correctAnswer
+            }
+        );
+        console.log("Quiz added:", response.data);
+        return response.data; // Return the response data for further use if needed
+    } catch (error) {
+        console.error("Error adding quiz:", error);
+        throw error; // Rethrow the error for handling in the calling function
+    }
+};

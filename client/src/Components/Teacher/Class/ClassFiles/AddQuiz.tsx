@@ -4,11 +4,22 @@ import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
 import InputContainer from "../../../Common/InputContainer";
 import BtnWithRobot from "../../../Common/BtnWithRobot";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { addQuiz } from "../../../../apiCalls/QuizAPIs";
+import { useCurrUser } from "../../../Context/UserContext";
+import { useClass } from "../../../Context/ClassContext";
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddQuiz = () => {
-  const [quizName, setQuizName] = useState("");
-  const [answerKey, setAnswerKey] = useState("");
+  const [quizName, setQuizName] = useState<string>("");
+  const [answerKey, setAnswerKey] = useState<string>("");
+  const navigate = useNavigate();
+  
+  const { user } = useCurrUser();
+  const userId = user?.userid; 
+  const { clickedClass } = useClass();
+  const classId = clickedClass?.classid; 
 
   const handleQuizNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuizName(e.target.value);
@@ -16,6 +27,20 @@ const AddQuiz = () => {
 
   const handleAnswerKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setAnswerKey(e.target.value);
+  };
+
+  const handleAddQuiz = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
+    if (!classId || !userId) {
+      toast.error("Class ID or User ID is missing.");
+      return;
+    }
+    try {
+      await addQuiz(classId, quizName, userId, answerKey);
+      navigate(`/dashboard/class`);
+    } catch (error) {
+      toast.error("Error adding quiz. Please try again."); 
+    }
   };
 
   return (
@@ -31,7 +56,7 @@ const AddQuiz = () => {
             onChange={handleQuizNameChange}
           />
 
-          <form action="" onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={handleAddQuiz}>
             <div className="input-container">
               <textarea
                 id="answerKey"
@@ -40,18 +65,17 @@ const AddQuiz = () => {
                 onChange={handleAnswerKeyChange}
                 placeholder="Enter answer key"
                 rows={10}
-                style={{ resize: "vertical" }}
+                style={{ resize: "vertical", color: "white" }}
               />
             </div>
 
-            <Link to={"/dashboard/class/"}>
-              <BtnWithRobot name={"Add"} />
-            </Link>
+            <BtnWithRobot name={"Add"} />
           </form>
         </div>
       </main>
 
       <Gradients />
+      <ToastContainer/>
     </div>
   );
 };
