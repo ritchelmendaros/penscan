@@ -54,3 +54,24 @@ export const postCreateClass = async (
         };
     }
 };
+
+//Students
+export const getUserClassesByUserId = async (userId: string): Promise<ClassInterface[]> => {
+    try {
+        const response = await axios.get<ClassInterface[]>(
+            `http://localhost:8080/api/students/getclassidsbyuserid?userid=${userId}`,
+        );
+        const classIds = response.data;
+        if (classIds.length > 0) {
+            const classDetailsResponse = await axios.get<ClassInterface[]>(
+                `http://localhost:8080/api/classes/getclassdetails?classids=${classIds.join(",")}`
+            );
+            return classDetailsResponse.data;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching user classes:', error);
+        throw error;
+    }
+};

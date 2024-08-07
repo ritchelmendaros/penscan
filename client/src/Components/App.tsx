@@ -55,6 +55,7 @@ const App = () => {
                     ) : userType === 'Student' ? (
                         <>
                             <Route path='/dashboard' element={<Dashboard />} />
+                            <Route path='/dashboard/class/:classid' element={<Class />} />
                         </>
                     ) : null}
                     <Route path='*' element={<NotFoundPage />} />

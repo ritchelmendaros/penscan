@@ -10,6 +10,7 @@ interface StudentDashboardProps {
 
 const StudentDashboard: React.FC<StudentDashboardProps> = ({ classes }) => {
     const { setClass } = useClass();
+
     return (
         <div className='StudentDashboard MainContent'>
             <div className='title-container'>
@@ -20,16 +21,16 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ classes }) => {
                 <ul className='classes'>
                     {classes.length > 0 ? (
                         classes.map((item, i) => (
-                            <Link to='/dashboard/class' key={i}>
+                            <Link to={`/dashboard/class/${item.classid}`} key={i}>
                                 <li onClick={() => setClass(item)}>
-                                    <Thumbnail />
-                                    <div>{item.classname}</div>
+                                    <Thumbnail name={item.classname} />
+                                    {/* <div>{item.classname}</div> */}
                                 </li>
                             </Link>
                         ))
                     ) : (
                         <h1 className='empty-state'>
-                            You have not enrolled to any classes yet.
+                            You have not enrolled in any classes yet.
                         </h1>
                     )}
                 </ul>

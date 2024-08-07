@@ -1,35 +1,46 @@
+import React, { useEffect, useState } from 'react';
 import Header from '../Common/Header';
 import TeacherDashboard from './TeacherDashboard';
 import robot from '../../assets/robot.svg';
 import Gradients from '../Common/Gradients';
 import StudentDashboard from './StudentDashboard';
 import { useCurrUser } from '../Context/UserContext';
-import { useEffect, useState } from 'react';
-import { getAllClasses } from '../../apiCalls/classAPIs';
+import { getAllClasses, getUserClassesByUserId } from '../../apiCalls/classAPIs';
 import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
+import { getDetailsByUsername } from '../../apiCalls/userApi';
 
 const Dashboard = () => {
     const [classes, setClasses] = useState<ClassInterface[]>([]);
     const { setClassList } = useClass();
-
     const { userType, user } = useCurrUser();
 
     useEffect(() => {
         if (user?.userid) {
-            getAllClasses(user.userid)
-                .then((classes: ClassInterface[]) => {
-                    setClasses(classes); // Set classes state
-                    setClassList(classes); // Update class list context
-                    console.log(classes);
-                    console.log(user.userid);
-                    console.log(user.username);
-                })
-                .catch((error) => {
-                    console.error('Failed to get user details:', error);
-                });
+            if (userType === 'Teacher') {
+                getAllClasses(user.userid)
+                    .then((classes: ClassInterface[]) => {
+                        setClasses(classes);
+                        setClassList(classes);
+                    })
+                    .catch((error) => {
+                        console.error('Failed to get classes:', error);
+                    });
+            } else if (userType === 'Student') {
+                getDetailsByUsername(user.username)
+                    .then((userDetails) => {
+                        return getUserClassesByUserId(userDetails.userid);
+                    })
+                    .then((userClasses: ClassInterface[]) => {
+                        setClasses(userClasses);
+                        setClassList(userClasses);
+                    })
+                    .catch((error) => {
+                        console.error('Failed to get user classes:', error);
+                    });
+            }
         }
-    }, [setClassList, user]); // Only include setClassList and user.userid
+    }, [setClassList, user, userType]);
 
     return (
         <div className='Dashboard Main MainContent'>
