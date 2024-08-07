@@ -13,6 +13,7 @@ import { saveStudentQuiz } from "../../../../apiCalls/studentQuizApi";
 const QuizResultEdit = () => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [studentAnswers, setStudentAnswers] = useState<string[]>([]);
+  const [studentQuizId, setStudentQuizId] = useState<string>("");
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
@@ -41,7 +42,11 @@ const QuizResultEdit = () => {
   useEffect(() => {
     if (studentResult?.recognizedtext) {
       const extractedAnswers = extractAnswers(studentResult.recognizedtext);
-      setStudentAnswers(extractedAnswers.slice(1));
+      const studentquizid = studentResult.studentquizid;
+      const slicedAnswers = extractedAnswers.slice(1); 
+
+      setStudentAnswers(slicedAnswers); 
+      setStudentQuizId(studentquizid);
     }
 
     if (selectedQuiz?.quizanswerkey) {
@@ -68,12 +73,17 @@ const QuizResultEdit = () => {
           return;
         }
       }
-
-      const quizId = selectedQuiz?.quizid;
-      console.log(quizId);
-
-      if (quizId) {
-        await saveStudentQuiz(quizId, studentAnswers.join("\n"));
+  
+      if (studentQuizId) {
+        const firstAnswer = studentResult?.recognizedtext.split("\n")[0];
+        
+        
+        const formattedAnswers = [
+          firstAnswer, 
+          ...studentAnswers.map((answer, index) => `${index + 1}. ${answer}`) 
+        ].join("\n");
+  
+        await saveStudentQuiz(studentQuizId, formattedAnswers);
         toast.success("Successfully saved changes!");
         navigate("/dashboard/class/quiz");
       } else {
@@ -83,6 +93,7 @@ const QuizResultEdit = () => {
       toast.error("Error saving changes");
     }
   };
+  
 
   return (
     <div className="QuizResults Main MainContent">

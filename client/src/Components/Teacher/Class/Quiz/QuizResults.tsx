@@ -9,9 +9,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-
 const QuizResults = () => {
     const [answers, setAnswers] = useState<string[]>([]);
     const [studentAnswers, setStudentAnswers] = useState<string[]>([]);
