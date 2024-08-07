@@ -10,6 +10,7 @@ import { useClass } from '../../Context/ClassContext';
 const Class = () => {
     const [option, setOption] = useState('class-files');
     const { clickedClass } = useClass();
+    
     return (
         <div className='Class Main MainContent'>
             <Header />

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CurrUser } from '../Components/Interface/CurrUser';
+import { Student } from '../Components/Interface/StudentInterface'; 
 
 const API_BASE_URL = 'http://localhost:8080/api/users';
 const USER_DETAILS = 'http://localhost:8080/api/users/getuserdetails?username=';
@@ -64,4 +65,14 @@ export const registerUser = async (
         },
     );
     return response.data;
+};
+
+export const fetchAllStudents = async (): Promise<Student[]> => {
+    try {
+        const response = await axios.get<Student[]>(`${API_BASE_URL}/getallstudents`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching students:', error);
+        throw error;
+    }
 };
