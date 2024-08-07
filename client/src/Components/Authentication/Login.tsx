@@ -8,6 +8,8 @@ import {
 } from '../../apiCalls/userApi';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/penscan-logo.svg';
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';
 
 // CONTEXT API
 import { useCurrUser } from '../Context/UserContext';
@@ -34,15 +36,15 @@ const Login = () => {
                         setUser(userDetails);
                     })
                     .catch((error) => {
-                        console.error('Failed to get user details:', error);
+                        toast.error('Failed to get user details:', error);
                     });
                 navigate('/dashboard');
             } else {
-                console.log('Unknown user type');
+                toast.error('Unknown user type');
             }
-            console.log('Login successful:', loginResponse);
+            toast.dark('Login successful:', loginResponse);
         } catch (error) {
-            console.error('Error logging in:', error);
+            toast.error('Error logging in');
             setErrorMessage('Incorrect username or password');
         }
     };
@@ -111,6 +113,7 @@ const Login = () => {
                     </div>
                 )}
                 <div className='gradient' />
+                <ToastContainer/>
             </main>
         </div>
     );

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchStudentsByClassId } from '../../../../apiCalls/studentApi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Student {
     userid: string;
@@ -25,7 +27,7 @@ const ClassStudents: React.FC<ClassStudentsProps> = ({ classId }) => {
 
                 setStudents(sortedStudents);
             } catch (error) {
-                console.error('Error fetching students:', error);
+                toast.error('Error fetching students');
             }
         };
 
@@ -52,6 +54,7 @@ const ClassStudents: React.FC<ClassStudentsProps> = ({ classId }) => {
                     ))}
                 </ul>
             </div>
+            <ToastContainer/>
         </div>
     );
 };

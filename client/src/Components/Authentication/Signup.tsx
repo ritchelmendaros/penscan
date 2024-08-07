@@ -48,10 +48,9 @@ const Signup: React.FC = () => {
                 password,
                 selectedOption,
             );
-            console.log('Registration successful:', response);
+            toast.dark('Registration successful:', response);
             navigate('/login');
         } catch (error) {
-            console.error('Error registering user:', error);
             toast.error(
                 'Username already exists or there was an error with the registration.',
             );

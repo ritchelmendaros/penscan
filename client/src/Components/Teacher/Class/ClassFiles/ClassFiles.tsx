@@ -4,8 +4,10 @@ import { useClass } from '../../../Context/ClassContext';
 import { useCurrUser } from '../../../Context/UserContext';
 import { Quiz } from '../../../Interface/Quiz';
 import { getAllQuizes } from '../../../../apiCalls/QuizAPIs';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../../../Context/QuizContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ClassFiles = () => {
     const navigate = useNavigate();
@@ -16,17 +18,14 @@ const ClassFiles = () => {
     const { setSelectedQuiz } = useQuiz();
 
     useEffect(() => {
-        console.log(clickedClass?.classid);
-        console.log(user?.userid);
 
         if (user?.userid && clickedClass?.classid) {
             getAllQuizes(user.userid, clickedClass.classid)
                 .then((quiz) => {
                     setQuizzes(quiz);
-                    console.log(quiz);
                 })
                 .catch((err) => {
-                    console.error(err);
+                    toast.error(err);
                 });
         }
     }, [clickedClass, user]);
@@ -51,6 +50,7 @@ const ClassFiles = () => {
                     </h1>
                 )}
             </ul>
+            <ToastContainer/>
         </div>
     );
 };

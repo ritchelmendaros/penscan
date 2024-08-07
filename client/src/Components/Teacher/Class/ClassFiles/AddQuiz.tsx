@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import Gradients from '../../../Common/Gradients';
 import Header from '../../../Common/Header';
@@ -6,6 +7,13 @@ import BtnWithRobot from '../../../Common/BtnWithRobot';
 import { Link } from 'react-router-dom';
 
 const AddQuiz = () => {
+
+    const [quizName, setQuizName] = useState('');
+
+    const handleQuizNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setQuizName(e.target.value); 
+    };
+
     return (
         <div className='AddQuiz Main MainContent'>
             <Header />
@@ -15,6 +23,8 @@ const AddQuiz = () => {
                     <InputContainer
                         icon={faEnvelope}
                         placeholder={'Quiz Name'}
+                        value={quizName} 
+                        onChange={handleQuizNameChange}
                     />
 
                     <form action='' onSubmit={(e) => e.preventDefault()}>

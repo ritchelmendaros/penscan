@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, ChangeEvent } from 'react';
 import { useCurrUser } from '../Context/UserContext';
 import { postCreateClass } from '../../apiCalls/classAPIs';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateClass: React.FC = () => {
     const navigate = useNavigate();
@@ -14,7 +16,7 @@ const CreateClass: React.FC = () => {
     const [className, setClassName] = useState('');
     const { user } = useCurrUser();
 
-    // Handle input change
+  
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setClassName(e.target.value);
     };
@@ -23,11 +25,10 @@ const CreateClass: React.FC = () => {
         if (user?.userid) {
             postCreateClass(className, user.userid)
                 .then(() => {
-                    // Navigate only after successful creation
                     navigate('/dashboard');
                 })
                 .catch((err) => {
-                    console.error('Error creating class:', err);
+                    toast.error('Error creating class:', err);
                 });
         }
     };
@@ -51,6 +52,7 @@ const CreateClass: React.FC = () => {
             </main>
 
             <Gradients />
+            <ToastContainer/>
         </div>
     );
 };

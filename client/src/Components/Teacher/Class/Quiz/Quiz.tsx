@@ -6,6 +6,8 @@ import { getAllQuizScores } from '../../../../apiCalls/QuizAPIs';
 import { useQuiz } from '../../../Context/QuizContext';
 import { StudentQuiz } from '../../../Interface/Quiz';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Quiz = () => {
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ const Quiz = () => {
                     setStudentsWithScores(valuesOfA);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    toast.error(error);
                 });
         }
     }, [selectedQuiz]);
@@ -78,6 +80,7 @@ const Quiz = () => {
 
             <SmilingRobot />
             <Gradients />
+            <ToastContainer/>
         </div>
     );
 };

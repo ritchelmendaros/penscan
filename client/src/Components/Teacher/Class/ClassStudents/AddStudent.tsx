@@ -8,6 +8,8 @@ import { fetchAllStudents } from "../../../../apiCalls/userApi";
 import { addStudentToClass } from "../../../../apiCalls/studentApi";
 import { useClass } from "../../../Context/ClassContext";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Student {
   userid: string;
@@ -21,7 +23,6 @@ const AddStudent: React.FC = () => {
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const { clickedClass } = useClass();
   const classId = clickedClass?.classid;
   const navigate = useNavigate();
@@ -33,8 +34,7 @@ const AddStudent: React.FC = () => {
         setAllStudents(studentsData);
         setFilteredStudents(studentsData);
       } catch (error) {
-        console.error("Error fetching students:", error);
-        setErrorMessage("Failed to load students. Please try again.");
+        toast.error("Error fetching students");
       }
     };
 
@@ -71,24 +71,23 @@ const AddStudent: React.FC = () => {
   const handleAddStudent = async () => {
     if (selectedStudent) {
       if (!classId) {
-        setErrorMessage("Class ID is missing. Please try again.");
+        toast.error("Class ID is missing. Please try again.");
         return;
       }
-
-      console.log("ci", classId, selectedStudent.userid);
       try {
         const addStudentResponse = await addStudentToClass(
           selectedStudent.userid,
           classId
         );
-        console.log("Student added:", addStudentResponse);
-        navigate(`/dashboard/class`);
+        toast.dark("Student added successfully!"); 
+            setTimeout(() => {
+                navigate(`/dashboard/class`); 
+            }, 2000);
       } catch (error) {
-        console.error("Error adding student:", error);
-        setErrorMessage("Error adding student. Please try again.");
+        toast.error("Error adding student");
       }
     } else {
-      setErrorMessage("Please select a student before adding.");
+      toast.error("Please select a student before adding.");
     }
   };
 
@@ -116,11 +115,11 @@ const AddStudent: React.FC = () => {
             ))}
           </datalist>
           <BtnWithRobot name={"Add"} onClick={handleAddStudent} />{" "}
-          {errorMessage && <p className="error-message">{errorMessage}</p>}{" "}
         </div>
       </main>
 
       <Gradients />
+      <ToastContainer />
     </div>
   );
 };

@@ -9,6 +9,8 @@ import { getAllClasses, getUserClassesByUserId } from '../../apiCalls/classAPIs'
 import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
 import { getDetailsByUsername } from '../../apiCalls/userApi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
     const [classes, setClasses] = useState<ClassInterface[]>([]);
@@ -24,7 +26,7 @@ const Dashboard = () => {
                         setClassList(classes);
                     })
                     .catch((error) => {
-                        console.error('Failed to get classes:', error);
+                        toast.error('Failed to get classes:', error);
                     });
             } else if (userType === 'Student') {
                 getDetailsByUsername(user.username)
@@ -36,7 +38,7 @@ const Dashboard = () => {
                         setClassList(userClasses);
                     })
                     .catch((error) => {
-                        console.error('Failed to get user classes:', error);
+                        toast.error('Failed to get user classes:', error);
                     });
             }
         }
@@ -56,6 +58,7 @@ const Dashboard = () => {
             <img src={robot} alt='' className='robot' />
 
             <Gradients />
+            <ToastContainer/>
         </div>
     );
 };

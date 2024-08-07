@@ -5,6 +5,8 @@ import { useQuiz } from '../../../Context/QuizContext';
 import { useEffect, useState } from 'react';
 import { getQuizResults } from '../../../../apiCalls/QuizAPIs';
 import { StudentImageResult } from '../../../Interface/Quiz';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +25,7 @@ const QuizResults = () => {
                     setStudentResult(result);
                 })
                 .catch((error) => {
-                    console.error(error);
+                    toast.error(error);
                 });
         }
     }, [selectedStudentResult, selectedQuiz]);
@@ -96,6 +98,7 @@ const QuizResults = () => {
 
             <SmilingRobot />
             <Gradients />
+            <ToastContainer/>
         </div>
     );
 };
