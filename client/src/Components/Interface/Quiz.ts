@@ -5,6 +5,11 @@ interface Quiz {
     teacherid: string;
     quizanswerkey: string;
 }
+//Student Quiz
+interface Quizzes {
+    quizId: string;
+    quizName: string;
+}
 
 interface StudentQuiz {
     firstName: string;
@@ -35,4 +40,4 @@ interface ItemAnalysisInterface {
     quizid: string;
 }
 
-export type { Quiz, StudentQuiz, StudentImageResult, ItemAnalysisInterface };
+export type { Quiz, Quizzes ,StudentQuiz, StudentImageResult, ItemAnalysisInterface };

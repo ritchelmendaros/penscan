@@ -1,0 +1,20 @@
+.Dashboard {
+    .StudentDashboard {
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+
+            a {
+                background-color: $blue-btn;
+                padding: 10px 30px;
+                border-radius: 10px;
+                font-weight: bold;
+
+                &:hover {
+                    padding: 10px 40px;
+                    transition: 0.3s;
+                }
+            }
+        }
+    }
+}

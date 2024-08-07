@@ -79,3 +79,28 @@ export const getQuizAnalysis = async (quizID: string) => {
         throw error;
     }
 };
+
+//Student
+export const getQuizNamesByUserIdAndClassId = async (userId: string, classId: string): Promise<any[]> => {
+    try {
+        const response = await axios.get<any[]>(
+            `http://localhost:8080/api/students/getquizidsandnamesbyuseridandclassid?userid=${userId}&classid=${classId}`
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching quiz names:', error);
+        throw error;
+    }
+};
+
+export const getAnswerKey = async (quizId: string): Promise<string> => {
+    try {
+        const response = await axios.get<string>(
+            `http://localhost:8080/api/quiz/getanswerkey?quizid=${quizId}`
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching answer key:', error);
+        throw error;
+    }
+};

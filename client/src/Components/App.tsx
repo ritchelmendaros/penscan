@@ -13,6 +13,8 @@ import { useCurrUser } from './Context/UserContext';
 import Quiz from './Teacher/Class/Quiz/Quiz';
 import QuizResults from './Teacher/Class/Quiz/QuizResults';
 import QuizResultEdit from './Teacher/Class/Quiz/QuizResultEdit';
+import Classes from './Student/Class/Classes'
+import StudentQuizResults from './Student/Quiz/QuizResult';
 
 const App = () => {
     const { userType } = useCurrUser();
@@ -60,7 +62,14 @@ const App = () => {
                     ) : userType === 'Student' ? (
                         <>
                             <Route path='/dashboard' element={<Dashboard />} />
-                            <Route path='/dashboard/class/:classid' element={<Class />} />
+                            <Route 
+                                path='/dashboard/class/:classid' 
+                                element={<Classes />} 
+                            />
+                            <Route
+                                path='/dashboard/class/quiz/quiz-result'
+                                element={<StudentQuizResults />}
+                            />
                         </>
                     ) : null}
                     <Route path='*' element={<NotFoundPage />} />
