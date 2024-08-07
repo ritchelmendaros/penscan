@@ -12,6 +12,7 @@ import Signup from './Authentication/Signup';
 import { useCurrUser } from './Context/UserContext';
 import Quiz from './Teacher/Class/Quiz/Quiz';
 import QuizResults from './Teacher/Class/Quiz/QuizResults';
+import QuizResultEdit from './Teacher/Class/Quiz/QuizResultEdit';
 
 const App = () => {
     const { userType } = useCurrUser();
@@ -42,6 +43,10 @@ const App = () => {
                             <Route
                                 path='/dashboard/class/quiz/quiz-result'
                                 element={<QuizResults />}
+                            />
+                            <Route
+                                path='/dashboard/class/quiz/quiz-result-edit'
+                                element={<QuizResultEdit />}
                             />
                             <Route
                                 path='/dashboard/class/add-student'

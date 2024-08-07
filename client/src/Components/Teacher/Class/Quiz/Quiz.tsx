@@ -21,6 +21,7 @@ const Quiz = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
     if (selectedQuiz?.quizid) {
@@ -42,13 +43,21 @@ const Quiz = () => {
         })
         .catch((error) => {
           toast.error(error);
-        });
+        })
+        .finally(() => {
+            setIsFetching(false);
+          });
     }
   }, [selectedQuiz]);
 
   const handleViewStudentScore = (student: StudentQuiz) => {
     setSelectedStudentResult(student);
-    navigate("/dashboard/class/quiz/quiz-result");
+    navigate(`/dashboard/class/quiz/quiz-result`);
+  };
+
+  const handleEditStudentScore = (student: StudentQuiz) => {
+    setSelectedStudentResult(student);
+    navigate(`/dashboard/class/quiz/quiz-result-edit`);
   };
 
   const handleDownloadExcel = () => {
@@ -102,7 +111,7 @@ const Quiz = () => {
       <main>
         <div className="btn-container">
           <div>
-            <button>Class Files</button>
+            <button>Quiz Files</button>
             <button>Analysis</button>
           </div>
           <div className="upload-download">
@@ -119,27 +128,37 @@ const Quiz = () => {
             </li>
           </ul>
           <ul className="tbody">
-            {studentsWithScores.map((student, i) => (
-              <li key={i} className="tr">
-                <p className="td">
-                  {student.firstName} {student.lastName}
-                </p>
-                <p className="td">{student.score}</p>
-                <div>
+          {isFetching ? (
+              <div className="loader-container">
+                <SyncLoader size={10} color={"#416edf"} loading={isFetching} />
+              </div>
+            ) : (
+              studentsWithScores.map((student, i) => (
+                <li key={i} className="tr">
+                  <p className="td">
+                    {student.firstName} {student.lastName}
+                  </p>
+                  <p className="td">{student.score}</p>
+                  <div>
                   <button
-                    className="view"
-                    onClick={() => handleViewStudentScore(student)}
-                  >
-                    View
-                  </button>
-                  <button className="edit">Edit</button>
-                </div>
-              </li>
-            ))}
+                      className="view"
+                      onClick={() => handleViewStudentScore(student)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="edit"
+                      onClick={() => handleEditStudentScore(student)}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </main>
-
       {/* Modal for File Upload */}
       {isModalOpen && (
         <div className="modal-overlay">

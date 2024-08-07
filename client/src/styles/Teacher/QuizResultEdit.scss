@@ -17,7 +17,7 @@
 
     .table {
       max-height: 500px;
-      overflow-y: hidden;
+      overflow: hidden;
       border-radius: 10px;
 
       .th,
@@ -38,7 +38,12 @@
         background-color: rgb(53, 53, 53);
         height: 350px;
         max-height: 350px;
-        overflow-y: auto;
+        overflow-y: scroll; 
+        scrollbar-width: none; 
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
 
       .td {
@@ -48,14 +53,21 @@
   }
   .center-button {
     display: flex;
-    margin-left: 660px;
+    margin-left: 600px;
     margin-top: 20px;
 
-    button {
+    .cancel {
       width: 125px;
       padding: 7px 10px;
       border-radius: 5px;
       font-size: 15px;
+      margin-left: 20px;
     }
+    .save {
+        width: 125px;
+        padding: 7px 10px;
+        border-radius: 5px;
+        font-size: 15px;
+      }
   }
 }
