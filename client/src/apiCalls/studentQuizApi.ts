@@ -26,3 +26,22 @@ export const uploadStudentQuiz = async (quizid: string, selectedFile: File) => {
         throw error;
     }
 };
+
+export const saveStudentQuiz = async (studentQuizId: string, newText: string) => {
+    try {
+        const response = await axios.put(`${BASE_URL}/edit`, {
+            studentQuizId,
+            newText,
+        });
+        toast.success(response.data);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const errorMessage = error.response?.data || 'Error saving changes';
+            toast.error(errorMessage);
+        } else {
+            toast.error('An unexpected error occurred while saving changes');
+        }
+        throw error;
+    }
+};
