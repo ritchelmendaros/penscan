@@ -1,5 +1,9 @@
 .Quiz {
     .table {
+        max-height: 500px;
+        overflow-y: hidden;
+        border-radius: 10px;
+
         .tbody {
             background-color: rgb(42, 42, 42);
             border-radius: 0 0 10px 10px;
@@ -44,7 +48,8 @@
 
                 .edit {
                     background-color: white;
-                    color: grey;
+                    border: 1px solid #416edf;
+                    color: #416edf;
 
                     &:hover {
                         background-color: #f0f0f0;
@@ -83,6 +88,18 @@
                 background-color: #d4d4d4;
                 color: black;
             }
+        }
+
+        .upload-download {
+            display: flex;
+            gap: 10px;
+
+            button {
+                background-color: #416edf;
+                color: white;
+                border-radius: 5px;
+            }
+            
         }
     }
 }

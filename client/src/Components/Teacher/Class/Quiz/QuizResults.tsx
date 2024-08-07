@@ -7,6 +7,7 @@ import { getQuizResults } from '../../../../apiCalls/QuizAPIs';
 import { StudentImageResult } from '../../../Interface/Quiz';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +18,8 @@ const QuizResults = () => {
 
     const { selectedStudentResult, selectedQuiz } = useQuiz();
     const [studentResult, setStudentResult] = useState<StudentImageResult>();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -48,19 +51,23 @@ const QuizResults = () => {
         }
     }, [selectedQuiz, studentResult]);
 
+    const handleClose = () => {
+        navigate('/dashboard/class/quiz');
+    };
+
     return (
         <div className='QuizResults Main MainContent'>
             <Header />
             <main>
                 <div className='student-details'>
                     <div>
-                        <h1>
+                        <h3>
                             {selectedStudentResult?.firstName}{' '}
                             {selectedStudentResult?.lastName}
-                        </h1>
-                        <h1>Score: {selectedStudentResult?.score}</h1>
+                        </h3>
+                        
                     </div>
-                    <button>Upload</button>
+                    <h3>Score: {selectedStudentResult?.score}</h3>
                 </div>
 
                 <div className='main-results'>
@@ -68,7 +75,7 @@ const QuizResults = () => {
                         src={`data:image/png;base64,${studentResult?.base64Image}`}
                         alt=''
                     />
-
+                    
                     <div className='table'>
                         <ul className='thead'>
                             <li className='th'>
@@ -92,7 +99,11 @@ const QuizResults = () => {
                                 </li>
                             ))}
                         </ul>
+                        
                     </div>
+                </div>
+                <div className="center-button">
+                    <button onClick={handleClose}>Close</button>
                 </div>
             </main>
 

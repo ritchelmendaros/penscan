@@ -3,11 +3,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        button {
-            width: 125px;
-            padding: 7px 10px;
-        }
     }
 
     .main-results {
@@ -29,8 +24,9 @@
             }
 
             .thead {
-                background-color: #e8e8e8;
-                color: grey;
+                background-color: $blue-btn;
+                border-radius: 5px 5px 0 0;
+                padding: 5px;
             }
 
             .tbody {
@@ -43,6 +39,18 @@
             .td {
                 padding: 7px 0;
             }
+        }
+    }
+    .center-button {
+        display: flex;
+        margin-left: 660px;
+        margin-top: 20px;
+
+        button {
+            width: 125px;
+            padding: 7px 10px;
+            border-radius: 5px;
+            font-size: 15px;
         }
     }
 }
