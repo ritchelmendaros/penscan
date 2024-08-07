@@ -5,9 +5,11 @@ import { Link } from 'react-router-dom';
 import ClassFiles from './ClassFiles/ClassFiles';
 import ClassStudents from './ClassStudents/ClassStudents';
 import SmilingRobot from '../../Common/SmilingRobot';
+import { useClass } from '../../Context/ClassContext';
 
 const Class = () => {
     const [option, setOption] = useState('class-files');
+    const { clickedClass } = useClass();
     return (
         <div className='Class Main MainContent'>
             <Header />
@@ -44,7 +46,7 @@ const Class = () => {
                 </div>
 
                 {option === 'class-files' && <ClassFiles />}
-                {option === 'students' && <ClassStudents />}
+                {option === 'students' && clickedClass && <ClassStudents classId={clickedClass.classid} />}
             </main>
             <SmilingRobot />
             <Gradients />
