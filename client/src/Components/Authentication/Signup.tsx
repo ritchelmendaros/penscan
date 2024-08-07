@@ -2,7 +2,7 @@ import Gradients from '../Common/Gradients';
 import InputContainer from '../Common/InputContainer';
 import {
     faCircleUser,
-    faEnvelope,
+    faUser,
     faLock,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -80,7 +80,7 @@ const Signup: React.FC = () => {
                         }
                     />
                     <InputContainer
-                        icon={faEnvelope}
+                        icon={faUser}
                         type={'text'}
                         placeholder={'username'}
                         value={username}

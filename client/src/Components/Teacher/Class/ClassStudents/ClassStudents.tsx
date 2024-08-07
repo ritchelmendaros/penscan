@@ -27,7 +27,7 @@ const ClassStudents: React.FC<ClassStudentsProps> = ({ classId }) => {
 
                 setStudents(sortedStudents);
             } catch (error) {
-                toast.error('Error fetching students');
+                toast.error('No students found!');
             }
         };
 

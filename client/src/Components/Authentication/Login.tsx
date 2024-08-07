@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import {
     loginUser,
     getUserType,
@@ -67,7 +67,7 @@ const Login = () => {
                     <form onSubmit={handleLogin}>
                         <div className='input-container'>
                             <FontAwesomeIcon
-                                icon={faEnvelope}
+                                icon={faUser}
                                 className='icon'
                             />
                             <input
