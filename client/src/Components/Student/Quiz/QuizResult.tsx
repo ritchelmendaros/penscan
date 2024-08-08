@@ -85,7 +85,7 @@ const StudentQuizResults = () => {
                 <li key={i} className="tr">
                   <p className="td"></p>
                   <p className="td">{i + 1}</p>
-                  <p className="td">{studentAnswers[i] || "No answer"}</p>
+                  <p className="td">{studentAnswers[i + 1]}</p>
                   <p className="td">{item}</p>
                   <p className="td"></p>
                 </li>
