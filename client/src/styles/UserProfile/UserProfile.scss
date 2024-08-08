@@ -26,6 +26,11 @@
             margin-bottom: 10px;
         }
 
+        input:focus {
+            outline: auto;
+            outline-color: $blue-btn;
+        }
+
         button {
             padding: 7px;
             border-radius: 5px;
@@ -41,7 +46,7 @@
         }
 
         button.save {
-            background-color: rgb(90, 0, 0);
+            background-color: rgb(42, 200, 211);
             color: white;
         }
     }
