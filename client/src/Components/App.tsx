@@ -13,8 +13,9 @@ import { useCurrUser } from './Context/UserContext';
 import Quiz from './Teacher/Class/Quiz/Quiz';
 import QuizResults from './Teacher/Class/Quiz/QuizResults';
 import QuizResultEdit from './Teacher/Class/Quiz/QuizResultEdit';
-import Classes from './Student/Class/Classes'
+import Classes from './Student/Class/Classes';
 import StudentQuizResults from './Student/Quiz/QuizResult';
+import UserProfile from './UserProfile/UserProfile';
 
 const App = () => {
     const { userType } = useCurrUser();
@@ -26,6 +27,10 @@ const App = () => {
                     <Route path='/' element={<LandingPage />} />
                     <Route path='/login' element={<Login />} />
                     <Route path='/sign-up' element={<Signup />} />
+                    {(userType === 'Teacher' || userType === 'Student') && (
+                        <Route path='/user-profile' element={<UserProfile />} />
+                    )}
+
                     {userType === 'Teacher' ? (
                         <>
                             <Route path='/dashboard' element={<Dashboard />} />
@@ -62,9 +67,9 @@ const App = () => {
                     ) : userType === 'Student' ? (
                         <>
                             <Route path='/dashboard' element={<Dashboard />} />
-                            <Route 
-                                path='/dashboard/class/:classid' 
-                                element={<Classes />} 
+                            <Route
+                                path='/dashboard/class/:classid'
+                                element={<Classes />}
                             />
                             <Route
                                 path='/dashboard/class/quiz/quiz-result'

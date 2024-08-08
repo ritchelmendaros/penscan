@@ -1,0 +1,48 @@
+.UserProfile {
+    display: flex;
+    justify-content: center;
+    .hello {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 100px;
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        margin-top: 30px;
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 7px;
+            border-radius: 5px;
+            width: 150px;
+            margin: 0 auto;
+            margin-top: 20px;
+            font-weight: bold;
+
+            &:hover {
+                width: 170px;
+                transition: 0.3s;
+            }
+        }
+
+        button.save {
+            background-color: rgb(90, 0, 0);
+            color: white;
+        }
+    }
+}

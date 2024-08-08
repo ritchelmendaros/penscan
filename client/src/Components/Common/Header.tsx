@@ -1,11 +1,12 @@
 import logo from '../../assets/penscan-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCurrUser } from '../Context/UserContext';
 import { CurrUser } from '../Interface/CurrUser';
 
 const Header = () => {
+    const navigate = useNavigate();
     const { user, setUser } = useCurrUser();
     const handleLogout = () => {
         const currUser: CurrUser = {
@@ -28,10 +29,21 @@ const Header = () => {
                 </div>
             </Link>
             <div className='user-container'>
-                <p className='user'>
-                    Welcome, {user?.firstname} {user?.lastname}!
-                </p>
-                <FontAwesomeIcon icon={faCircleUser} className='user-icon' />
+                <div
+                    className='user'
+                    onClick={() => {
+                        navigate('/user-profile');
+                    }}
+                >
+                    <p>
+                        Welcome, {user?.firstname} {user?.lastname}!
+                    </p>
+                    <FontAwesomeIcon
+                        icon={faCircleUser}
+                        className='user-icon'
+                    />
+                </div>
+
                 <Link to={'/login'} onClick={() => handleLogout()}>
                     Logout
                 </Link>
