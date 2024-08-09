@@ -76,3 +76,26 @@ export const fetchAllStudents = async (): Promise<Student[]> => {
         throw error;
     }
 };
+
+// Function to update user details
+export const updateUserDetails = async (
+    username: string,
+    firstName: string,
+    lastName: string,
+) => {
+    try {
+        const response = await axios.put(
+            `${API_BASE_URL}/updateuserdetails`,
+            {
+                username,
+                firstname: firstName,
+                lastname: lastName,
+            }
+        );
+        console.log("User details updated", response);
+        return response.data; // Return updated user data if needed
+    } catch (error) {
+        console.error("Error updating user details", error);
+        throw error; // Re-throw error for handling in the calling function
+    }
+};

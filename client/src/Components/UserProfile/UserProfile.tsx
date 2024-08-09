@@ -4,16 +4,20 @@ import { useCurrUser } from '../Context/UserContext';
 import robotHeartWink from '../../assets/robot-heart-wink.svg';
 import Gradients from '../Common/Gradients';
 import { toast, ToastContainer } from 'react-toastify';
+import { updateUserDetails } from '../../apiCalls/userApi';
 
 const UserProfile = () => {
     const [isEdit, setIsEdit] = useState(false);
-    const { user } = useCurrUser();
+    const { user, setUser } = useCurrUser();
     const firstNameRef = useRef<HTMLInputElement>(null);
     const lastNameRef = useRef<HTMLInputElement>(null);
+    const [firstName, setFirstName] = useState(user?.firstname || '');
+    const [lastName, setLastName] = useState(user?.lastname || '');
+    
 
     useEffect(() => {
         if (isEdit && firstNameRef.current) {
-            firstNameRef.current.focus(); // Focus on the first input when entering edit mode
+            firstNameRef.current.focus(); 
         }
     }, [isEdit]);
 
@@ -30,6 +34,23 @@ const UserProfile = () => {
             },
         );
         setIsEdit(editMode);
+    };
+
+    const handleSave = async () => {
+        if (user) {
+            try {
+                await updateUserDetails(user.username, firstName, lastName);
+                setUser({
+                    ...user,
+                    firstname: firstName,
+                    lastname: lastName,
+                });
+                handleClick(false); 
+            } catch (error) {
+                console.error('Failed to update user details', error);
+                toast.error('Failed to update user details. Please try again.');
+            }
+        }
     };
 
     return (
@@ -52,7 +73,8 @@ const UserProfile = () => {
                         type='text'
                         id='firstname'
                         ref={firstNameRef}
-                        value={user?.firstname || ''}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                         disabled={!isEdit}
                     />
                     <label htmlFor='lastname'>Last Name</label>
@@ -60,7 +82,8 @@ const UserProfile = () => {
                         type='text'
                         id='lastname'
                         ref={lastNameRef}
-                        value={user?.lastname || ''}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         disabled={!isEdit}
                     />
                     {!isEdit ? (
@@ -71,7 +94,7 @@ const UserProfile = () => {
                         <button
                             type='button'
                             className='save'
-                            onClick={() => handleClick(false)}
+                            onClick={handleSave}
                         >
                             Save
                         </button>
