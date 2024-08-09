@@ -10,9 +10,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { saveStudentQuiz } from "../../../../apiCalls/studentQuizApi";
 
+interface AnswerMap {
+  [key: number]: string;
+}
+
 const QuizResultEdit = () => {
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [studentAnswers, setStudentAnswers] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -27,31 +31,37 @@ const QuizResultEdit = () => {
           setStudentResult(result);
         })
         .catch((error) => {
-          toast.error(error);
+          toast.error(error.message);
         });
     }
   }, [selectedStudentResult, selectedQuiz]);
 
   const extractAnswers = (input: string) => {
-    return input
+    const answers: { [key: number]: string } = {};
+    input
       .trim()
       .split("\n")
-      .map((line) => line.replace(/^\d+\.\s*/, ""));
+      .forEach((line) => {
+        const match = line.match(/^(\d+)\.\s*(.*)$/);
+        if (match) {
+          const number = parseInt(match[1]);
+          const answer = match[2];
+          answers[number] = answer;
+        }
+      });
+    return answers;
   };
 
   useEffect(() => {
     if (studentResult?.recognizedtext) {
       const extractedAnswers = extractAnswers(studentResult.recognizedtext);
-      const studentquizid = studentResult.studentquizid;
-      const slicedAnswers = extractedAnswers.slice(1); 
-
-      setStudentAnswers(slicedAnswers); 
-      setStudentQuizId(studentquizid);
+      setStudentAnswers(extractedAnswers);
+      setStudentQuizId(studentResult.studentquizid);
     }
 
     if (selectedQuiz?.quizanswerkey) {
-      const theAnswers = extractAnswers(selectedQuiz.quizanswerkey);
-      setAnswers(theAnswers);
+      const correctAnswers = extractAnswers(selectedQuiz.quizanswerkey);
+      setAnswers(correctAnswers);
     }
   }, [selectedQuiz, studentResult]);
 
@@ -60,29 +70,29 @@ const QuizResultEdit = () => {
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
-    const updatedAnswers = [...studentAnswers];
-    updatedAnswers[index] = value;
+    const updatedAnswers = { ...studentAnswers, [index + 1]: value };
     setStudentAnswers(updatedAnswers);
   };
 
   const handleSaveClick = async () => {
     try {
-      for (let i = 0; i < studentAnswers.length; i++) {
+      for (let i = 1; i <= Object.keys(answers).length; i++) {
         if (!studentAnswers[i]) {
-          toast.error(`Answer for item ${i + 1} is required.`);
+          toast.error(`Answer for item ${i} is required.`);
           return;
         }
       }
-  
+
       if (studentQuizId) {
         const firstAnswer = studentResult?.recognizedtext.split("\n")[0];
         
-        
         const formattedAnswers = [
-          firstAnswer, 
-          ...studentAnswers.map((answer, index) => `${index + 1}. ${answer}`) 
+          firstAnswer,
+          ...Object.keys(studentAnswers).map(
+            (key) => `${key}. ${studentAnswers[parseInt(key)]}`
+          ),
         ].join("\n");
-  
+
         await saveStudentQuiz(studentQuizId, formattedAnswers);
         toast.success("Successfully saved changes!");
         navigate("/dashboard/class/quiz");
@@ -93,7 +103,35 @@ const QuizResultEdit = () => {
       toast.error("Error saving changes");
     }
   };
-  
+
+  const renderRows = () => {
+    const rows = [];
+
+    for (let i = 1; i <= Object.keys(answers).length; i++) {
+      const studentAnswer = studentAnswers[i] || "";
+      const correctAnswer = answers[i] || "";
+
+      rows.push(
+        <li key={i} className="tr">
+          <p className="td"></p>
+          <p className="td">{i}</p>
+          <p className="td">
+            <input
+              type="text"
+              value={studentAnswer}
+              onChange={(e) =>
+                handleStudentAnswerChange(i - 1, e.target.value)
+              }
+            />
+          </p>
+          <p className="td">{correctAnswer}</p>
+          <p className="td"></p>
+        </li>
+      );
+    }
+
+    return rows;
+  };
 
   return (
     <div className="QuizResults Main MainContent">
@@ -119,33 +157,14 @@ const QuizResultEdit = () => {
             <ul className="thead">
               <li className="th">
                 <p />
-                <p className="td"></p>
+                <p className="td">Item No.</p>
                 <p className="td">Scanned Answer</p>
                 <p className="td">Correct Answer</p>
                 <p />
               </li>
             </ul>
             <ul className="tbody">
-              {answers.map((item, i) => (
-                <li key={i} className="tr">
-                  <p className="td"></p>
-                  <p className="td"></p>
-                  <p className="td">
-                    <input
-                      type="text"
-                      value={`${i + 1}. ${studentAnswers[i]}`}
-                      onChange={(e) =>
-                        handleStudentAnswerChange(
-                          i,
-                          e.target.value.replace(/^\d+\.\s*/, "")
-                        )
-                      }
-                    />
-                  </p>
-                  <p className="td">{item}</p>
-                  <p className="td"></p>
-                </li>
-              ))}
+              {renderRows()}
             </ul>
           </div>
         </div>

@@ -9,12 +9,16 @@ import { useCurrUser } from "../../Context/UserContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+interface Answer {
+  number: string;
+  answer: string;
+}
+
 const StudentQuizResults = () => {
   const [answers, setAnswers] = useState<string[]>([]);
-  const [studentAnswers, setStudentAnswers] = useState<string[]>([]);
+  const [studentAnswers, setStudentAnswers] = useState<Answer[]>([]);
   const { user } = useCurrUser();
-
-  const { selectedStudentResult, selectedQuiz } = useQuiz();
+  const { selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
 
   useEffect(() => {
@@ -25,30 +29,76 @@ const StudentQuizResults = () => {
           return getAnswerKey(selectedQuiz.quizid);
         })
         .then((answerKey) => {
-          const extractedAnswers = extractAnswers(answerKey);
+          const extractedAnswers = extractAnswersFromAnswerKey(answerKey);
           setAnswers(extractedAnswers);
         })
         .catch((error) => {
-          toast.error("Error fetching data", error)
+          toast.error("Error fetching data", error);
         });
     }
   }, [user, selectedQuiz]);
 
-  const extractAnswers = (input: string) => {
+  const extractAnswersFromAnswerKey = (input: string) => {
     return input
       .trim()
       .split("\n")
       .map((line) => line.replace(/^\d+\.\s*/, ""));
   };
 
+  const extractAnswersFromRecognizedText = (input: string): Answer[] => {
+    const lines = input.trim().split("\n");
+    return lines.map((line) => {
+      const match = line.match(/^(\d+)\.\s*(.*)$/); 
+      if (match) {
+        return {
+          number: match[1],
+          answer: match[2],
+        };
+      }
+      return null;
+    }).filter((item): item is Answer => item !== null);
+  };
+
   useEffect(() => {
     if (studentResult?.recognizedtext) {
-      setStudentAnswers(extractAnswers(studentResult.recognizedtext));
+      setStudentAnswers(extractAnswersFromRecognizedText(studentResult.recognizedtext));
     }
   }, [studentResult]);
 
-  console.log("Selected Student Result:", selectedStudentResult);
-  console.log("Current User:", user);
+  const renderRows = () => {
+    const rows = [];
+    let correctIndex = 0;
+
+    for (let i = 1; i <= answers.length; i++) {
+      const foundAnswer = studentAnswers.find((ans) => parseInt(ans.number) === i);
+
+      if (foundAnswer) {
+        rows.push(
+          <li key={i} className="tr">
+            <p className="td"></p>
+            <p className="td">{foundAnswer.number}</p>
+            <p className="td">{foundAnswer.answer}</p>
+            <p className="td">{answers[correctIndex]}</p>
+            <p className="td"></p>
+          </li>
+        );
+      } else {
+        rows.push(
+          <li key={i} className="tr">
+            <p className="td"></p>
+            <p className="td">{i}</p>
+            <p className="td"></p>
+            <p className="td">{answers[correctIndex]}</p>
+            <p className="td"></p>
+          </li>
+        );
+      }
+
+      correctIndex++;
+    }
+
+    return rows;
+  };
 
   return (
     <div className="QuizResults Main MainContent">
@@ -56,10 +106,7 @@ const StudentQuizResults = () => {
       <main>
         <div className="student-details">
           <div>
-            <h3>
-              {user?.firstname}{" "}
-              {user?.lastname}
-            </h3>
+            <h3>{user?.firstname} {user?.lastname}</h3>
           </div>
           <h3>Score: {studentResult?.score}</h3>
         </div>
@@ -81,15 +128,7 @@ const StudentQuizResults = () => {
               </li>
             </ul>
             <ul className="tbody">
-              {answers.map((item, i) => (
-                <li key={i} className="tr">
-                  <p className="td"></p>
-                  <p className="td">{i + 1}</p>
-                  <p className="td">{studentAnswers[i + 1]}</p>
-                  <p className="td">{item}</p>
-                  <p className="td"></p>
-                </li>
-              ))}
+              {renderRows()}
             </ul>
           </div>
         </div>
@@ -97,7 +136,7 @@ const StudentQuizResults = () => {
 
       <SmilingRobot />
       <Gradients />
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

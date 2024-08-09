@@ -25,9 +25,11 @@ const Quiz = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [analysisTab, setAnalysisTab] = useState(false);
+  const [refreshScores, setRefreshScores] = useState(false);
 
   useEffect(() => {
     if (selectedQuiz?.quizid) {
+      setIsFetching(true); 
       getAllQuizScores(selectedQuiz.quizid)
         .then((student) => {
           const values = Object.values(student);
@@ -52,7 +54,7 @@ const Quiz = () => {
           setIsFetching(false);
         });
     }
-  }, [selectedQuiz]);
+  }, [selectedQuiz, refreshScores]);
 
   const handleViewStudentScore = (student: StudentQuiz) => {
     setSelectedStudentResult(student);
@@ -92,6 +94,7 @@ const Quiz = () => {
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
         setIsModalOpen(false);
+        setRefreshScores(true);
       } catch (error) {
         toast.error("File upload failed.");
         setSelectedFile(null);
