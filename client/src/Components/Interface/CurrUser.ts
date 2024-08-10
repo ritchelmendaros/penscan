@@ -1,7 +1,7 @@
 interface CurrUser {
     firstname: string;
     lastname: string;
-    password: string;
+    password?: string;
     userType: string;
     userid: string;
     username: string;

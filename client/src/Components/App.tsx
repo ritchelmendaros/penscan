@@ -16,9 +16,28 @@ import QuizResultEdit from './Teacher/Class/Quiz/QuizResultEdit';
 import Classes from './Student/Class/Classes';
 import StudentQuizResults from './Student/Quiz/QuizResult';
 import UserProfile from './UserProfile/UserProfile';
+import { useEffect } from 'react';
+import { getFromLocalStorage } from '../Utils/LocalStorage';
 
 const App = () => {
-    const { userType } = useCurrUser();
+    const { userType, setUserType, setUser } = useCurrUser();
+
+    useEffect(() => {
+        setUserType(getFromLocalStorage('userType'));
+        const fname = getFromLocalStorage('firstname');
+        const lname = getFromLocalStorage('lastname');
+        const utype = getFromLocalStorage('userType');
+        const uid = getFromLocalStorage('userid');
+        const uname = getFromLocalStorage('username');
+
+        setUser({
+            firstname: fname,
+            lastname: lname,
+            userType: utype,
+            userid: uid,
+            username: uname,
+        });
+    }, []);
 
     return (
         <BrowserRouter>

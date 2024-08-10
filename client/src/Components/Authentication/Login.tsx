@@ -8,11 +8,12 @@ import {
 } from '../../apiCalls/userApi';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/penscan-logo.svg';
-import { toast, ToastContainer } from 'react-toastify'; 
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // CONTEXT API
 import { useCurrUser } from '../Context/UserContext';
+import { setLocalStorage } from '../../Utils/LocalStorage';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -34,6 +35,11 @@ const Login = () => {
                     .then((userDetails) => {
                         // get user details
                         setUser(userDetails);
+                        setLocalStorage('firstname', userDetails.firstname);
+                        setLocalStorage('lastname', userDetails.lastname);
+                        setLocalStorage('userType', userDetails.userType);
+                        setLocalStorage('userid', userDetails.userid);
+                        setLocalStorage('username', userDetails.username);
                     })
                     .catch((error) => {
                         toast.error('Failed to get user details:', error);
@@ -66,10 +72,7 @@ const Login = () => {
                     </div>
                     <form onSubmit={handleLogin}>
                         <div className='input-container'>
-                            <FontAwesomeIcon
-                                icon={faUser}
-                                className='icon'
-                            />
+                            <FontAwesomeIcon icon={faUser} className='icon' />
                             <input
                                 type='text'
                                 placeholder='username'
@@ -113,7 +116,7 @@ const Login = () => {
                     </div>
                 )}
                 <div className='gradient' />
-                <ToastContainer/>
+                <ToastContainer />
             </main>
         </div>
     );

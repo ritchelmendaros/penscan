@@ -48,6 +48,7 @@ const Signup: React.FC = () => {
                 password,
                 selectedOption,
             );
+
             toast.dark('Registration successful:', response);
             navigate('/login');
         } catch (error) {

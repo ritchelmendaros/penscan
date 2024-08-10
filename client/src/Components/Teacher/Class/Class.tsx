@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Gradients from '../../Common/Gradients';
 import Header from '../../Common/Header';
 import { Link } from 'react-router-dom';
@@ -6,11 +6,37 @@ import ClassFiles from './ClassFiles/ClassFiles';
 import ClassStudents from './ClassStudents/ClassStudents';
 import SmilingRobot from '../../Common/SmilingRobot';
 import { useClass } from '../../Context/ClassContext';
+import {
+    getArrayFromLocalStorage,
+    getFromLocalStorage,
+    saveArrayToLocalStorage,
+    setLocalStorage,
+} from '../../../Utils/LocalStorage';
 
 const Class = () => {
     const [option, setOption] = useState('class-files');
-    const { clickedClass } = useClass();
-    
+    const { clickedClass, setClass } = useClass();
+
+    useEffect(() => {
+        if (clickedClass) {
+            setLocalStorage('classCode', clickedClass.classCode);
+            setLocalStorage('classid', clickedClass.classid);
+            setLocalStorage('classname', clickedClass.classname);
+            saveArrayToLocalStorage('studentid', clickedClass.studentid);
+            setLocalStorage('teacherid', clickedClass.teacherid);
+        }
+
+        if (!clickedClass) {
+            setClass({
+                classCode: '',
+                classid: getFromLocalStorage('classid'),
+                classname: getFromLocalStorage('classname'),
+                studentid: getArrayFromLocalStorage('studentid'),
+                teacherid: getFromLocalStorage('teacherid'),
+            });
+        }
+    });
+
     return (
         <div className='Class Main MainContent'>
             <Header />
@@ -47,7 +73,9 @@ const Class = () => {
                 </div>
 
                 {option === 'class-files' && <ClassFiles />}
-                {option === 'students' && clickedClass && <ClassStudents classId={clickedClass.classid} />}
+                {option === 'students' && clickedClass && (
+                    <ClassStudents classId={clickedClass.classid} />
+                )}
             </main>
             <SmilingRobot />
             <Gradients />

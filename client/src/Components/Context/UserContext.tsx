@@ -27,7 +27,7 @@ const useCurrUser = () => {
 };
 
 const CurrUserProvider: React.FC<CurrUserProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<CurrUser | undefined>(undefined);
+    const [user, setUser] = useState<CurrUser | undefined>();
     const [userType, setUserType] = useState('');
 
     return (

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../Common/Header';
 import TeacherDashboard from './TeacherDashboard';
 import robot from '../../assets/robot.svg';
 import Gradients from '../Common/Gradients';
 import StudentDashboard from './StudentDashboard';
 import { useCurrUser } from '../Context/UserContext';
-import { getAllClasses, getUserClassesByUserId } from '../../apiCalls/classAPIs';
+import {
+    getAllClasses,
+    getUserClassesByUserId,
+} from '../../apiCalls/classAPIs';
 import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
 import { getDetailsByUsername } from '../../apiCalls/userApi';
@@ -58,7 +61,7 @@ const Dashboard = () => {
             <img src={robot} alt='' className='robot' />
 
             <Gradients />
-            <ToastContainer/>
+            <ToastContainer />
         </div>
     );
 };
