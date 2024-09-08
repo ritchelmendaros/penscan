@@ -6,7 +6,7 @@ export const getAllClasses: (
 ) => Promise<ClassInterface[]> = async (userID) => {
     try {
         const response = await axios.get<ClassInterface[]>(
-            `http://localhost:8080/api/classes/getclassesbyteacherid?teacherid=${userID}`,
+            `https://penscan-api.onrender.com/api/classes/getclassesbyteacherid?teacherid=${userID}`,
         );
         return response.data;
     } catch (error) {
@@ -28,7 +28,7 @@ export const postCreateClass = async (
     try {
         // Check if the class already exists
         const response = await axios.get(
-            `http://localhost:8080/api/classes/checkclass?classname=${className}&teacherid=${teacherID}`,
+            `https://penscan-api.onrender.com/api/classes/checkclass?classname=${className}&teacherid=${teacherID}`,
         );
 
         if (response.data.exists) {
@@ -39,7 +39,7 @@ export const postCreateClass = async (
         } else {
             // Add the new class
             const addClassResponse = await axios.post(
-                'http://localhost:8080/api/classes/add',
+                'https://penscan-api.onrender.com/api/classes/add',
                 { classname: className, teacherid: teacherID },
             );
             console.log({
@@ -59,12 +59,12 @@ export const postCreateClass = async (
 export const getUserClassesByUserId = async (userId: string): Promise<ClassInterface[]> => {
     try {
         const response = await axios.get<ClassInterface[]>(
-            `http://localhost:8080/api/students/getclassidsbyuserid?userid=${userId}`,
+            `https://penscan-api.onrender.com/api/students/getclassidsbyuserid?userid=${userId}`,
         );
         const classIds = response.data;
         if (classIds.length > 0) {
             const classDetailsResponse = await axios.get<ClassInterface[]>(
-                `http://localhost:8080/api/classes/getclassdetails?classids=${classIds.join(",")}`
+                `https://penscan-api.onrender.com/api/classes/getclassdetails?classids=${classIds.join(",")}`
             );
             return classDetailsResponse.data;
         } else {
