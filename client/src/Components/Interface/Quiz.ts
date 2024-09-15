@@ -29,6 +29,7 @@ interface StudentImageResult {
         data: string;
     };
     recognizedtext: string;
+    feedback?: string;
     base64Image: string;
 }
 

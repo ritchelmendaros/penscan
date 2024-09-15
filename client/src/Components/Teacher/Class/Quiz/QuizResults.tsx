@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const QuizResults = () => {
     const [answers, setAnswers] = useState<string[]>([]);
     const [studentAnswers, setStudentAnswers] = useState<{ [key: number]: string }>({});
+    const [feedback, setFeedback] = useState<string | null>(null); 
     
     const { selectedStudentResult, selectedQuiz } = useQuiz();
     const [studentResult, setStudentResult] = useState<StudentImageResult>();
@@ -22,6 +23,7 @@ const QuizResults = () => {
             getQuizResults(selectedStudentResult.userId, selectedQuiz.quizid)
                 .then((result) => {
                     setStudentResult(result);
+                    setFeedback(result.feedback || 'No feedback given');
                 })
                 .catch((error) => {
                     toast.error(error.message);
@@ -99,10 +101,22 @@ const QuizResults = () => {
                 </div>
 
                 <div className='main-results'>
+                <div className="image-feedback-container">
                     <img
                         src={`data:image/png;base64,${studentResult?.base64Image}`}
                         alt=''
                     />
+                    {feedback === 'No feedback given' ? (
+                        <p className="no-feedback">{feedback}</p>
+                    ) : (
+                        <div className='feedback-container'>
+                            <textarea
+                                readOnly
+                                value={feedback || ''}
+                            />
+                        </div>
+                    )}
+                    </div>
                     
                     <div className='table'>
                         <ul className='thead'>

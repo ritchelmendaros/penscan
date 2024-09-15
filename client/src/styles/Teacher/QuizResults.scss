@@ -13,6 +13,32 @@
 
     img {
       width: 250px;
+      border-radius: 10px;
+    }
+
+    .feedback-container {
+      width: 250px;
+
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: rgb(53, 53, 53);
+        border: none;
+        outline: none;
+        font-size: 14px;
+        color: white;
+        resize: vertical;
+        height: 80px; 
+      }
+    }
+    .no-feedback {
+      width: 250px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: rgb(200, 200, 200); 
+      font-style: italic; 
     }
 
     .table {
