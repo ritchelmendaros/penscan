@@ -4,13 +4,36 @@
         justify-content: center;
 
         .content {
-            margin-top: 100px;
+            margin-top: 70px;
             width: 50%;
         }
     }
     form {
         display: flex;
         flex-direction: column;
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+
+            .input-icon {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: white;
+              }
+
+            .full-width-input {
+                width: 100%; 
+                padding: 10px 10px 10px 40px;
+                border-radius: 5px;
+                background-color: $grey; 
+                color: white; 
+                
+            }
+        }
     }
 
     .file-input-container {

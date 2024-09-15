@@ -11,11 +11,14 @@ import { useCurrUser } from "../../../Context/UserContext";
 import { useClass } from "../../../Context/ClassContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ConfirmationModal from "../../../Modal/ConfirmationModal";
 
 const AddQuiz = () => {
   const [quizName, setQuizName] = useState<string>("");
   const [answerKey, setAnswerKey] = useState<string>("");
   const [numItems, setNumItems] = useState<number>(0);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
   const navigate = useNavigate();
 
   const { user } = useCurrUser();
@@ -42,8 +45,27 @@ const AddQuiz = () => {
     setAnswerKey(generatedAnswers);
   };
 
-  const handleAddQuiz = async (e: React.FormEvent<HTMLFormElement>) => {
+  // const handleAddQuiz = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (!classId || !userId) {
+  //     toast.error("Class ID or User ID is missing.");
+  //     return;
+  //   }
+  //   try {
+  //     await addQuiz(classId, quizName, userId, answerKey);
+  //     navigate(`/dashboard/class`);
+  //   } catch (error) {
+  //     toast.error("Error adding quiz. Please try again.");
+  //   }
+  // };
+
+  const handleAddQuiz = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setModalMessage("Are you sure you want to add this quiz?");
+    setIsModalOpen(true);
+  };
+
+  const confirmAddQuiz = async () => {
     if (!classId || !userId) {
       toast.error("Class ID or User ID is missing.");
       return;
@@ -53,7 +75,13 @@ const AddQuiz = () => {
       navigate(`/dashboard/class`);
     } catch (error) {
       toast.error("Error adding quiz. Please try again.");
+    } finally {
+      setIsModalOpen(false);
     }
+  };
+
+  const cancelAddQuiz = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -99,6 +127,12 @@ const AddQuiz = () => {
 
       <Gradients />
       <ToastContainer />
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onConfirm={confirmAddQuiz}
+        onCancel={cancelAddQuiz}
+        message={modalMessage}
+      />
     </div>
   );
 };
