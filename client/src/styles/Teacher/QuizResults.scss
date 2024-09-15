@@ -49,7 +49,7 @@
       .th,
       .tr {
         display: grid;
-        grid-template-columns: 1fr 1fr 3fr 3fr 1fr;
+        grid-template-columns: 40px 1fr 3fr 3fr 3fr; 
         text-align: left;
       }
 
@@ -96,5 +96,4 @@
     background-color: rgba(0, 0, 0, 0.3); 
     z-index: 1000; 
   }
-
 }

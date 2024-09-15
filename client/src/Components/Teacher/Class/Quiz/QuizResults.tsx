@@ -81,6 +81,7 @@ const QuizResults = () => {
           <p className="td"></p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer || ""}</p>
+          <p className="td">{studentAnswer || ""}</p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
@@ -131,8 +132,9 @@ const QuizResults = () => {
                 <ul className="thead">
                   <li className="th">
                     <p />
-                    <p className="td">Item No.</p>
+                    <p className="td">Item </p>
                     <p className="td">Scanned Answer</p>
+                    <p className="td">Edited Answer</p>
                     <p className="td">Correct Answer</p>
                     <p />
                   </li>
