@@ -154,7 +154,13 @@ const QuizResultEdit = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
-              <h3>Score: {selectedStudentResult?.score}</h3>
+              <div className="score-container">
+                <h3 className="score">Score: {selectedStudentResult?.score}</h3>
+                <div className="additional-points">
+                  <span>Additional Points:</span>
+                  <input type="number" value={0} />
+                </div>
+              </div>
             </div>
 
             <div className="main-results">

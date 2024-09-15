@@ -3,6 +3,35 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 50px;
+
+    .score-container {
+      display: flex;
+      align-items: center;
+
+      h3 {
+        margin-right: 20px;
+      }
+
+      .additional-points {
+        display: flex;
+        align-items: center; 
+        gap: 10px; 
+
+        span {
+          font-size: 16px; 
+          font-weight: bold;
+        }
+
+        input {
+          width: 50px; 
+          padding: 5px;
+          border-radius: 5px;
+          border: 1px solid #ccc; 
+          text-align: center; 
+        }
+      }
+    }
   }
 
   .main-results {
