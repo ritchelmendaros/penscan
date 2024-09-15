@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { saveStudentQuiz } from "../../../../apiCalls/studentQuizApi";
+import { SyncLoader } from "react-spinners";
 
 interface AnswerMap {
   [key: number]: string;
@@ -19,6 +20,7 @@ const QuizResultEdit = () => {
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
@@ -30,9 +32,11 @@ const QuizResultEdit = () => {
       getQuizResults(selectedStudentResult.userId, selectedQuiz.quizid)
         .then((result) => {
           setStudentResult(result);
+          setLoading(false);
         })
         .catch((error) => {
           toast.error(error.message);
+          setLoading(false);
         });
     }
   }, [selectedStudentResult, selectedQuiz]);
@@ -86,7 +90,7 @@ const QuizResultEdit = () => {
 
       if (studentQuizId) {
         const firstAnswer = studentResult?.recognizedtext.split("\n")[0];
-        
+
         const formattedAnswers = [
           firstAnswer,
           ...Object.keys(studentAnswers).map(
@@ -120,9 +124,7 @@ const QuizResultEdit = () => {
             <input
               type="text"
               value={studentAnswer}
-              onChange={(e) =>
-                handleStudentAnswerChange(i - 1, e.target.value)
-              }
+              onChange={(e) => handleStudentAnswerChange(i - 1, e.target.value)}
             />
           </p>
           <p className="td">{correctAnswer}</p>
@@ -138,55 +140,61 @@ const QuizResultEdit = () => {
     <div className="QuizResults Main MainContent">
       <Header />
       <main>
-        <div className="student-details">
-          <div>
-            <h3>
-              {selectedStudentResult?.firstName}{" "}
-              {selectedStudentResult?.lastName}
-            </h3>
+        {loading ? (
+          <div className="loader-container">
+            <SyncLoader color="#3498db" loading={loading} size={15} />
           </div>
-          <h3>Score: {selectedStudentResult?.score}</h3>
-        </div>
-
-        <div className="main-results">
-        <div className="image-feedback-container">
-            <img
-              src={`data:image/png;base64,${studentResult?.base64Image}`}
-              alt=""
-            />
-            <div className="feedback-container">
-              <textarea
-                placeholder="Provide feedback here..."
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                rows={4}
-              />
+        ) : (
+          <>
+            <div className="student-details">
+              <div>
+                <h3>
+                  {selectedStudentResult?.firstName}{" "}
+                  {selectedStudentResult?.lastName}
+                </h3>
+              </div>
+              <h3>Score: {selectedStudentResult?.score}</h3>
             </div>
-          </div>
 
-          <div className="table">
-            <ul className="thead">
-              <li className="th">
-                <p />
-                <p className="td">Item No.</p>
-                <p className="td">Scanned Answer</p>
-                <p className="td">Correct Answer</p>
-                <p />
-              </li>
-            </ul>
-            <ul className="tbody">
-              {renderRows()}
-            </ul>
-          </div>
-        </div>
-        <div className="center-button">
-          <button className="save" onClick={handleSaveClick}>
-            Save
-          </button>
-          <button className="cancel" onClick={handleClose}>
-            Cancel
-          </button>
-        </div>
+            <div className="main-results">
+              <div className="image-feedback-container">
+                <img
+                  src={`data:image/png;base64,${studentResult?.base64Image}`}
+                  alt=""
+                />
+                <div className="feedback-container">
+                  <textarea
+                    placeholder="Provide feedback here..."
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    rows={4}
+                  />
+                </div>
+              </div>
+
+              <div className="table">
+                <ul className="thead">
+                  <li className="th">
+                    <p />
+                    <p className="td">Item No.</p>
+                    <p className="td">Scanned Answer</p>
+                    <p className="td">Correct Answer</p>
+                    <p />
+                  </li>
+                </ul>
+                <ul className="tbody">{renderRows()}</ul>
+              </div>
+            </div>
+            <div className="center-button">
+              <button className="save" onClick={handleSaveClick}>
+                Save
+              </button>
+              <button className="cancel" onClick={handleClose}>
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
       </main>
 
       <SmilingRobot />
