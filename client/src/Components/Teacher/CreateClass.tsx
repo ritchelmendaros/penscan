@@ -21,18 +21,7 @@ const CreateClass: React.FC = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setClassName(e.target.value);
   };
-
-  // const handleClick = () => {
-  //     if (user?.userid) {
-  //         postCreateClass(className, user.userid)
-  //             .then(() => {
-  //                 navigate('/dashboard');
-  //             })
-  //             .catch((err) => {
-  //                 toast.error('Error creating class:', err);
-  //             });
-  //     }
-  // };
+  
   const handleCreateClass = () => {
     setIsModalOpen(true);
   };

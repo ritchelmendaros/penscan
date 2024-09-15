@@ -18,6 +18,7 @@ const QuizResultEdit = () => {
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
+  const [feedback, setFeedback] = useState<string>("");
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
@@ -148,10 +149,20 @@ const QuizResultEdit = () => {
         </div>
 
         <div className="main-results">
-          <img
-            src={`data:image/png;base64,${studentResult?.base64Image}`}
-            alt=""
-          />
+        <div className="image-feedback-container">
+            <img
+              src={`data:image/png;base64,${studentResult?.base64Image}`}
+              alt=""
+            />
+            <div className="feedback-container">
+              <textarea
+                placeholder="Provide feedback here..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                rows={4}
+              />
+            </div>
+          </div>
 
           <div className="table">
             <ul className="thead">

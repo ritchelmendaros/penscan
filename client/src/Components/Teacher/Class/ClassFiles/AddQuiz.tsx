@@ -45,20 +45,6 @@ const AddQuiz = () => {
     setAnswerKey(generatedAnswers);
   };
 
-  // const handleAddQuiz = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (!classId || !userId) {
-  //     toast.error("Class ID or User ID is missing.");
-  //     return;
-  //   }
-  //   try {
-  //     await addQuiz(classId, quizName, userId, answerKey);
-  //     navigate(`/dashboard/class`);
-  //   } catch (error) {
-  //     toast.error("Error adding quiz. Please try again.");
-  //   }
-  // };
-
   const handleAddQuiz = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setModalMessage("Are you sure you want to add this quiz?");
