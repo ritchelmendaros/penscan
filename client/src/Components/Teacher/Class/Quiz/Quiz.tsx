@@ -150,6 +150,7 @@ const Quiz = () => {
                             <li className='th'>
                                 <p className='td'>Student Name</p>
                                 <p className='td'>Scores</p>
+                                <p className='td'>Status</p> 
                                 <p className='td'>Actions</p>
                             </li>
                         </ul>
@@ -170,6 +171,7 @@ const Quiz = () => {
                                             {student.lastName}
                                         </p>
                                         <p className='td'>{student.score}</p>
+                                        <p className='td'>Status</p>
                                         <div>
                                             <button
                                                 className='view'
