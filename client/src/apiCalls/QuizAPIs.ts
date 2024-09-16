@@ -5,6 +5,8 @@ import {
     StudentImageResult,
 } from '../Components/Interface/Quiz';
 
+const BASE_URL = "http://localhost:8080/api/studentquiz";
+
 export const getAllQuizes: (
     teacherID: string,
     classID: string,
@@ -23,7 +25,7 @@ export const getAllQuizes: (
 export const getAllQuizScores = async (quizID: string) => {
     try {
         const response = await axios.get<StudentQuiz[]>(
-            `https://penscan-api.onrender.com/api/studentquiz/getscoresandstudentids?quizid=${quizID}`,
+            `${BASE_URL}/getscoresandstudentids?quizid=${quizID}`,
         );
         return response.data;
     } catch (error) {
@@ -35,7 +37,7 @@ export const getAllQuizScores = async (quizID: string) => {
 export const getQuizResults = async (studentID: string, quizID: string) => {
     try {
         const response = await axios.get<StudentImageResult>(
-            `https://penscan-api.onrender.com/api/studentquiz/get?studentid=${studentID}&quizid=${quizID}`,
+            `${BASE_URL}/get?studentid=${studentID}&quizid=${quizID}`,
         );
         return response.data;
     } catch (error) {

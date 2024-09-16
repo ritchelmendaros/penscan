@@ -171,7 +171,7 @@ const Quiz = () => {
                                             {student.lastName}
                                         </p>
                                         <p className='td'>{student.score}</p>
-                                        <p className='td'>Status</p>
+                                        <p className='td'>{student.editedStatus}</p>
                                         <div>
                                             <button
                                                 className='view'

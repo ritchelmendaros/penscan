@@ -19,7 +19,10 @@ const QuizResultEdit = () => {
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
-  const [feedback, setFeedback] = useState<string>("");
+  const [feedback, setFeedback] = useState<string>(""); 
+  const [bonusScore, setBonusScore] = useState<number>(0);
+  const [editedAnswers, setEditedAnswers] = useState<AnswerMap>({});
+  const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -32,6 +35,8 @@ const QuizResultEdit = () => {
       getQuizResults(selectedStudentResult.userId, selectedQuiz.quizid)
         .then((result) => {
           setStudentResult(result);
+          setFeedback(result.comment || ""); 
+          setBonusScore(result.bonusscore || 0); 
           setLoading(false);
         })
         .catch((error) => {
@@ -40,6 +45,14 @@ const QuizResultEdit = () => {
         });
     }
   }, [selectedStudentResult, selectedQuiz]);
+
+  useEffect(() => {
+    if (studentResult?.editedanswer) {
+      const extractedAnswers = extractAnswers(studentResult.editedanswer);
+      setEditedAnswers(extractedAnswers);
+    }
+  }, [studentResult]);
+  
 
   const extractAnswers = (input: string) => {
     const answers: { [key: number]: string } = {};
@@ -75,8 +88,9 @@ const QuizResultEdit = () => {
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
-    const updatedAnswers = { ...studentAnswers, [index + 1]: value };
-    setStudentAnswers(updatedAnswers);
+    const updatedAnswers = { ...editedAnswers, [index + 1]: value };
+    setEditedAnswers(updatedAnswers);
+    setEditedStatus("Edited");
   };
 
   const handleSaveClick = async () => {
@@ -89,16 +103,13 @@ const QuizResultEdit = () => {
       }
 
       if (studentQuizId) {
-        const firstAnswer = studentResult?.recognizedtext.split("\n")[0];
+        // const firstAnswer = studentResult?.recognizedtext.split("\n")[0];
 
-        const formattedAnswers = [
-          firstAnswer,
-          ...Object.keys(studentAnswers).map(
-            (key) => `${key}. ${studentAnswers[parseInt(key)]}`
-          ),
-        ].join("\n");
+        const formattedAnswers = Object.keys(editedAnswers)
+          .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
+          .join("\n");
 
-        await saveStudentQuiz(studentQuizId, formattedAnswers);
+        await saveStudentQuiz(studentQuizId, formattedAnswers, feedback, bonusScore, editedStatus);
         toast.success("Successfully saved changes!");
         navigate("/dashboard/class/quiz");
       } else {
@@ -111,31 +122,33 @@ const QuizResultEdit = () => {
 
   const renderRows = () => {
     const rows = [];
-
+  
     for (let i = 1; i <= Object.keys(answers).length; i++) {
-      const studentAnswer = studentAnswers[i] || "";
       const correctAnswer = answers[i] || "";
-
+      const scannedAnswer = studentResult?.recognizedtext.split("\n").find(line => line.startsWith(`${i}.`))?.substring(3) || "";
+      const editedAnswer = editedAnswers[i] || "";
+  
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
           <p className="td">{i}</p>
+          <p className="td">{scannedAnswer}</p>
           <p className="td">
             <input
               type="text"
-              value={studentAnswer}
+              value={editedAnswer} // Display the entire edited answer
               onChange={(e) => handleStudentAnswerChange(i - 1, e.target.value)}
             />
           </p>
-          <p className="td">{correctAnswer}</p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
       );
     }
-
+  
     return rows;
   };
+  
 
   return (
     <div className="QuizResults Main MainContent">
@@ -157,8 +170,12 @@ const QuizResultEdit = () => {
               <div className="score-container">
                 <h3 className="score">Score: {selectedStudentResult?.score}</h3>
                 <div className="additional-points">
-                  <span>Additional Points:</span>
-                  <input type="number" value={0} />
+                  <span>Bonus Points:</span>
+                  <input
+                    type="number"
+                    value={bonusScore}
+                    onChange={(e) => setBonusScore(Number(e.target.value))}
+                  />
                 </div>
               </div>
             </div>

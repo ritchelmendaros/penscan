@@ -17,7 +17,7 @@ const QuizResults = () => {
   }>({});
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [editedAnswers, setEditedAnswers] = useState<{[key: number]: string;}>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const QuizResults = () => {
       getQuizResults(selectedStudentResult.userId, selectedQuiz.quizid)
         .then((result) => {
           setStudentResult(result);
-          setFeedback(result.feedback || "No feedback given");
+          setFeedback(result.comment || "No feedback given");
           setLoading(false);
         })
         .catch((error) => {
@@ -36,6 +36,13 @@ const QuizResults = () => {
         });
     }
   }, [selectedStudentResult, selectedQuiz]);
+
+  useEffect(() => {
+    if (studentResult?.editedanswer) {
+      const extractedAnswers = extractAnswers(studentResult.editedanswer);
+      setEditedAnswers(extractedAnswers);
+    }
+  }, [studentResult]);
 
   const extractAnswers = (input: string) => {
     const answers: { [key: number]: string } = {};
@@ -74,6 +81,7 @@ const QuizResults = () => {
 
     for (let i = 1; i <= answers.length; i++) {
       const studentAnswer = studentAnswers[i];
+      const editedAnswer = editedAnswers[i] || "";
       const correctAnswer = answers[correctIndex] || "Skipped";
 
       rows.push(
@@ -81,7 +89,7 @@ const QuizResults = () => {
           <p className="td"></p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer || ""}</p>
-          <p className="td">{studentAnswer || ""}</p>
+          <p className="td">{editedAnswer || ""}</p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
@@ -123,7 +131,7 @@ const QuizResults = () => {
                   <p className="no-feedback">{feedback}</p>
                 ) : (
                   <div className="feedback-container">
-                    <textarea readOnly value={feedback || ""} />
+                    <p className="no-feedback">{feedback}</p>
                   </div>
                 )}
               </div>

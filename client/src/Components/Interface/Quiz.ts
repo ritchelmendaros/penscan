@@ -17,6 +17,7 @@ interface StudentQuiz {
     score: number;
     userId: string;
     username: string;
+    editedStatus: string;
 }
 
 interface StudentImageResult {
@@ -29,8 +30,11 @@ interface StudentImageResult {
         data: string;
     };
     recognizedtext: string;
-    feedback?: string;
+    comment?: string | null;
     base64Image: string;
+    editedanswer?: string | null;
+    editedstatus?: string | null;
+    bonusscore: number;
 }
 
 interface ItemAnalysisInterface {
