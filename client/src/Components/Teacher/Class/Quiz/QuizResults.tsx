@@ -78,28 +78,34 @@ const QuizResults = () => {
   const renderRows = () => {
     const rows = [];
     let correctIndex = 0;
-
+  
     for (let i = 1; i <= answers.length; i++) {
       const studentAnswer = studentAnswers[i];
       const editedAnswer = editedAnswers[i] || "";
       const correctAnswer = answers[correctIndex] || "Skipped";
-
+  
+      const isEditedDifferent =
+      editedAnswer !== "" && editedAnswer !== studentAnswer && editedAnswer !== correctAnswer;
+  
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer || ""}</p>
-          <p className="td">{editedAnswer || ""}</p>
+          <p className={`td ${isEditedDifferent ? "highlight-edited" : ""}`}>
+            {editedAnswer || ""}
+          </p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
       );
-
+  
       correctIndex++;
     }
-
+  
     return rows;
   };
+  
 
   return (
     <div className="QuizResults Main MainContent">
