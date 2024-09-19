@@ -76,6 +76,9 @@
       &.highlight-edited {
         background-color: rgba(227, 227, 136, 0.2);
       }
+      &.highlight-approved {
+        background-color: rgba(76, 175, 80, 0.2); 
+      }
     }
 
     .tr:last-child {
@@ -155,12 +158,14 @@
     }
   }
 
-  .modal-overlay {
+  .modalquiz-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
@@ -168,22 +173,43 @@
     z-index: 1000;
   }
 
-  .modal-content {
-    background: #868686;
+  .modalquiz-content {
+    background: #3d3b44;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     text-align: center;
-    width: 400px;
+    width: 500px;
+    max-width: 90%;
   }
 
-  .modal-buttons {
+  .modalquiz-input {
+    background: #232324;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    width: 500px;
+    max-width: 90%;
+  }
+
+  .modalquiz-buttons {
     display: flex;
-    justify-content: space-between;
     margin-top: 20px;
-    button {
+    .modalsubmit {
       border-radius: 10px;
       padding: 10px 15px;
+      font-weight: bold;
+      margin-left: 150px;
+      background-color: #3e6ab7;
+      color: white;
+    }
+    .modalcancel {
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: bold;
+      margin-left: 20px;
+      background-color: #e94f4f;
+      color: white;
     }
   }
 

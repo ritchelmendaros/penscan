@@ -98,7 +98,7 @@ const QuizResultEdit = () => {
       setIsSaving(true);
 
       for (let i = 1; i <= Object.keys(answers).length; i++) {
-        if (!studentAnswers[i]) {
+        if (studentAnswers[i] !== "" && studentAnswers[i] !== undefined && !editedAnswers[i]) {
           toast.error(`Answer for item ${i} is required.`);
           return;
         }

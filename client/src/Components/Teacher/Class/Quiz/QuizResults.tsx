@@ -164,11 +164,14 @@ const QuizResults = () => {
                 <ul className="tbody">{renderRows()}</ul>
               </div>
             </div>
-            <div className="center-button">
-              <button className="approve" onClick={handleClose}>
+            <div className="viewcenter-button">
+              <button className="viewapprove" onClick={handleClose}>
                 Approve
               </button>
-              <button className="close" onClick={handleClose}>
+              <button className="viewdisapprove" onClick={handleClose}>
+                Disapprove
+              </button>
+              <button className="viewclose" onClick={handleClose}>
                 Close
               </button>
             </div>

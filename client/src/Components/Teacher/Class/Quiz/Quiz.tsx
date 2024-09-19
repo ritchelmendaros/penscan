@@ -162,13 +162,15 @@ const Quiz = () => {
                 <div className="no-data-container">
                   <img src={noDataGif} alt="No Data Found" />
                 </div>
-              ) : ( 
+              ) : (
                 studentsWithScores.map((student, i) => (
                   <li
                     key={i}
                     className={`tr ${
                       student.editedStatus === "Edited"
                         ? "highlight-edited"
+                        : student.editedStatus === "Approved"
+                        ? "highlight-approved"
                         : ""
                     }`}
                   >
@@ -200,18 +202,29 @@ const Quiz = () => {
       </main>
       {/* Modal for File Upload */}
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="modalquiz-overlay">
+          <div className="modalquiz-content">
             <h3>Please Upload a File</h3> <br></br>
-            <input type="file" onChange={handleFileChange} />
+            <input
+              className="modalquiz-input"
+              type="file"
+              onChange={handleFileChange}
+            />
             {isLoading ? (
               <div className="loader">
                 <SyncLoader size={10} color={"#416edf"} loading={isLoading} />
               </div>
             ) : (
-              <div className="modal-buttons">
-                <button onClick={handleUpload}>Submit</button>
-                <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+              <div className="modalquiz-buttons">
+                <button className="modalsubmit" onClick={handleUpload}>
+                  Submit
+                </button>
+                <button
+                  className="modalcancel"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
               </div>
             )}
           </div>
