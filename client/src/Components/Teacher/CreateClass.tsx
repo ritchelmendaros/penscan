@@ -17,24 +17,31 @@ const CreateClass: React.FC = () => {
   const [className, setClassName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useCurrUser();
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setClassName(e.target.value);
   };
-  
+
   const handleCreateClass = () => {
+    if (className.trim() === "") {
+      toast.error("Class name is required.");
+      return;
+    }
     setIsModalOpen(true);
   };
 
   const handleConfirm = async () => {
     if (user?.userid) {
-      postCreateClass(className, user.userid)
-        .then(() => {
-          navigate("/dashboard");
-        })
-        .catch((err) => {
-          toast.error("Error creating class:", err);
-        });
+      setLoading(true);
+      try {
+        await postCreateClass(className, user.userid);
+        navigate("/dashboard");
+      } catch (err) {
+        toast.error("Error creating class");
+      } finally {
+        setLoading(false);
+      }
     }
     setIsModalOpen(false);
   };
@@ -57,7 +64,11 @@ const CreateClass: React.FC = () => {
             onChange={handleInputChange}
           />
 
-          <BtnWithRobot name={"Create"} onClick={handleCreateClass} />
+          <BtnWithRobot
+            name={"Create"}
+            onClick={handleCreateClass}
+            loading={loading}
+          />
         </div>
       </main>
 

@@ -1,14 +1,29 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px; 
+}
+
 .ClassFiles {
     ul {
         display: grid;
         gap: 20px;
         grid-template-columns: repeat(5, 1fr);
+        .empty-state {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding: 50px;
+    
+            img {
+              max-width: 350px;
+              max-height: 250px; 
+              margin-left: 300px;
+            }
+        }
     }
 
-    .empty-state {
-        min-width: 700px;
-        font-weight: 500;
-        color: #d1d1d1;
-        font-size: 1.5rem;
-    }
 }

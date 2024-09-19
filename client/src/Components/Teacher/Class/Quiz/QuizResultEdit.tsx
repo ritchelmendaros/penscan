@@ -19,11 +19,12 @@ const QuizResultEdit = () => {
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
-  const [feedback, setFeedback] = useState<string>(""); 
+  const [feedback, setFeedback] = useState<string>("");
   const [bonusScore, setBonusScore] = useState<number>(0);
   const [editedAnswers, setEditedAnswers] = useState<AnswerMap>({});
-  const [editedStatus, setEditedStatus] = useState<string>("");
+  const [editedStatus, setEditedStatus] = useState<string>("Edited");
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
@@ -35,8 +36,8 @@ const QuizResultEdit = () => {
       getQuizResults(selectedStudentResult.userId, selectedQuiz.quizid)
         .then((result) => {
           setStudentResult(result);
-          setFeedback(result.comment || ""); 
-          setBonusScore(result.bonusscore || 0); 
+          setFeedback(result.comment || "");
+          setBonusScore(result.bonusscore || 0);
           setLoading(false);
         })
         .catch((error) => {
@@ -52,7 +53,6 @@ const QuizResultEdit = () => {
       setEditedAnswers(extractedAnswers);
     }
   }, [studentResult]);
-  
 
   const extractAnswers = (input: string) => {
     const answers: { [key: number]: string } = {};
@@ -95,11 +95,23 @@ const QuizResultEdit = () => {
 
   const handleSaveClick = async () => {
     try {
+      setIsSaving(true);
+
       for (let i = 1; i <= Object.keys(answers).length; i++) {
         if (!studentAnswers[i]) {
           toast.error(`Answer for item ${i} is required.`);
           return;
         }
+      }
+
+      if (
+        editedStatus !== "Edited" &&
+        Object.keys(editedAnswers).some(
+          (key) =>
+            studentAnswers[parseInt(key)] !== editedAnswers[parseInt(key)]
+        )
+      ) {
+        setEditedStatus("Edited");
       }
 
       if (studentQuizId) {
@@ -108,8 +120,13 @@ const QuizResultEdit = () => {
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
           .join("\n");
-
-        await saveStudentQuiz(studentQuizId, formattedAnswers, feedback, bonusScore, editedStatus);
+        await saveStudentQuiz(
+          studentQuizId,
+          formattedAnswers,
+          feedback,
+          bonusScore,
+          editedStatus
+        );
         toast.success("Successfully saved changes!");
         navigate("/dashboard/class/quiz");
       } else {
@@ -117,17 +134,23 @@ const QuizResultEdit = () => {
       }
     } catch (error) {
       toast.error("Error saving changes");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const renderRows = () => {
     const rows = [];
-  
+
     for (let i = 1; i <= Object.keys(answers).length; i++) {
       const correctAnswer = answers[i] || "";
-      const scannedAnswer = studentResult?.recognizedtext.split("\n").find(line => line.startsWith(`${i}.`))?.substring(3) || "";
+      const scannedAnswer =
+        studentResult?.recognizedtext
+          .split("\n")
+          .find((line) => line.startsWith(`${i}.`))
+          ?.substring(3) || "";
       const editedAnswer = editedAnswers[i];
-  
+
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
@@ -145,10 +168,9 @@ const QuizResultEdit = () => {
         </li>
       );
     }
-  
+
     return rows;
   };
-  
 
   return (
     <div className="QuizResults Main MainContent">
@@ -211,8 +233,12 @@ const QuizResultEdit = () => {
               </div>
             </div>
             <div className="center-button">
-              <button className="save" onClick={handleSaveClick}>
-                Save
+              <button
+                className="save"
+                onClick={handleSaveClick}
+                disabled={isSaving}
+              >
+                {isSaving ? <SyncLoader size={6} color="#fff" /> : "Save"}
               </button>
               <button className="cancel" onClick={handleClose}>
                 Cancel

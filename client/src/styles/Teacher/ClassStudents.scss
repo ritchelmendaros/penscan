@@ -1,28 +1,52 @@
 .ClassStudents {
-    .table {
-        .thead {
-            background-color: $blue-btn;
-            border-radius: 5px 5px 0 0;
-        }
-        .tr {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            padding: 10px;
-        }
-
-        .tbody {
-            min-height: 450px;
-            max-height: 450px;
-            overflow-y: hidden;
-            background-color: rgb(49, 49, 49);
-            border-radius: 0 0 5px 5px;
-            .tr {
-                background-color: #272727;
-            }
-
-            .tr:nth-child(even) {
-                background-color: #232323;
-            }
-        }
+  .table {
+    .thead {
+      background-color: $blue-btn;
+      border-radius: 5px 5px 0 0;
     }
+    .tr {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 10px;
+    }
+
+    .tbody {
+      min-height: 450px;
+      max-height: 450px;
+      overflow-y: hidden;
+      background-color: rgb(49, 49, 49);
+      border-radius: 0 0 5px 5px;
+      .tr {
+        background-color: #272727;
+      }
+
+      .tr:nth-child(even) {
+        background-color: #232323;
+      }
+
+      .no-data-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        grid-template-columns: 1fr; 
+
+        .no-data-content {
+          text-align: center;
+          padding: 70px;
+
+          img {
+            max-width: 350px; 
+            max-height: 250px; 
+          }
+
+          p {
+            color: white;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
 }

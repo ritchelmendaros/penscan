@@ -23,6 +23,7 @@ const AddStudent: React.FC = () => {
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { clickedClass } = useClass();
   const classId = clickedClass?.classid;
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ const AddStudent: React.FC = () => {
         toast.error("Class ID is missing. Please try again.");
         return;
       }
+      setLoading(true); 
       try {
         const addStudentResponse = await addStudentToClass(
           selectedStudent.userid,
@@ -84,6 +86,7 @@ const AddStudent: React.FC = () => {
                 navigate(`/dashboard/class`); 
             }, 2000);
       } catch (error) {
+        setLoading(false);
         toast.error("Error adding student");
       }
     } else {
@@ -114,7 +117,7 @@ const AddStudent: React.FC = () => {
               />
             ))}
           </datalist>
-          <BtnWithRobot name={"Add"} onClick={handleAddStudent} />{" "}
+          <BtnWithRobot name={"Add"} onClick={handleAddStudent} loading={loading}/>{" "}
         </div>
       </main>
 

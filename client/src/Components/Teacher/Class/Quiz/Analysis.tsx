@@ -3,6 +3,7 @@ import { useQuiz } from "../../../Context/QuizContext";
 import { getQuizAnalysis } from "../../../../apiCalls/QuizAPIs";
 import { ItemAnalysisInterface } from "../../../Interface/Quiz";
 import { SyncLoader } from "react-spinners";
+import noDataGif from "../../../../assets/nodata.gif";
 
 const Analysis = () => {
   const { selectedQuiz, studentScoreResults } = useQuiz();
@@ -44,7 +45,7 @@ const Analysis = () => {
                       <p className="td name">
                         {student.firstName} {student.lastName}
                       </p>
-                      <p className="td">{student.score}</p>
+                      <p className="td">{student.finalScore}</p>
                     </li>
                   ))}
               </ul>
@@ -61,13 +62,19 @@ const Analysis = () => {
                 </li>
               </ul>
               <ul className="tbody">
-                {itemAnalysis.map((item, i) => (
-                  <li className="tr" key={i}>
-                    <p className="td">{item.itemNumber}</p>
-                    <p className="td">{item.correctCount}</p>
-                    <p className="td">{item.incorrectCount}</p>
+                {itemAnalysis.length > 0 ? (
+                  itemAnalysis.map((item, i) => (
+                    <li className="tr" key={i}>
+                      <p className="td">{item.itemNumber}</p>
+                      <p className="td">{item.correctCount}</p>
+                      <p className="td">{item.incorrectCount}</p>
+                    </li>
+                  ))
+                ) : (
+                  <li className="no-data-container">
+                    <img src={noDataGif} alt="No data found" />
                   </li>
-                ))}
+                )}
               </ul>
             </div>
           </div>

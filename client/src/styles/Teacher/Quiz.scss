@@ -1,162 +1,195 @@
 .Quiz {
-    button.active {
-        background-color: $blue-btn !important;
-        color: white !important;
-    }
+  button.active {
+    background-color: $blue-btn !important;
+    color: white !important;
+  }
 
-    button.inactive {
-        background-color: grey !important;
-        color: white !important;
-    }
+  button.inactive {
+    background-color: grey !important;
+    color: white !important;
+  }
 
-    .table {
-        max-height: 500px;
-        overflow-y: hidden;
-        border-radius: 10px;
+  .table {
+    max-height: 500px;
+    overflow-y: hidden;
+    border-radius: 10px;
 
-        .tbody {
-            background-color: rgb(42, 42, 42);
-            border-radius: 0 0 10px 10px;
-            height: 500px;
-            max-height: 500px;
-            overflow-y: auto;
+    .tbody {
+      background-color: rgb(42, 42, 42);
+      border-radius: 0 0 10px 10px;
+      height: 500px;
+      max-height: 500px;
+      overflow-y: auto;
 
-            .loader-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-            }
-        }
-        .th {
-            background-color: #416edf;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .th {
-            color: white;
-            font-weight: bold;
-        }
-
-        .tr {
-            background-color: #383838;
-            border-bottom: 1px solid #cdcdcd;
-            cursor: pointer;
-            &:hover {
-                div {
-                    display: flex;
-                }
-            }
-
-            div {
-                display: flex;
-
-                button {
-                    padding: 7px 20px;
-                    border-radius: 10px;
-                    margin-left: 10px;
-                }
-
-                .view {
-                    &:hover {
-                        background-color: #416edf;
-                    }
-                }
-
-                .edit {
-                    background-color: white;
-                    border: 1px solid #416edf;
-                    color: #416edf;
-
-                    &:hover {
-                        background-color: #f0f0f0;
-                    }
-                }
-            }
-            &.highlight-edited {
-                background-color: rgba(227, 227, 136, 0.2); 
-            }
-        }
-
-        .tr:last-child {
-            border-bottom: none;
-        }
-
-        .th,
-        .tr {
-            display: grid;
-            grid-template-columns: 3fr 2fr 2fr 1.2fr;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .td {
-            padding: 15px;
-        }
-        
-    }
-
-    .btn-container {
+      .loader-container {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        button {
-            padding: 10px 20px;
-        }
-
-        div {
-            button:last-child {
-                background-color: #d4d4d4;
-                color: black;
-            }
-        }
-
-        .upload-download {
-            display: flex;
-            gap: 10px;
-
-            button {
-                background-color: #416edf;
-                color: white;
-                border-radius: 5px;
-            }
-        }
-    }
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
         justify-content: center;
-        z-index: 1000;
+        align-items: center;
+        height: 100%;
+      }
+    }
+    .th {
+      background-color: #416edf;
+      border-radius: 10px 10px 0 0;
     }
 
-    .modal-content {
-        background: #868686;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-        text-align: center;
-        width: 400px;
+    .th {
+      color: white;
+      font-weight: bold;
     }
 
-    .modal-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-        button {
-            border-radius: 10px;
-            padding: 10px 15px;
+    .tr {
+      background-color: #383838;
+      border-bottom: 1px solid #cdcdcd;
+      cursor: pointer;
+      &:hover {
+        div {
+          display: flex;
         }
+      }
+
+      div {
+        display: flex;
+
+        button {
+          padding: 7px 20px;
+          border-radius: 10px;
+          margin-left: 10px;
+        }
+
+        .view {
+          &:hover {
+            background-color: #416edf;
+          }
+        }
+
+        .edit {
+          background-color: white;
+          border: 1px solid #416edf;
+          color: #416edf;
+
+          &:hover {
+            background-color: #f0f0f0;
+          }
+        }
+      }
+      &.highlight-edited {
+        background-color: rgba(227, 227, 136, 0.2);
+      }
     }
 
-    .loader {
-        font-size: 18px;
-        color: #666;
-        margin-top: 10px;
+    .tr:last-child {
+      border-bottom: none;
     }
+
+    .th,
+    .tr {
+      display: grid;
+      grid-template-columns: 3fr 2fr 2fr 1.2fr;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .td {
+      padding: 15px;
+    }
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    button {
+      padding: 10px 20px;
+    }
+
+    div {
+      button:last-child {
+        background-color: #d4d4d4;
+        color: black;
+      }
+    }
+
+    .upload-download {
+      display: flex;
+      gap: 10px;
+
+      button {
+        background-color: #416edf;
+        color: white;
+        border-radius: 5px;
+      }
+    }
+    .no-data-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+      }
+
+      p {
+        color: #666;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+  }
+  .no-data-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 40px;
+
+    img {
+      width: 350px;
+      height: 200px;
+    }
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: #868686;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    width: 400px;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    button {
+      border-radius: 10px;
+      padding: 10px 15px;
+    }
+  }
+
+  .loader {
+    font-size: 18px;
+    color: #666;
+    margin-top: 10px;
+  }
 }

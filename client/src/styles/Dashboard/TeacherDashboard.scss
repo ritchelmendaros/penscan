@@ -1,3 +1,10 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px; 
+}
+
 .Dashboard {
     .TeacherDashboard {
         .title-container {
@@ -13,6 +20,26 @@
                 &:hover {
                     padding: 10px 40px;
                     transition: 0.3s;
+                }
+            }
+        }
+        .classes {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+            .empty-state {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+                padding: 50px;
+
+                img {
+                    max-width: 350px;
+                    max-height: 250px;
+                    margin-left: 400px;
                 }
             }
         }
