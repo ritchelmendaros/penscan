@@ -15,6 +15,7 @@ interface StudentQuiz {
     firstName: string;
     lastName: string;
     score: number;
+    finalScore: number;
     userId: string;
     username: string;
     editedStatus: string;
@@ -35,6 +36,7 @@ interface StudentImageResult {
     editedanswer?: string | null;
     editedstatus?: string | null;
     bonusscore: number;
+    finalscore: number;
 }
 
 interface ItemAnalysisInterface {

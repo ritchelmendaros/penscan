@@ -71,7 +71,7 @@ const Quiz = () => {
     const handleDownloadExcel = () => {
         const data = studentsWithScores.map((student) => ({
             'Student Name': `${student.firstName} ${student.lastName}`,
-            Score: student.score,
+            Score: student.finalScore,
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(data);
@@ -165,12 +165,15 @@ const Quiz = () => {
                                 </div>
                             ) : (
                                 studentsWithScores.map((student, i) => (
-                                    <li key={i} className='tr'>
+                                    <li
+                                        key={i}
+                                        className={`tr ${student.editedStatus === 'Edited' ? 'highlight-edited' : ''}`}
+                                    >
                                         <p className='td'>
                                             {student.firstName}{' '}
                                             {student.lastName}
                                         </p>
-                                        <p className='td'>{student.score}</p>
+                                        <p className='td'>{student.finalScore}</p>
                                         <p className='td'>{student.editedStatus}</p>
                                         <div>
                                             <button

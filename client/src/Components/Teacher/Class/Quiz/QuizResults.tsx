@@ -17,7 +17,9 @@ const QuizResults = () => {
   }>({});
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [editedAnswers, setEditedAnswers] = useState<{[key: number]: string;}>({});
+  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
+    {}
+  );
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
@@ -78,15 +80,17 @@ const QuizResults = () => {
   const renderRows = () => {
     const rows = [];
     let correctIndex = 0;
-  
+
     for (let i = 1; i <= answers.length; i++) {
       const studentAnswer = studentAnswers[i];
-      const editedAnswer = editedAnswers[i] || "";
+      const editedAnswer = editedAnswers[i];
       const correctAnswer = answers[correctIndex] || "Skipped";
-  
+
       const isEditedDifferent =
-      editedAnswer !== "" && editedAnswer !== studentAnswer && editedAnswer !== correctAnswer;
-  
+        editedAnswer !== "" &&
+        editedAnswer !== studentAnswer &&
+        editedAnswer !== correctAnswer;
+
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
@@ -99,13 +103,12 @@ const QuizResults = () => {
           <p className="td"></p>
         </li>
       );
-  
+
       correctIndex++;
     }
-  
+
     return rows;
   };
-  
 
   return (
     <div className="QuizResults Main MainContent">
@@ -124,7 +127,12 @@ const QuizResults = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
-              <h3>Score: {selectedStudentResult?.score}</h3>
+              <div className="score-container">
+                <h3>Score: {selectedStudentResult?.score}</h3>
+                <div className="additional-points">
+                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
+                </div>
+              </div>
             </div>
 
             <div className="main-results">
@@ -157,7 +165,12 @@ const QuizResults = () => {
               </div>
             </div>
             <div className="center-button">
-              <button onClick={handleClose}>Close</button>
+              <button className="approve" onClick={handleClose}>
+                Approve
+              </button>
+              <button className="close" onClick={handleClose}>
+                Close
+              </button>
             </div>
           </>
         )}

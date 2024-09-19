@@ -73,6 +73,9 @@
                     }
                 }
             }
+            &.highlight-edited {
+                background-color: rgba(227, 227, 136, 0.2); 
+            }
         }
 
         .tr:last-child {
@@ -90,6 +93,7 @@
         .td {
             padding: 15px;
         }
+        
     }
 
     .btn-container {

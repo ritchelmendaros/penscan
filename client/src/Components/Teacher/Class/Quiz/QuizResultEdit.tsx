@@ -126,7 +126,7 @@ const QuizResultEdit = () => {
     for (let i = 1; i <= Object.keys(answers).length; i++) {
       const correctAnswer = answers[i] || "";
       const scannedAnswer = studentResult?.recognizedtext.split("\n").find(line => line.startsWith(`${i}.`))?.substring(3) || "";
-      const editedAnswer = editedAnswers[i] || "";
+      const editedAnswer = editedAnswers[i];
   
       rows.push(
         <li key={i} className="tr">
@@ -136,7 +136,7 @@ const QuizResultEdit = () => {
           <p className="td">
             <input
               type="text"
-              value={editedAnswer} // Display the entire edited answer
+              value={editedAnswer}
               onChange={(e) => handleStudentAnswerChange(i - 1, e.target.value)}
             />
           </p>
