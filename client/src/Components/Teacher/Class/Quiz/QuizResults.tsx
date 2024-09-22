@@ -17,10 +17,13 @@ const QuizResults = () => {
   }>({});
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
-  //   {}
-  // );
-  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: { editeditem: string; isapproved: boolean; isdisapproved: boolean } }>({});
+  const [editedAnswers, setEditedAnswers] = useState<{
+    [key: number]: {
+      editeditem: string;
+      isapproved: boolean;
+      isdisapproved: boolean;
+    };
+  }>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
@@ -41,15 +44,27 @@ const QuizResults = () => {
   }, [selectedStudentResult, selectedQuiz]);
 
   useEffect(() => {
-    // if (studentResult?.editedanswer) {
-    //   const extractedAnswers = extractAnswers(studentResult.editedanswer);
-    //   setEditedAnswers(extractedAnswers);
-    // }
-    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
-      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
-        acc[index + 1] = { editeditem: curr.editeditem, isapproved: curr.isapproved, isdisapproved: curr.isdisapproved };
-        return acc;
-      }, {} as { [key: number]: { editeditem: string; isapproved: boolean; isdisapproved: boolean } });
+    if (
+      studentResult?.editedanswer &&
+      Array.isArray(studentResult.editedanswer)
+    ) {
+      const extractedEditedAnswers = studentResult.editedanswer.reduce(
+        (acc, curr, index) => {
+          acc[index + 1] = {
+            editeditem: curr.editeditem,
+            isapproved: curr.isapproved,
+            isdisapproved: curr.isdisapproved,
+          };
+          return acc;
+        },
+        {} as {
+          [key: number]: {
+            editeditem: string;
+            isapproved: boolean;
+            isdisapproved: boolean;
+          };
+        }
+      );
       setEditedAnswers(extractedEditedAnswers);
     }
   }, [studentResult]);
@@ -101,12 +116,14 @@ const QuizResults = () => {
 
       rows.push(
         <li key={i} className="tr">
-          <p className="td"></p>
+          <p className="td">
+            {isEditedDifferent ? <input type="checkbox" /> : ""}
+          </p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer || ""}</p>
           <p className={`td ${isEditedDifferent ? "highlight-edited" : ""}`}>
-          {isEditedDifferent ? editedAnswer : ""}
-        </p>
+            {isEditedDifferent ? editedAnswer : ""}
+          </p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
@@ -160,12 +177,12 @@ const QuizResults = () => {
 
               <div className="table">
                 <ul className="thead">
-                  <li className="th">
+                  <li className="thview">
                     <p />
-                    <p className="td">Item </p>
-                    <p className="td">Scanned Answer</p>
-                    <p className="td">Edited Answer</p>
-                    <p className="td">Correct Answer</p>
+                    <p className="tdview">Item </p>
+                    <p className="tdview">Scanned Answer</p>
+                    <p className="tdview">Edited Answer</p>
+                    <p className="tdview">Correct Answer</p>
                     <p />
                   </li>
                 </ul>

@@ -47,14 +47,12 @@ const QuizResultEdit = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
-  // Updated to handle the new structure of editedanswer
   useEffect(() => {
     if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
       const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
-        // Changed to store only the edited item string
-        acc[index + 1] = curr.editeditem; // Store just the edited item string
+        acc[index + 1] = curr.editeditem; 
         return acc;
-      }, {} as { [key: number]: string }); // Ensure it's a string map
+      }, {} as { [key: number]: string }); 
       setEditedAnswers(extractedEditedAnswers);
     
       setEditedStatus(studentResult?.editedstatus || "");
