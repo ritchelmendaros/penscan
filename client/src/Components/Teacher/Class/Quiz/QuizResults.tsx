@@ -17,9 +17,10 @@ const QuizResults = () => {
   }>({});
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
-    {}
-  );
+  // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
+  //   {}
+  // );
+  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: { editeditem: string; isapproved: boolean; isdisapproved: boolean } }>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
@@ -40,9 +41,16 @@ const QuizResults = () => {
   }, [selectedStudentResult, selectedQuiz]);
 
   useEffect(() => {
-    if (studentResult?.editedanswer) {
-      const extractedAnswers = extractAnswers(studentResult.editedanswer);
-      setEditedAnswers(extractedAnswers);
+    // if (studentResult?.editedanswer) {
+    //   const extractedAnswers = extractAnswers(studentResult.editedanswer);
+    //   setEditedAnswers(extractedAnswers);
+    // }
+    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
+      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
+        acc[index + 1] = { editeditem: curr.editeditem, isapproved: curr.isapproved, isdisapproved: curr.isdisapproved };
+        return acc;
+      }, {} as { [key: number]: { editeditem: string; isapproved: boolean; isdisapproved: boolean } });
+      setEditedAnswers(extractedEditedAnswers);
     }
   }, [studentResult]);
 
@@ -83,7 +91,7 @@ const QuizResults = () => {
 
     for (let i = 1; i <= answers.length; i++) {
       const studentAnswer = studentAnswers[i];
-      const editedAnswer = editedAnswers[i];
+      const editedAnswer = editedAnswers[i]?.editeditem || "";
       const correctAnswer = answers[correctIndex] || "Skipped";
 
       const isEditedDifferent =
@@ -97,8 +105,8 @@ const QuizResults = () => {
           <p className="td">{i}</p>
           <p className="td">{studentAnswer || ""}</p>
           <p className={`td ${isEditedDifferent ? "highlight-edited" : ""}`}>
-            {editedAnswer || ""}
-          </p>
+          {isEditedDifferent ? editedAnswer : ""}
+        </p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>

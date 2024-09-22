@@ -21,8 +21,8 @@ const QuizResultEdit = () => {
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   const [bonusScore, setBonusScore] = useState<number>(0);
-  const [editedAnswers, setEditedAnswers] = useState<AnswerMap>({});
-  const [editedStatus, setEditedStatus] = useState<string>("Edited");
+  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>({});
+  const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -47,10 +47,17 @@ const QuizResultEdit = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
+  // Updated to handle the new structure of editedanswer
   useEffect(() => {
-    if (studentResult?.editedanswer) {
-      const extractedAnswers = extractAnswers(studentResult.editedanswer);
-      setEditedAnswers(extractedAnswers);
+    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
+      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
+        // Changed to store only the edited item string
+        acc[index + 1] = curr.editeditem; // Store just the edited item string
+        return acc;
+      }, {} as { [key: number]: string }); // Ensure it's a string map
+      setEditedAnswers(extractedEditedAnswers);
+    
+      setEditedStatus(studentResult?.editedstatus || "");
     }
   }, [studentResult]);
 
@@ -90,7 +97,7 @@ const QuizResultEdit = () => {
   const handleStudentAnswerChange = (index: number, value: string) => {
     const updatedAnswers = { ...editedAnswers, [index + 1]: value };
     setEditedAnswers(updatedAnswers);
-    setEditedStatus("Edited");
+    setEditedStatus("PENDING"); 
   };
 
   const handleSaveClick = async () => {
@@ -115,11 +122,16 @@ const QuizResultEdit = () => {
       }
 
       if (studentQuizId) {
-        // const firstAnswer = studentResult?.recognizedtext.split("\n")[0];
-
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
           .join("\n");
+          console.log({
+            studentQuizId,
+            formattedAnswers,
+            feedback,
+            bonusScore,
+            editedStatus,
+          });
         await saveStudentQuiz(
           studentQuizId,
           formattedAnswers,
