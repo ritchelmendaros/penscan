@@ -74,6 +74,21 @@
           border-radius: 4px;
         }
 
+        .highlight-approved {
+          background-color: rgba(76, 175, 80, 0.2); 
+          color: white; 
+          padding-left: 5px;
+          border-radius: 4px;
+        }
+        
+        .highlight-disapproved {
+          background-color: rgba(175, 76, 76, 0.2);  
+          color: white;
+          padding-left: 5px;
+          border-radius: 4px;
+        }
+        
+
         .checkbox {
           display: flex;
           justify-content: center;

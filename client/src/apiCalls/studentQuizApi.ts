@@ -55,3 +55,39 @@ export const saveStudentQuiz = async (
     throw error;
   }
 };
+
+export const approveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
+  try {
+      const response = await axios.put(`${BASE_URL}/approve`, null, {
+          params: {
+              studentQuizId,
+              editedItem,  // Add editedItem here
+              studentId,
+              quizId,
+              itemId,
+          }
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error approving answer:', error);
+      throw error;
+  }
+};
+
+export const disapproveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/disapprove`, null, {
+      params: {
+        studentQuizId,  // Ensure this is in params
+        editedItem,
+        studentId,
+        quizId,
+        itemId,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error disapproving answer:', error);
+    throw error;
+  }
+};
