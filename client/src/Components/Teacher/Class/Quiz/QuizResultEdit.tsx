@@ -47,10 +47,21 @@ const QuizResultEdit = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
+  // useEffect(() => {
+  //   if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
+  //     const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
+  //       acc[index + 1] = curr.editeditem; 
+  //       return acc;
+  //     }, {} as { [key: number]: string }); 
+  //     setEditedAnswers(extractedEditedAnswers);
+    
+  //     setEditedStatus(studentResult?.editedstatus || "");
+  //   }
+  // }, [studentResult]);
   useEffect(() => {
     if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
-      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
-        acc[index + 1] = curr.editeditem; 
+      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr) => {
+        acc[curr.itemnumber] = curr.editeditem; // Updated to use itemnumber for mapping
         return acc;
       }, {} as { [key: number]: string }); 
       setEditedAnswers(extractedEditedAnswers);
@@ -93,7 +104,7 @@ const QuizResultEdit = () => {
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
-    const updatedAnswers = { ...editedAnswers, [index + 1]: value };
+    const updatedAnswers = { ...editedAnswers, [index]: value }; // Adjusted to use item number directly
     setEditedAnswers(updatedAnswers);
     setEditedStatus("PENDING"); 
   };
@@ -102,12 +113,12 @@ const QuizResultEdit = () => {
     try {
       setIsSaving(true);
 
-      for (let i = 1; i <= Object.keys(answers).length; i++) {
-        if (studentAnswers[i] !== "" && studentAnswers[i] !== undefined && !editedAnswers[i]) {
-          toast.error(`Answer for item ${i} is required.`);
-          return;
-        }
-      }
+      // for (let i = 1; i <= Object.keys(answers).length; i++) {
+      //   if (studentAnswers[i] !== "" && studentAnswers[i] !== undefined && !editedAnswers[i]) {
+      //     toast.error(`Answer for item ${i} is required.`);
+      //     return;
+      //   }
+      // }
 
       if (
         editedStatus !== "Edited" &&
@@ -159,7 +170,8 @@ const QuizResultEdit = () => {
           .split("\n")
           .find((line) => line.startsWith(`${i}.`))
           ?.substring(3) || "";
-      const editedAnswer = editedAnswers[i];
+      const editedAnswer = editedAnswers[i] || ""; // Updated to access edited answers using item number
+      const status = studentResult?.editedstatus || "";
 
       rows.push(
         <li key={i} className="tr">
@@ -170,7 +182,7 @@ const QuizResultEdit = () => {
             <input
               type="text"
               value={editedAnswer}
-              onChange={(e) => handleStudentAnswerChange(i - 1, e.target.value)}
+              onChange={(e) => handleStudentAnswerChange(i, e.target.value)} // Changed index to match item number
             />
           </p>
           <p className="td">{correctAnswer}</p>

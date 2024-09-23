@@ -23,9 +23,11 @@ const QuizResults = () => {
   const [loading, setLoading] = useState(true);
   const [editedAnswers, setEditedAnswers] = useState<{
     [key: number]: {
+      itemnumber: number;
       editeditem: string;
       isapproved: boolean;
       isdisapproved: boolean;
+      isedited: boolean;
     };
   }>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -48,31 +50,48 @@ const QuizResults = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
+  // useEffect(() => {
+  //   if (
+  //     studentResult?.editedanswer &&
+  //     Array.isArray(studentResult.editedanswer)
+  //   ) {
+  //     const extractedEditedAnswers = studentResult.editedanswer.reduce(
+  //       (acc, curr, index) => {
+  //         acc[index + 1] = {
+  //           editeditem: curr.editeditem,
+  //           isapproved: curr.isapproved,
+  //           isdisapproved: curr.isdisapproved,
+  //         };
+  //         return acc;
+  //       },
+  //       {} as {
+  //         [key: number]: {
+  //           editeditem: string;
+  //           isapproved: boolean;
+  //           isdisapproved: boolean;
+  //         };
+  //       }
+  //     );
+  //     setEditedAnswers(extractedEditedAnswers);
+  //   }
+  // }, [studentResult]);
   useEffect(() => {
-    if (
-      studentResult?.editedanswer &&
-      Array.isArray(studentResult.editedanswer)
-    ) {
-      const extractedEditedAnswers = studentResult.editedanswer.reduce(
-        (acc, curr, index) => {
-          acc[index + 1] = {
-            editeditem: curr.editeditem,
-            isapproved: curr.isapproved,
-            isdisapproved: curr.isdisapproved,
-          };
-          return acc;
-        },
-        {} as {
-          [key: number]: {
-            editeditem: string;
-            isapproved: boolean;
-            isdisapproved: boolean;
-          };
-        }
-      );
+    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) {
+      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr) => {
+        acc[curr.itemnumber] = {
+          editeditem: curr.editeditem,
+          isapproved: curr.isapproved,
+          isdisapproved: curr.isdisapproved,
+          isedited: curr.isedited,
+        };
+        return acc;
+      }, {});
+  
+      console.log("Extracted Edited Answers:", extractedEditedAnswers); // Debugging log
       setEditedAnswers(extractedEditedAnswers);
     }
   }, [studentResult]);
+  
 
   const handleApprove = async () => {
     if (
@@ -185,55 +204,58 @@ const QuizResults = () => {
 
   const renderRows = () => {
     const rows = [];
-    let correctIndex = 0;
-
+  
     for (let i = 1; i <= answers.length; i++) {
-      const studentAnswer = studentAnswers[i];
-      const editedAnswer = editedAnswers[i]?.editeditem || "";
-      const correctAnswer = answers[correctIndex] || "Skipped";
-
-      const isEditedDifferent =
-        editedAnswer !== "" &&
-        editedAnswer !== studentAnswer &&
-        editedAnswer !== correctAnswer;
-
+      const studentAnswer = studentAnswers[i] || "";
+      const correctAnswer = answers[i - 1] || "Skipped"; // Adjust for 0-based index
+      const editedStatus = studentResult?.editedstatus;
+  
+      // Find the edited answer for the current item number
+      const editedAnswerObj = editedAnswers[i] || null;
+      let editedAnswer = editedAnswerObj && editedAnswerObj.isedited ? editedAnswerObj.editeditem : "";
+  
+      // Log to check if editedAnswer is being found correctly
+      console.log(`Item ${i}: Student Answer: ${studentAnswer}, Edited Answer: ${editedAnswer}, Correct Answer: ${correctAnswer}`);
+  
+      // Determine if the answer has been edited
+      const isEditedDifferent = editedAnswer !== "" && editedAnswer !== studentAnswer && editedAnswer !== correctAnswer;
+  
       let highlightClass = "";
-      if (editedAnswers[i]?.isapproved) {
+      if (editedStatus === "NONE") {
+        highlightClass = ""; 
+      } else if (editedAnswerObj?.isapproved) {
         highlightClass = "highlight-approved";
-      } else if (editedAnswers[i]?.isdisapproved) {
+      } else if (editedAnswerObj?.isdisapproved) {
         highlightClass = "highlight-disapproved";
       } else if (isEditedDifferent) {
         highlightClass = "highlight-edited"; 
       }
-
+  
       rows.push(
         <li key={i} className="tr">
           <p className="td">
-            {isEditedDifferent ? (
+            {editedStatus !== "NONE" && isEditedDifferent && (
               <input
                 type="checkbox"
                 checked={selectedItems.includes(i)}
                 onChange={() => handleCheckboxChange(i)}
               />
-            ) : (
-              ""
             )}
           </p>
           <p className="td">{i}</p>
-          <p className="td">{studentAnswer || ""}</p>
+          <p className="td">{studentAnswer}</p>
           <p className={`td ${highlightClass}`}>
-          {isEditedDifferent ? editedAnswer : ""}
-        </p>
+            {editedStatus !== "NONE" && editedAnswer ? editedAnswer : ""}
+          </p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
       );
-
-      correctIndex++;
     }
-
+  
     return rows;
   };
+  
 
   return (
     <div className="QuizResults Main MainContent">
