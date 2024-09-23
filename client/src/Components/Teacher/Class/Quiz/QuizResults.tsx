@@ -197,8 +197,7 @@ const QuizResults = () => {
 
       const isEditedDifferent =
         editedAnswer !== "" &&
-        editedAnswer !== studentAnswer &&
-        editedAnswer !== correctAnswer;
+        editedAnswer !== studentAnswer 
 
       let highlightClass = "";
       if (editedStatus === "NONE") {

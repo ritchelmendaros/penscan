@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { saveStudentQuiz } from "../../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
+import ConfirmationModal from "../../../Modal/ConfirmationModal";
 
 interface AnswerMap {
   [key: number]: string;
@@ -27,6 +28,7 @@ const QuizResultEdit = () => {
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
@@ -106,7 +108,12 @@ const QuizResultEdit = () => {
     setEditedStatus("PENDING");
   };
 
-  const handleSaveClick = async () => {
+  const handleSaveClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirmSave = async () => {
+    setIsModalOpen(false); 
     try {
       setIsSaving(true);
 
@@ -173,6 +180,7 @@ const QuizResultEdit = () => {
               type="text"
               value={editedAnswer}
               onChange={(e) => handleStudentAnswerChange(i, e.target.value)} 
+              disabled ={status==="PENDING"}
             />
           </p>
           <p className="td">{correctAnswer}</p>
@@ -248,7 +256,7 @@ const QuizResultEdit = () => {
               <button
                 className="save"
                 onClick={handleSaveClick}
-                disabled={isSaving}
+                disabled={isSaving || editedStatus === "PENDING"}
               >
                 {isSaving ? <SyncLoader size={6} color="#fff" /> : "Save"}
               </button>
@@ -256,6 +264,12 @@ const QuizResultEdit = () => {
                 Cancel
               </button>
             </div>
+            <ConfirmationModal
+              isOpen={isModalOpen}
+              onConfirm={confirmSave}
+              onCancel={() => setIsModalOpen(false)}
+              message="Are you sure you want to edit? You can only edit once."
+            />
           </>
         )}
       </main>
