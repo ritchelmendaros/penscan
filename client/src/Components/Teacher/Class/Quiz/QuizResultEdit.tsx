@@ -28,6 +28,7 @@ const QuizResultEdit = () => {
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isEditingAnswer, setIsEditingAnswer] = useState(false); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -109,7 +110,11 @@ const QuizResultEdit = () => {
   };
 
   const handleSaveClick = () => {
-    setIsModalOpen(true);
+    if (isEditingAnswer) {
+      setIsModalOpen(true);
+    } else {
+      confirmSave(); 
+    }
   };
 
   const confirmSave = async () => {
@@ -256,7 +261,7 @@ const QuizResultEdit = () => {
               <button
                 className="save"
                 onClick={handleSaveClick}
-                disabled={isSaving || editedStatus === "PENDING"}
+                disabled={isSaving}
               >
                 {isSaving ? <SyncLoader size={6} color="#fff" /> : "Save"}
               </button>
