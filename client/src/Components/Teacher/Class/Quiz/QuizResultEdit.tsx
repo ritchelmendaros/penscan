@@ -21,7 +21,9 @@ const QuizResultEdit = () => {
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   const [bonusScore, setBonusScore] = useState<number>(0);
-  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>({});
+  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
+    {}
+  );
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -47,25 +49,20 @@ const QuizResultEdit = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
-  // useEffect(() => {
-  //   if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
-  //     const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr, index) => {
-  //       acc[index + 1] = curr.editeditem; 
-  //       return acc;
-  //     }, {} as { [key: number]: string }); 
-  //     setEditedAnswers(extractedEditedAnswers);
-    
-  //     setEditedStatus(studentResult?.editedstatus || "");
-  //   }
-  // }, [studentResult]);
   useEffect(() => {
-    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) { 
-      const extractedEditedAnswers = studentResult.editedanswer.reduce((acc, curr) => {
-        acc[curr.itemnumber] = curr.editeditem; // Updated to use itemnumber for mapping
-        return acc;
-      }, {} as { [key: number]: string }); 
+    if (
+      studentResult?.editedanswer &&
+      Array.isArray(studentResult.editedanswer)
+    ) {
+      const extractedEditedAnswers = studentResult.editedanswer.reduce(
+        (acc, curr) => {
+          acc[curr.itemnumber] = curr.editeditem; 
+          return acc;
+        },
+        {} as { [key: number]: string }
+      );
       setEditedAnswers(extractedEditedAnswers);
-    
+
       setEditedStatus(studentResult?.editedstatus || "");
     }
   }, [studentResult]);
@@ -104,21 +101,14 @@ const QuizResultEdit = () => {
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
-    const updatedAnswers = { ...editedAnswers, [index]: value }; // Adjusted to use item number directly
+    const updatedAnswers = { ...editedAnswers, [index]: value };
     setEditedAnswers(updatedAnswers);
-    setEditedStatus("PENDING"); 
+    setEditedStatus("PENDING");
   };
 
   const handleSaveClick = async () => {
     try {
       setIsSaving(true);
-
-      // for (let i = 1; i <= Object.keys(answers).length; i++) {
-      //   if (studentAnswers[i] !== "" && studentAnswers[i] !== undefined && !editedAnswers[i]) {
-      //     toast.error(`Answer for item ${i} is required.`);
-      //     return;
-      //   }
-      // }
 
       if (
         editedStatus !== "Edited" &&
@@ -134,13 +124,13 @@ const QuizResultEdit = () => {
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
           .join("\n");
-          console.log({
-            studentQuizId,
-            formattedAnswers,
-            feedback,
-            bonusScore,
-            editedStatus,
-          });
+        console.log({
+          studentQuizId,
+          formattedAnswers,
+          feedback,
+          bonusScore,
+          editedStatus,
+        });
         await saveStudentQuiz(
           studentQuizId,
           formattedAnswers,
@@ -170,7 +160,7 @@ const QuizResultEdit = () => {
           .split("\n")
           .find((line) => line.startsWith(`${i}.`))
           ?.substring(3) || "";
-      const editedAnswer = editedAnswers[i] || ""; // Updated to access edited answers using item number
+      const editedAnswer = editedAnswers[i] || ""; 
       const status = studentResult?.editedstatus || "";
 
       rows.push(
@@ -182,7 +172,7 @@ const QuizResultEdit = () => {
             <input
               type="text"
               value={editedAnswer}
-              onChange={(e) => handleStudentAnswerChange(i, e.target.value)} // Changed index to match item number
+              onChange={(e) => handleStudentAnswerChange(i, e.target.value)} 
             />
           </p>
           <p className="td">{correctAnswer}</p>

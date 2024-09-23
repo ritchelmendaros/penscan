@@ -63,10 +63,10 @@ export const addQuiz = async (
             },
         );
         console.log('Quiz added:', response.data);
-        return response.data; // Return the response data for further use if needed
+        return response.data; 
     } catch (error) {
         console.error('Error adding quiz:', error);
-        throw error; // Rethrow the error for handling in the calling function
+        throw error; 
     }
 };
 
@@ -106,3 +106,4 @@ export const getAnswerKey = async (quizId: string): Promise<string> => {
         throw error;
     }
 };
+

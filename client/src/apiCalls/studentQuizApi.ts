@@ -61,7 +61,7 @@ export const approveQuizAnswer = async (studentQuizId: string, studentId: string
       const response = await axios.put(`${BASE_URL}/approve`, null, {
           params: {
               studentQuizId,
-              editedItem,  // Add editedItem here
+              editedItem,  
               studentId,
               quizId,
               itemId,
@@ -78,7 +78,7 @@ export const disapproveQuizAnswer = async (studentQuizId: string, studentId: str
   try {
     const response = await axios.put(`${BASE_URL}/disapprove`, null, {
       params: {
-        studentQuizId,  // Ensure this is in params
+        studentQuizId, 
         editedItem,
         studentId,
         quizId,
@@ -91,3 +91,4 @@ export const disapproveQuizAnswer = async (studentQuizId: string, studentId: str
     throw error;
   }
 };
+  
