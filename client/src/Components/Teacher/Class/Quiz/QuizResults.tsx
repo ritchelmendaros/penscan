@@ -186,7 +186,7 @@ const QuizResults = () => {
 
     for (let i = 1; i <= answers.length; i++) {
       const studentAnswer = studentAnswers[i] || "";
-      const correctAnswer = answers[i - 1] || "Skipped"; 
+      const correctAnswer = answers[i - 1] || "Skipped";
       const editedStatus = studentResult?.editedstatus;
 
       const editedAnswerObj = editedAnswers[i] || null;
@@ -214,19 +214,27 @@ const QuizResults = () => {
       rows.push(
         <li key={i} className="tr">
           <p className="td">
-            {editedStatus !== "NONE" && isEditedDifferent && (
-              <input
-                type="checkbox"
-                checked={selectedItems.includes(i)}
-                onChange={() => handleCheckboxChange(i)}
-              />
-            )}
+            {editedStatus !== "NONE" &&
+              !editedAnswerObj?.isapproved &&
+              !editedAnswerObj?.isdisapproved &&
+              isEditedDifferent && (
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(i)}
+                  onChange={() => handleCheckboxChange(i)}
+                />
+              )}
           </p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer}</p>
           <p className={`td ${highlightClass}`}>
-            {editedStatus !== "NONE" && editedAnswer ? editedAnswer : ""}
+            {editedStatus !== "NONE"
+              ? editedAnswer
+                ? editedAnswer
+                : studentAnswer
+              : ""}
           </p>
+
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
