@@ -92,10 +92,10 @@ export const updateUserDetails = async (
                 lastname: lastName,
             }
         );
-        console.log("User details updated", response);
+        // console.log("User details updated", response);
         return response.data; // Return updated user data if needed
     } catch (error) {
-        console.error("Error updating user details", error);
+        // console.error("Error updating user details", error);
         throw error; // Re-throw error for handling in the calling function
     }
 };

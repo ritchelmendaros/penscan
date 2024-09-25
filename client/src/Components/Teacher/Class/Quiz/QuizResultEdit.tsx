@@ -17,7 +17,7 @@ interface AnswerMap {
 }
 
 const QuizResultEdit = () => {
-  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [answers, setAnswers] = useState<{ itemnumber: number; answer: string }[]>([]);
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
@@ -43,6 +43,7 @@ const QuizResultEdit = () => {
           setStudentResult(result);
           setFeedback(result.comment || "");
           setBonusScore(result.bonusscore || 0);
+          setStudentQuizId(result.studentquizid || ""); 
           setLoading(false);
         })
         .catch((error) => {
@@ -70,32 +71,20 @@ const QuizResultEdit = () => {
     }
   }, [studentResult]);
 
-  const extractAnswers = (input: string) => {
-    const answers: { [key: number]: string } = {};
-    input
-      .trim()
-      .split("\n")
-      .forEach((line) => {
-        const match = line.match(/^(\d+)\.\s*(.*)$/);
-        if (match) {
-          const number = parseInt(match[1]);
-          const answer = match[2];
-          answers[number] = answer;
-        }
-      });
-    return answers;
-  };
-
   useEffect(() => {
-    if (studentResult?.recognizedtext) {
-      const extractedAnswers = extractAnswers(studentResult.recognizedtext);
-      setStudentAnswers(extractedAnswers);
-      setStudentQuizId(studentResult.studentquizid);
+    if (studentResult?.recognizedAnswers) {
+      const answersMap = studentResult.recognizedAnswers.reduce(
+        (acc: { [key: number]: string }, answerObj) => {
+          acc[answerObj.itemnumber] = answerObj.answer;
+          return acc;
+        },
+        {}
+      );
+      setStudentAnswers(answersMap); 
     }
 
     if (selectedQuiz?.quizanswerkey) {
-      const correctAnswers = extractAnswers(selectedQuiz.quizanswerkey);
-      setAnswers(correctAnswers);
+      setAnswers(selectedQuiz.quizanswerkey);
     }
   }, [selectedQuiz, studentResult]);
 
@@ -123,26 +112,19 @@ const QuizResultEdit = () => {
       setIsSaving(true);
 
       if (
-        editedStatus !== "Edited" &&
+        editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some(
           (key) =>
             studentAnswers[parseInt(key)] !== editedAnswers[parseInt(key)]
         )
       ) {
-        setEditedStatus("Edited");
+        setEditedStatus("PENDING");
       }
 
       if (studentQuizId) {
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
           .join("\n");
-        console.log({
-          studentQuizId,
-          formattedAnswers,
-          feedback,
-          bonusScore,
-          editedStatus,
-        });
         await saveStudentQuiz(
           studentQuizId,
           formattedAnswers,
@@ -166,12 +148,8 @@ const QuizResultEdit = () => {
     const rows = [];
 
     for (let i = 1; i <= Object.keys(answers).length; i++) {
-      const correctAnswer = answers[i] || "";
-      const scannedAnswer =
-        studentResult?.recognizedtext
-          .split("\n")
-          .find((line) => line.startsWith(`${i}.`))
-          ?.substring(3) || "";
+      const studentAnswer = studentAnswers[i] || "";
+      const correctAnswer = answers[i - 1]?.answer || "Skipped";
       const editedAnswer = editedAnswers[i] || ""; 
       const status = studentResult?.editedstatus || "";
 
@@ -179,7 +157,7 @@ const QuizResultEdit = () => {
         <li key={i} className="tr">
           <p className="td"></p>
           <p className="td">{i}</p>
-          <p className="td">{scannedAnswer}</p>
+          <p className="td">{studentAnswer}</p>
           <p className="td">
             <input
               type="text"

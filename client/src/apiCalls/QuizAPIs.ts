@@ -6,6 +6,7 @@ import {
 } from '../Components/Interface/Quiz';
 
 const BASE_URL = "http://localhost:8080/api/studentquiz";
+const BASE_URL1 = "http://localhost:8080/api/quiz";
 
 export const getAllQuizes: (
     teacherID: string,
@@ -13,7 +14,7 @@ export const getAllQuizes: (
 ) => Promise<Quiz[]> = async (teacherID, classID) => {
     try {
         const response = await axios.get<Quiz[]>(
-            `https://penscan-api.onrender.com/api/quiz/getquizbyteacherid?teacherid=${teacherID}&classid=${classID}`,
+            `${BASE_URL1}/getquizbyteacherid?teacherid=${teacherID}&classid=${classID}`,
         );
         return response.data;
     } catch (error) {
@@ -50,11 +51,11 @@ export const addQuiz = async (
     classid: string,
     quizName: string,
     userId: string,
-    correctAnswer: string,
+    correctAnswer: { itemnumber: number; answer: string }[]
 ) => {
     try {
         const response = await axios.post(
-            'https://penscan-api.onrender.com/api/quiz/addquiz',
+            `${BASE_URL1}/addquiz`,
             {
                 classid: classid,
                 quizname: quizName,
@@ -62,10 +63,10 @@ export const addQuiz = async (
                 quizanswerkey: correctAnswer,
             },
         );
-        console.log('Quiz added:', response.data);
+        // console.log('Quiz added:', response.data);
         return response.data; 
     } catch (error) {
-        console.error('Error adding quiz:', error);
+        // console.error('Error adding quiz:', error);
         throw error; 
     }
 };

@@ -90,7 +90,7 @@ const Quiz = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        console.log(selectedFile);
+        // console.log(selectedFile);
         await uploadStudentQuiz(selectedQuiz.quizid, selectedFile);
         toast.success("File uploaded successfully!");
         setSelectedFile(null);

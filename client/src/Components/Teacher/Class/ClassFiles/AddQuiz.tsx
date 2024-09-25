@@ -56,8 +56,16 @@ const AddQuiz = () => {
       toast.error("Class ID or User ID is missing.");
       return;
     }
+    const answerArray = answerKey.split("\n").map((line, index) => {
+      const [itemnumber, ...answerParts] = line.split(".");
+      const answer = answerParts.join(".").trim();
+      return {
+        itemnumber: parseInt(itemnumber.trim()),
+        answer,
+      };
+    });
     try {
-      await addQuiz(classId, quizName, userId, answerKey);
+      await addQuiz(classId, quizName, userId, answerArray);
       navigate(`/dashboard/class`);
     } catch (error) {
       toast.error("Error adding quiz. Please try again.");

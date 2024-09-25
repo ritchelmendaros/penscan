@@ -15,7 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 
 const QuizResults = () => {
-  const [answers, setAnswers] = useState<string[]>([]);
+  // const [answers, setAnswers] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<{ itemnumber: number; answer: string }[]>([]);
+
   const [studentAnswers, setStudentAnswers] = useState<{
     [key: number]: string;
   }>({});
@@ -132,7 +134,6 @@ const QuizResults = () => {
           updatedAnswers[itemIndex].isapproved = false;
           updatedAnswers[itemIndex].isdisapproved = true;
         } catch (error) {
-          console.error("Error disapproving item " + itemIndex, error);
           toast.error("Error disapproving item " + itemIndex);
         }
       }
@@ -142,30 +143,21 @@ const QuizResults = () => {
     setSelectedItems([]);
   };
 
-  const extractAnswers = (input: string) => {
-    const answers: { [key: number]: string } = {};
-    input
-      .trim()
-      .split("\n")
-      .forEach((line) => {
-        const match = line.match(/^(\d+)\.\s*(.*)$/);
-        if (match) {
-          const number = parseInt(match[1]);
-          const answer = match[2];
-          answers[number] = answer;
-        }
-      });
-    return answers;
-  };
 
   useEffect(() => {
-    if (studentResult?.recognizedtext) {
-      setStudentAnswers(extractAnswers(studentResult.recognizedtext));
+    if (studentResult?.recognizedAnswers) {
+      const answersMap = studentResult.recognizedAnswers.reduce(
+        (acc: { [key: number]: string }, answerObj) => {
+          acc[answerObj.itemnumber] = answerObj.answer;
+          return acc;
+        },
+        {}
+      );
+      setStudentAnswers(answersMap); 
     }
 
     if (selectedQuiz?.quizanswerkey) {
-      const correctAnswers = extractAnswers(selectedQuiz.quizanswerkey);
-      setAnswers(Object.values(correctAnswers));
+      setAnswers(selectedQuiz.quizanswerkey);
     }
   }, [selectedQuiz, studentResult]);
 
@@ -186,7 +178,7 @@ const QuizResults = () => {
 
     for (let i = 1; i <= answers.length; i++) {
       const studentAnswer = studentAnswers[i] || "";
-      const correctAnswer = answers[i - 1] || "Skipped";
+      const correctAnswer = answers[i - 1]?.answer || "Skipped";
       const editedStatus = studentResult?.editedstatus;
 
       const editedAnswerObj = editedAnswers[i] || null;

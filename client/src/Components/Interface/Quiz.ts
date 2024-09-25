@@ -3,7 +3,8 @@ interface Quiz {
     classid: string;
     quizname: string;
     teacherid: string;
-    quizanswerkey: string;
+    // quizanswerkey: string;
+    quizanswerkey: { itemnumber: number; answer: string }[];
 }
 //Student Quiz
 interface Quizzes {
@@ -30,13 +31,20 @@ interface StudentImageResult {
         type: number;
         data: string;
     };
-    recognizedtext: string;
+    // recognizedtext: string;
+    recognizedAnswers?: RecognizedAnswer[]; 
     comment?: string | null;
     base64Image: string;
     editedanswer?: string | null;
     editedstatus?: string | null;
     bonusscore: number;
     finalscore: number;
+}
+
+interface RecognizedAnswer {
+    itemnumber: number;
+    answer: string;
+    iscorrect: boolean;
 }
 
 interface ItemAnalysisInterface {
