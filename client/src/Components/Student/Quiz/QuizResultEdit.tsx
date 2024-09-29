@@ -17,7 +17,7 @@ interface Answer {
   answer: string;
 }
 
-const StudentQuizResults = () => {
+const StudentQuizResultEdit = () => {
   const navigate = useNavigate();
   const { clickedClass } = useClass();
   const [correctAnswers, setCorrectAnswers] = useState<Answer[]>([]);
@@ -121,12 +121,26 @@ const StudentQuizResults = () => {
         highlightClass = "highlight-edited";
       }
 
+      const isDisabled = highlightClass !== "";
+
       return (
         <li key={correctAnswer.itemnumber} className="tr">
           <p className="td"></p>
           <p className="td">{correctAnswer.itemnumber}</p>
           <p className="td">{studentAnswer.answer}</p>
-          <p className={`td ${highlightClass}`}>{editedAnswerObj.editeditem}</p>
+          <p className={`td ${highlightClass}`}>
+            <input
+              type="text"
+              value={editedAnswerObj.editeditem}
+              onChange={(e) => {
+                setEditedAnswers((prev) => ({
+                  ...prev,
+                  [correctAnswer.itemnumber]: e.target.value,
+                }));
+              }}
+              disabled={isDisabled}
+            />
+          </p>
           <p className="td">{correctAnswer.answer}</p>
           <p className="td"></p>
         </li>
@@ -134,8 +148,8 @@ const StudentQuizResults = () => {
     });
   };
 
-  const handleEdit = () => {
-    navigate(`/dashboard/class/quiz/quiz-result-edit`);
+  const handleSave = () => {
+    toast("Edit button clicked");
   };
 
   const handleClose = () => {
@@ -185,7 +199,7 @@ const StudentQuizResults = () => {
                 <ul className="thead">
                   <li className="th">
                     <p />
-                    <p className="td">Item No.</p>
+                    <p className="td">Item</p>
                     <p className="td">Scanned Answer</p>
                     <p className="td">Edited Answer</p>
                     <p className="td">Correct Answer</p>
@@ -194,10 +208,10 @@ const StudentQuizResults = () => {
                 </ul>
                 <ul className="tbody">{renderRows()}</ul>
                 <div className="buttons-container">
-                  <button onClick={handleEdit} className="studentviewedit">
-                    Edit
+                  <button onClick={handleSave} className="studenteditsave">
+                    Save
                   </button>
-                  <button onClick={handleClose} className="studentviewclose">
+                  <button onClick={handleClose} className="studenteditclose">
                     Close
                   </button>
                 </div>
@@ -214,4 +228,4 @@ const StudentQuizResults = () => {
   );
 };
 
-export default StudentQuizResults;
+export default StudentQuizResultEdit;

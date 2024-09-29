@@ -13,15 +13,18 @@ import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
 import { getDetailsByUsername } from '../../apiCalls/userApi';
 import { ToastContainer, toast } from 'react-toastify';
+import { SyncLoader } from 'react-spinners'; 
 import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
     const [classes, setClasses] = useState<ClassInterface[]>([]);
     const { setClassList } = useClass();
     const { userType, user } = useCurrUser();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (user?.userid) {
+            setLoading(true); 
             if (userType === 'Teacher') {
                 getAllClasses(user.userid)
                     .then((classes: ClassInterface[]) => {
@@ -42,6 +45,9 @@ const Dashboard = () => {
                     })
                     .catch((error) => {
                         toast.error('Failed to get user classes:', error);
+                    })
+                    .finally(() => {
+                            setLoading(false); // End loading
                     });
             }
         }
@@ -54,7 +60,7 @@ const Dashboard = () => {
                 {userType === 'Teacher' ? (
                     <TeacherDashboard classes={classes} />
                 ) : userType === 'Student' ? (
-                    <StudentDashboard classes={classes} />
+                    <StudentDashboard classes={classes} loading={loading} />
                 ) : null}
             </main>
 

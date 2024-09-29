@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import Gradients from '../../Common/Gradients';
 import Header from '../../Common/Header';
-import { Link } from 'react-router-dom';
 import ClassFiles from '../../Student/Class/ClassFiles';
 import SmilingRobot from '../../Common/SmilingRobot';
 

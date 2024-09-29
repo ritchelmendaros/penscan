@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 
 const QuizResults = () => {
-  // const [answers, setAnswers] = useState<string[]>([]);
   const [answers, setAnswers] = useState<{ itemnumber: number; answer: string }[]>([]);
 
   const [studentAnswers, setStudentAnswers] = useState<{

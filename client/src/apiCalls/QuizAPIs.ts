@@ -99,7 +99,7 @@ export const getQuizNamesByUserIdAndClassId = async (userId: string, classId: st
 export const getAnswerKey = async (quizId: string): Promise<string> => {
     try {
         const response = await axios.get<string>(
-            `https://penscan-api.onrender.com/api/quiz/getanswerkey?quizid=${quizId}`
+            `${BASE_URL1}/getanswerkey?quizid=${quizId}`
         );
         return response.data;
     } catch (error) {

@@ -18,6 +18,7 @@ import StudentQuizResults from './Student/Quiz/QuizResult';
 import UserProfile from './UserProfile/UserProfile';
 import { useEffect } from 'react';
 import { getFromLocalStorage } from '../Utils/LocalStorage';
+import StudentQuizResultEdit from './Student/Quiz/QuizResultEdit';
 
 const App = () => {
     const { userType, setUserType, setUser } = useCurrUser();
@@ -93,6 +94,10 @@ const App = () => {
                             <Route
                                 path='/dashboard/class/quiz/quiz-result'
                                 element={<StudentQuizResults />}
+                            />
+                            <Route
+                                path='/dashboard/class/quiz/quiz-result-edit'
+                                element={<StudentQuizResultEdit />}
                             />
                         </>
                     ) : null}
