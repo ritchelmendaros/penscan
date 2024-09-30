@@ -5,8 +5,8 @@ import {
     StudentImageResult,
 } from '../Components/Interface/Quiz';
 
-const BASE_URL = "http://localhost:8080/api/studentquiz";
-const BASE_URL1 = "http://localhost:8080/api/quiz";
+const BASE_URL = "https://penscan-api.onrender.com/api/studentquiz";
+const BASE_URL1 = "https://penscan-api.onrender.com/api/quiz";
 
 export const getAllQuizes: (
     teacherID: string,
@@ -14,7 +14,7 @@ export const getAllQuizes: (
 ) => Promise<Quiz[]> = async (teacherID, classID) => {
     try {
         const response = await axios.get<Quiz[]>(
-            `${BASE_URL1}/getquizbyteacherid?teacherid=${teacherID}&classid=${classID}`,
+            `https://penscan-api.onrender.com/api/quiz/getquizbyteacherid?teacherid=${teacherID}&classid=${classID}`,
         );
         return response.data;
     } catch (error) {
@@ -25,7 +25,7 @@ export const getAllQuizes: (
 
 export const getQuizzesByClassId = async (classId: string): Promise<Quiz[]> => {
     try {
-        const response = await axios.get<Quiz[]>(`${BASE_URL1}/getquizbyclassid?classid=${classId}`);
+        const response = await axios.get<Quiz[]>(`https://penscan-api.onrender.com/api/quiz/getquizbyclassid?classid=${classId}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching quizzes by class ID:', error);
@@ -36,7 +36,7 @@ export const getQuizzesByClassId = async (classId: string): Promise<Quiz[]> => {
 export const getAllQuizScores = async (quizID: string) => {
     try {
         const response = await axios.get<StudentQuiz[]>(
-            `${BASE_URL}/getscoresandstudentids?quizid=${quizID}`,
+            `https://penscan-api.onrender.com/api/studentquiz/getscoresandstudentids?quizid=${quizID}`,
         );
         return response.data;
     } catch (error) {
@@ -48,7 +48,7 @@ export const getAllQuizScores = async (quizID: string) => {
 export const getQuizResults = async (studentID: string, quizID: string) => {
     try {
         const response = await axios.get<StudentImageResult>(
-            `${BASE_URL}/get?studentid=${studentID}&quizid=${quizID}`,
+            `https://penscan-api.onrender.com/api/studentquiz/get?studentid=${studentID}&quizid=${quizID}`,
         );
         return response.data;
     } catch (error) {
@@ -65,7 +65,7 @@ export const addQuiz = async (
 ) => {
     try {
         const response = await axios.post(
-            `${BASE_URL1}/addquiz`,
+            `https://penscan-api.onrender.com/api/quiz/addquiz`,
             {
                 classid: classid,
                 quizname: quizName,
@@ -109,7 +109,7 @@ export const getQuizNamesByUserIdAndClassId = async (userId: string, classId: st
 export const getAnswerKey = async (quizId: string): Promise<string> => {
     try {
         const response = await axios.get<string>(
-            `${BASE_URL1}/getanswerkey?quizid=${quizId}`
+            `https://penscan-api.onrender.com/api/quiz/getanswerkey?quizid=${quizId}`
         );
         return response.data;
     } catch (error) {
