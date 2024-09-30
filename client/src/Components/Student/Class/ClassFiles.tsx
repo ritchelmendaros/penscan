@@ -4,7 +4,7 @@ import { useCurrUser } from "../../../Components/Context/UserContext";
 import { Quizzes, Quiz } from "../../Interface/Quiz";
 import {
   getQuizResults,
-  getQuizNamesByUserIdAndClassId,
+  getQuizzesByClassId
 } from "../../../apiCalls/QuizAPIs";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../../Components/Context/QuizContext";
@@ -22,38 +22,54 @@ const ClassFiles = () => {
   const { user } = useCurrUser();
   const { setSelectedQuiz } = useQuiz();
 
+ 
   useEffect(() => {
     const fetchQuizData = async () => {
-      if (user?.userid && clickedClass?.classid) {
+      if (clickedClass?.classid) {
         try {
-          const quiz = await getQuizNamesByUserIdAndClassId(
-            user.userid,
-            clickedClass.classid
-          );
-          console.log("Fetched quizzes:", quiz);
-          setQuizzes(quiz);
-          const results = await Promise.all(
-            quiz.map((q) => getQuizResults(user.userid, q.quizId))
-          );
-          console.log("Fetched quizzes:", quiz);
-          setQuizResults(results);
-          setLoading(false);
+          const quiz: Quiz[] = await getQuizzesByClassId(clickedClass.classid);
+  
+          const quizzesWithProperMapping: Quizzes[] = quiz.map(q => ({
+            quizId: q.quizid, 
+            quizName: q.quizname,  
+          }));
+          setQuizzes(quizzesWithProperMapping);
+  
+          if (user?.userid) {
+            const results = await Promise.all(
+              quizzesWithProperMapping.map(async (q) => {
+                try {
+                  const result = await getQuizResults(user.userid, q.quizId);
+                  return result;
+                } catch (err) {
+                  return null;
+                }
+              })
+            );
+  
+            const filteredResults = results.filter((result): result is StudentImageResult => result !== null);
+            setQuizResults(filteredResults);
+            console.log("Fetched quiz results:", filteredResults);
+          }
         } catch (err) {
+        } finally {
           setLoading(false);
         }
       }
     };
-
+  
     fetchQuizData();
   }, [clickedClass, user]);
+  
+  
 
-  const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
-    quizid: quiz.quizId,
-    classid: clickedClass?.classid || "",
-    quizname: quiz.quizName,
-    teacherid: user?.userid || "",
-    quizanswerkey: [],
-  });
+const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
+  quizid: quiz.quizId,
+  classid: clickedClass?.classid || "",
+  quizname: quiz.quizName,
+  teacherid: user?.userid || "",
+  quizanswerkey: [],
+});
 
   const handleClick = (quiz: Quizzes) => {
     const selectedQuiz = mapQuizzesToQuiz(quiz);
@@ -81,6 +97,8 @@ const ClassFiles = () => {
     navigate("/dashboard/class/quiz/quiz-result-edit");
   };
 
+  const displayedQuizzes = new Set();
+
   return (
     <div className="Classes">
       {loading ? (
@@ -94,17 +112,23 @@ const ClassFiles = () => {
               <p className="td">Quiz Name</p>
               <p className="td">Score</p>
               <p className="td">Status</p>
-              <p className="td">Action</p>
+              <p className="td" style={{marginLeft:"20px"}}>Action</p>
             </div>
           </div>
           <div className="tbody">
             {quizzes.length > 0 ? (
               quizzes.map((quiz, i) => {
+                if (displayedQuizzes.has(quiz.quizId)) {
+                  return null; 
+                }
+                
+                displayedQuizzes.add(quiz.quizId);
+
                 const result = quizResults.find(
                   (r) => r.quizid === quiz.quizId
                 );
-                const status = result ? result.editedstatus : "Not Completed";
-                const score = result ? result.finalscore : 0;
+                const status = result ? result.editedstatus : "Not Yet Uploaded";
+                const score = result ? result.finalscore : "N/A";
                 return (
                   <div className="tr" onClick={() => handleClick(quiz)} key={i}>
                     <p className="td">{quiz.quizName}</p>

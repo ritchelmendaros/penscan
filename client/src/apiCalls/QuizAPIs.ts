@@ -23,6 +23,16 @@ export const getAllQuizes: (
     }
 };
 
+export const getQuizzesByClassId = async (classId: string): Promise<Quiz[]> => {
+    try {
+        const response = await axios.get<Quiz[]>(`${BASE_URL1}/getquizbyclassid?classid=${classId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching quizzes by class ID:', error);
+        throw error;
+    }
+};
+
 export const getAllQuizScores = async (quizID: string) => {
     try {
         const response = await axios.get<StudentQuiz[]>(

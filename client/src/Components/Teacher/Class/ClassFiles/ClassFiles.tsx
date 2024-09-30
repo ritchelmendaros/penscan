@@ -39,7 +39,7 @@ const ClassFiles = () => {
 
     setLocalStorage("cid", quiz.classid);
     setLocalStorage("qid", quiz.quizid);
-    setLocalStorage("qans", quiz.quizanswerkey);
+    // setLocalStorage("qans", quiz.quizanswerkey);
     setLocalStorage("qname", quiz.quizname);
     setLocalStorage("qtid", quiz.teacherid);
 

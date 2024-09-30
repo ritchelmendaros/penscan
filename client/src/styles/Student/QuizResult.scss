@@ -1,6 +1,16 @@
-// StudentQuizResults.scss
-
 .QuizResults {
+  .studentupload-download {
+    display: flex;
+    gap: 10px;
+
+    button {
+      background-color: #416edf;
+      color: white;
+      border-radius: 5px;
+      font-size: 16px;
+      width: 80px;
+    }
+  }
     .buttons-container {
       display: flex; 
       justify-content: center; 
@@ -20,6 +30,23 @@
   
         &:hover {
           background-color: rgb(210, 200, 4);
+        }
+      }
+
+      .studentviewupload {
+        width: 125px;
+        padding: 7px 10px;
+        border-radius: 5px;
+        margin-left: 20px; 
+        font-size: 15px;
+        color: white; 
+        border: none;
+        cursor: pointer; 
+        background-color: #002992;
+        transition: background-color 0.3s; 
+  
+        &:hover {
+          background-color: #416edf;
         }
       }
   
@@ -76,6 +103,8 @@
         }
       }
     }
+
+    
   }
 
   

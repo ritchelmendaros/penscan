@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import { useNavigate, useParams } from "react-router-dom";
+import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
 
 interface Answer {
   itemnumber: number;
@@ -28,6 +29,9 @@ const StudentQuizResults = () => {
   const { selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -44,7 +48,7 @@ const StudentQuizResults = () => {
           setCorrectAnswers(parsedAnswerKey);
         })
         .catch((error) => {
-          toast.error("Error fetching data", error);
+          toast.error("No data found", error);
         })
         .finally(() => {
           setLoading(false);
@@ -87,17 +91,30 @@ const StudentQuizResults = () => {
   }, [studentResult]);
 
   const renderRows = () => {
-    return correctAnswers.map((correctAnswer) => {
-      const studentAnswer = studentAnswers.find(
-        (ans) => ans.itemnumber === correctAnswer.itemnumber
-      ) || { answer: "" };
-      const defaultEditedAnswer = {
+    const maxItemNumber = Math.max(
+      ...correctAnswers.map((ans) => ans.itemnumber),
+      ...studentAnswers.map((ans) => ans.itemnumber)
+    );
+
+    const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
+      acc[correctAnswer.itemnumber] = correctAnswer.answer;
+      return acc;
+    }, {} as Record<number, string>);
+
+    const studentAnswerMap = studentAnswers.reduce((acc, studentAnswer) => {
+      acc[studentAnswer.itemnumber] = studentAnswer.answer;
+      return acc;
+    }, {} as Record<number, string>);
+
+    const rows = [];
+    for (let i = 1; i <= maxItemNumber; i++) {
+      const correctAnswer = correctAnswerMap[i] || "";
+      const studentAnswer = studentAnswerMap[i] || "";
+      const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
         isapproved: false,
         isdisapproved: false,
       };
-      const editedAnswerObj =
-        editedAnswers[correctAnswer.itemnumber] || defaultEditedAnswer;
 
       const editedStatus = studentResult?.editedstatus;
 
@@ -121,17 +138,19 @@ const StudentQuizResults = () => {
         highlightClass = "highlight-edited";
       }
 
-      return (
-        <li key={correctAnswer.itemnumber} className="tr">
+      rows.push(
+        <li key={i} className="tr">
           <p className="td"></p>
-          <p className="td">{correctAnswer.itemnumber}</p>
-          <p className="td">{studentAnswer.answer}</p>
-          <p className={`td ${highlightClass}`}>{editedAnswerObj.editeditem}</p>
-          <p className="td">{correctAnswer.answer}</p>
+          <p className="td">{i}</p>
+          <p className="td">{studentAnswer}</p>
+          <p className={`td ${highlightClass}`}>{editedItem}</p>
+          <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
       );
-    });
+    }
+
+    return rows;
   };
 
   const handleEdit = () => {
@@ -140,6 +159,42 @@ const StudentQuizResults = () => {
 
   const handleClose = () => {
     navigate(`/dashboard/class/${clickedClass?.classid}`);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    } else {
+      setSelectedFile(null);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (selectedFile && selectedQuiz) {
+      setIsLoading(true);
+      try {
+        await studentuploadStudentQuiz(
+          selectedQuiz.quizid,
+          user?.userid || "",
+          selectedFile
+        );
+        toast.success("File uploaded successfully!");
+        setSelectedFile(null);
+        setIsModalOpen(false);
+        navigate(`/dashboard/class/${clickedClass?.classid}`);
+      } catch (error) {
+        toast.error("File upload failed.");
+        setSelectedFile(null);
+        setIsModalOpen(false);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      toast.warn(
+        "Please select a file to upload and ensure a quiz is selected."
+      );
+    }
   };
 
   return (
@@ -194,6 +249,14 @@ const StudentQuizResults = () => {
                 </ul>
                 <ul className="tbody">{renderRows()}</ul>
                 <div className="buttons-container">
+                  {!studentResult && (
+                    <button
+                      className="studentviewupload"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      Upload
+                    </button>
+                  )}
                   <button onClick={handleEdit} className="studentviewedit">
                     Edit
                   </button>
@@ -206,6 +269,44 @@ const StudentQuizResults = () => {
           </>
         )}
       </main>
+
+      {isModalOpen && (
+        <div className="modalquiz-overlay">
+          <div className="modalquiz-content">
+            <h3>Please Upload a File</h3>
+            <input
+              className="modalquiz-input"
+              style={{ marginTop: "10px" }}
+              type="file"
+              onChange={handleFileChange}
+            />
+            {isLoading ? (
+              <div className="loader">
+                <SyncLoader size={10} color={"#416edf"} loading={isLoading} />
+              </div>
+            ) : (
+              <div className="modalquiz-buttons">
+                <button className="modalsubmit" onClick={handleUpload}>
+                  Submit
+                </button>
+                <button
+                  className="modalclose"
+                  style={{
+                    width: "70px",
+                    borderRadius: "7px",
+                    marginLeft: "10px",
+                    fontWeight: "bold",
+                    backgroundColor: "#e94f4f",
+                  }}
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <SmilingRobot />
       <Gradients />
