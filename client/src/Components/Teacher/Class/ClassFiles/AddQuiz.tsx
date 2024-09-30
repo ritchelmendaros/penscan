@@ -57,7 +57,7 @@ const AddQuiz = () => {
       toast.error("Class ID or User ID is missing.");
       return;
     }
-    const answerArray = answerKey.split("\n").map((line, index) => {
+    const answerArray = answerKey.split("\n").map((line) => {
       const [itemnumber, ...answerParts] = line.split(".");
       const answer = answerParts.join(".").trim();
       return {

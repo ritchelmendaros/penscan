@@ -10,7 +10,7 @@ import { useCurrUser } from "../../Context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
 
 interface Answer {

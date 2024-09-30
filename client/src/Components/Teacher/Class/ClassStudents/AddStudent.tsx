@@ -67,6 +67,7 @@ const AddStudent: React.FC = () => {
     }
 
     setShowDropdown(false);
+    console.log(showDropdown)
   };
 
   const handleAddStudent = async () => {
@@ -77,7 +78,7 @@ const AddStudent: React.FC = () => {
       }
       setLoading(true); 
       try {
-        const addStudentResponse = await addStudentToClass(
+        await addStudentToClass(
           selectedStudent.userid,
           classId
         );

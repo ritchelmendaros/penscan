@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../../Components/Context/QuizContext";
 import { SyncLoader } from "react-spinners";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { StudentImageResult } from "../../Interface/Quiz";
 import "react-toastify/dist/ReactToastify.css";
 

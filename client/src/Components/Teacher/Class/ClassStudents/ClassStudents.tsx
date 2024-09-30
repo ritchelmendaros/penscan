@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchStudentsByClassId } from "../../../../apiCalls/studentApi";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import noDataImage from "../../../../assets/nodata.gif";

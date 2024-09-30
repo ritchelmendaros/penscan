@@ -38,7 +38,7 @@ const QuizResultEdit = () => {
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [isEditingAnswer, setIsEditingAnswer] = useState(false); 
+  const [isEditingAnswer] = useState(false); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -168,7 +168,7 @@ const QuizResultEdit = () => {
       const studentAnswer = studentAnswers[i] || "";
       const correctAnswer = answers[i - 1]?.answer || "Skipped";
       const editedAnswerObj = editedAnswers[i] || { editeditem: "", isedited: false, isapproved: false, isdisapproved: false }; 
-      const status = studentResult?.editedstatus || "";
+      // const status = studentResult?.editedstatus || "";
 
       let highlightClass = "";
 

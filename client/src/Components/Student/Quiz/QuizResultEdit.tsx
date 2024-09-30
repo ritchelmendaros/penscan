@@ -32,7 +32,7 @@ const StudentQuizResultEdit = () => {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [studentQuizId, setStudentQuizId] = useState<string>("");
-  const [isEditingAnswer, setIsEditingAnswer] = useState(false);
+  const [isEditingAnswer] = useState(false);
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,9 +124,9 @@ const StudentQuizResultEdit = () => {
 
       const editedStatus = studentResult?.editedstatus;
 
-      let editedItem = editedAnswerObj.isedited
-        ? editedAnswerObj.editeditem
-        : "";
+      // let editedItem = editedAnswerObj.isedited
+      //   ? editedAnswerObj.editeditem
+      //   : "";
 
       let highlightClass = "";
 
@@ -187,7 +187,7 @@ const StudentQuizResultEdit = () => {
     setIsModalOpen(false);
     try {
       setIsSaving(true);
-
+      console.log(isSaving)
       if (
         editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some(

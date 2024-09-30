@@ -4,7 +4,7 @@ import Gradients from "../../../Common/Gradients";
 import SmilingRobot from "../../../Common/SmilingRobot";
 import { getAllQuizScores } from "../../../../apiCalls/QuizAPIs";
 import { useQuiz } from "../../../Context/QuizContext";
-import { StudentImageResult, StudentQuiz } from "../../../Interface/Quiz";
+import { StudentQuiz } from "../../../Interface/Quiz";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

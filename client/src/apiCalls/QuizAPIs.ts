@@ -5,8 +5,8 @@ import {
     StudentImageResult,
 } from '../Components/Interface/Quiz';
 
-const BASE_URL = "https://penscan-api.onrender.com/api/studentquiz";
-const BASE_URL1 = "https://penscan-api.onrender.com/api/quiz";
+// const BASE_URL = "https://penscan-api.onrender.com/api/studentquiz";
+// const BASE_URL1 = "https://penscan-api.onrender.com/api/quiz";
 
 export const getAllQuizes: (
     teacherID: string,

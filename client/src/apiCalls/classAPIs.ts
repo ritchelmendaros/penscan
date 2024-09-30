@@ -26,26 +26,16 @@ export const postCreateClass = async (
     teacherID: string,
 ): Promise<PostCreateClassResponse | undefined> => {
     try {
-        // Check if the class already exists
         const response = await axios.get(
             `https://penscan-api.onrender.com/api/classes/checkclass?classname=${className}&teacherid=${teacherID}`,
         );
 
         if (response.data.exists) {
-            // Adjust based on actual API response
-            // console.log({
-            //     errMsg: 'Class name already exists.',
-            // });
         } else {
-            // Add the new class
-            const addClassResponse = await axios.post(
+            await axios.post(
                 'https://penscan-api.onrender.com/api/classes/add',
                 { classname: className, teacherid: teacherID },
             );
-            // console.log({
-            //     msg: 'Class added successfully',
-            //     data: addClassResponse.data,
-            // });
         }
     } catch (error) {
         console.error('Error creating class:', error);

@@ -6,7 +6,7 @@ import { Quiz } from "../../../Interface/Quiz";
 import { getAllQuizes } from "../../../../apiCalls/QuizAPIs";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../../Context/QuizContext";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setLocalStorage } from "../../../../Utils/LocalStorage";
 import { SyncLoader } from "react-spinners";
@@ -28,7 +28,7 @@ const ClassFiles = () => {
           setQuizzes(quiz);
           setLoading(false);
         })
-        .catch((err) => {
+        .catch(() => {
           setLoading(false);
         });
     }
