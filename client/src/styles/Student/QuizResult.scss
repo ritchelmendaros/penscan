@@ -12,14 +12,14 @@
         border-radius: 5px;
         margin-left: 20px; 
         font-size: 15px;
-        background-color: rgb(210, 200, 4);
+        background-color: rgb(186, 170, 0); 
         color: white; 
         border: none; 
         cursor: pointer;
         transition: background-color 0.3s; 
   
         &:hover {
-          background-color: rgb(186, 170, 0); 
+          background-color: rgb(210, 200, 4);
         }
       }
   

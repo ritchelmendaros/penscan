@@ -4,15 +4,17 @@ import Gradients from "../../../Common/Gradients";
 import SmilingRobot from "../../../Common/SmilingRobot";
 import { getAllQuizScores } from "../../../../apiCalls/QuizAPIs";
 import { useQuiz } from "../../../Context/QuizContext";
-import { StudentQuiz } from "../../../Interface/Quiz";
+import { StudentImageResult, StudentQuiz } from "../../../Interface/Quiz";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as XLSX from "xlsx";
-import { uploadStudentQuiz } from "../../../../apiCalls/studentQuizApi";
+import { uploadStudentQuiz, deleteStudentQuiz } from "../../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import Analysis from "./Analysis";
 import noDataGif from "../../../../assets/nodata.gif";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -112,6 +114,20 @@ const Quiz = () => {
     }
   };
 
+  const handleDeleteStudentScore = async (student: StudentQuiz) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this score?"
+    );
+    if (confirmDelete && selectedQuiz?.quizid) {
+      try {
+        await deleteStudentQuiz(student.userId, selectedQuiz.quizid); 
+        setRefreshScores(true);  
+      } catch (error) {
+        toast.error("Failed to delete the score.");
+      }
+    }
+  };
+
   return (
     <div className="Quiz Main MainContent">
       <Header />
@@ -133,7 +149,7 @@ const Quiz = () => {
             </button>
           </div>
           <div className="upload-download">
-            <button onClick={() => setIsModalOpen(true)}>Upload</button>
+            {/* <button onClick={() => setIsModalOpen(true)}>Upload</button> */}
             <button onClick={handleDownloadExcel}>Download Excel</button>
           </div>
         </div>
@@ -177,7 +193,7 @@ const Quiz = () => {
                     <p className="td">
                       {student.firstName} {student.lastName}
                     </p>
-                    <p className="td">{student.finalScore}</p>
+                    <p className="td" style={{marginLeft: "20px"}}>{student.finalScore}</p>
                     <p className="td">{student.editedStatus}</p>
                     <div>
                       <button
@@ -191,6 +207,18 @@ const Quiz = () => {
                         onClick={() => handleEditStudentScore(student)}
                       >
                         Edit
+                      </button>
+                      <button
+                        className="delete"
+                        onClick={() => handleDeleteStudentScore(student)}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          style={{
+                            color: "red",
+                            backgroundColor: "transparent",
+                          }} 
+                        />
                       </button>
                     </div>
                   </li>

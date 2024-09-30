@@ -21,13 +21,20 @@ const Classes = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
+        setSelectedFile(file);
+    } else {
+        setSelectedFile(null);
     }
-  };
+};
+
 
   const handleUpload = async () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
+
+      console.log("Selected file:", selectedFile);
+    console.log("Selected quiz:", selectedQuiz);
+    
       try {
         await studentuploadStudentQuiz(selectedQuiz.quizid, user?.userid || "", selectedFile);
         toast.success("File uploaded successfully!");
@@ -50,6 +57,12 @@ const Classes = () => {
     }
   };
 
+  useEffect(() => {
+    if (refreshScores) {
+      setRefreshScores(false); 
+    }
+  }, [refreshScores]);
+
   return (
     <div className="Class Main MainContent">
       <Header />
@@ -60,7 +73,7 @@ const Classes = () => {
             <button onClick={() => setIsModalOpen(true)}>Upload</button>
           </div>
         </div>
-        <ClassFiles />
+        <ClassFiles key={refreshScores ? "refresh" : "no-refresh"} />
       </main>
       {isModalOpen && (
         <div className="modalquiz-overlay">

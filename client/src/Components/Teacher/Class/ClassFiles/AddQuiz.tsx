@@ -40,9 +40,10 @@ const AddQuiz = () => {
 
     const generatedAnswers = Array.from(
       { length: items },
-      (_, i) => `${i + 1}.`
+      (_, i) => `${i + 1}. `
     ).join("\n");
-    setAnswerKey(generatedAnswers);
+    
+    setAnswerKey(generatedAnswers); 
   };
 
   const handleAddQuiz = (e: React.FormEvent<HTMLFormElement>) => {

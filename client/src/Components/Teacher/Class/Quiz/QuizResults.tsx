@@ -37,6 +37,7 @@ const QuizResults = () => {
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [refresh, setRefresh] = useState(0); 
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -51,7 +52,7 @@ const QuizResults = () => {
           setLoading(false);
         });
     }
-  }, [selectedStudentResult, selectedQuiz]);
+  }, [selectedStudentResult, selectedQuiz, refresh]);
 
   useEffect(() => {
     if (
@@ -107,7 +108,7 @@ const QuizResults = () => {
 
     setEditedAnswers(updatedAnswers);
     setSelectedItems([]);
-    toast.success("Selected items approved!");
+    setRefresh((prev) => prev + 1);
   };
 
   const handleDisapprove = async () => {
@@ -142,6 +143,7 @@ const QuizResults = () => {
 
     setEditedAnswers(updatedAnswers);
     setSelectedItems([]);
+    setRefresh((prev) => prev + 1);
   };
 
   useEffect(() => {

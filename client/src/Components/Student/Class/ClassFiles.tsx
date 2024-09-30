@@ -39,7 +39,6 @@ const ClassFiles = () => {
           setQuizResults(results);
           setLoading(false);
         } catch (err) {
-          toast.error("Error fetching data");
           setLoading(false);
         }
       }

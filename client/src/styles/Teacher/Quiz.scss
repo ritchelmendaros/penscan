@@ -75,6 +75,20 @@
             background-color: #f0f0f0;
           }
         }
+
+        .delete {
+          background: none;
+          border: none; 
+          cursor: pointer; 
+          padding: 0; 
+          margin-right: 10px;
+          font-size: 20px;
+        }
+        
+        .delete:hover {
+          background: none;
+        }
+        
       }
       &.highlight-edited {
         background-color: rgba(227, 227, 136, 0.2);

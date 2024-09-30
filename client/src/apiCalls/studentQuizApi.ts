@@ -141,3 +141,20 @@ export const disapproveQuizAnswer = async (studentQuizId: string, studentId: str
   }
 };
   
+export const deleteStudentQuiz = async (studentId: string, quizId: string) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/delete`, {
+      params: { studentId, quizId },
+    });
+    toast.success("Score deleted successfully!");
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || "Error deleting the score";
+      toast.error(errorMessage);
+    } else {
+      toast.error("An unexpected error occurred");
+    }
+    throw error;
+  }
+};

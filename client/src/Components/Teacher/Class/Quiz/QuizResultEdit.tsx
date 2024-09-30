@@ -16,15 +16,25 @@ interface AnswerMap {
   [key: number]: string;
 }
 
+interface EditedAnswer {
+  itemnumber: number;
+  editeditem: string;
+  isapproved: boolean;
+  isdisapproved: boolean;
+  isedited: boolean;
+}
+
+
 const QuizResultEdit = () => {
   const [answers, setAnswers] = useState<{ itemnumber: number; answer: string }[]>([]);
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   const [bonusScore, setBonusScore] = useState<number>(0);
-  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
-    {}
-  );
+    // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
+    //   {}
+    // );
+  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: EditedAnswer }>({});  
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -53,19 +63,23 @@ const QuizResultEdit = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
+
   useEffect(() => {
-    if (
-      studentResult?.editedanswer &&
-      Array.isArray(studentResult.editedanswer)
-    ) {
+    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) {
       const extractedEditedAnswers = studentResult.editedanswer.reduce(
         (acc, curr) => {
-          acc[curr.itemnumber] = curr.editeditem; 
+          acc[curr.itemnumber] = {
+            itemnumber: curr.itemnumber, 
+            editeditem: curr.editeditem,
+            isapproved: curr.isapproved,
+            isdisapproved: curr.isdisapproved,
+            isedited: curr.isedited,
+          };
           return acc;
         },
-        {} as { [key: number]: string }
+        {} as { [key: number]: EditedAnswer }
       );
-      setEditedAnswers(extractedEditedAnswers);
+      setEditedAnswers(extractedEditedAnswers); 
 
       setEditedStatus(studentResult?.editedstatus || "");
     }
@@ -93,7 +107,7 @@ const QuizResultEdit = () => {
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
-    const updatedAnswers = { ...editedAnswers, [index]: value };
+    const updatedAnswers = { ...editedAnswers, [index]: { ...editedAnswers[index], editeditem: value } }; 
     setEditedAnswers(updatedAnswers);
     setEditedStatus("PENDING");
   };
@@ -115,7 +129,7 @@ const QuizResultEdit = () => {
         editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some(
           (key) =>
-            studentAnswers[parseInt(key)] !== editedAnswers[parseInt(key)]
+            studentAnswers[parseInt(key)] !== editedAnswers[parseInt(key)].editeditem 
         )
       ) {
         setEditedStatus("PENDING");
@@ -123,8 +137,11 @@ const QuizResultEdit = () => {
 
       if (studentQuizId) {
         const formattedAnswers = Object.keys(editedAnswers)
-          .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
-          .join("\n");
+        .map((key) => {
+          const answer = editedAnswers[parseInt(key)];
+          return `${key}. ${answer.editeditem}`; 
+        })
+        .join("\n");
         await saveStudentQuiz(
           studentQuizId,
           formattedAnswers,
@@ -145,17 +162,27 @@ const QuizResultEdit = () => {
   };
 
   const renderRows = () => {
-    const totalItems = Math.max(
-      answers.length,
-      Object.keys(studentAnswers).length
-    );
     const rows = [];
 
-    for (let i = 1; i <= totalItems; i++) {
+    for (let i = 1; i <= Object.keys(answers).length; i++) {
       const studentAnswer = studentAnswers[i] || "";
-      const correctAnswer = answers[i - 1]?.answer || "";
-      const editedAnswer = editedAnswers[i] || ""; 
+      const correctAnswer = answers[i - 1]?.answer || "Skipped";
+      const editedAnswerObj = editedAnswers[i] || { editeditem: "", isedited: false, isapproved: false, isdisapproved: false }; 
       const status = studentResult?.editedstatus || "";
+
+      let highlightClass = "";
+
+      if (editedStatus === "NONE") {
+        highlightClass = "";
+      } else if (editedAnswerObj.isapproved) {
+        highlightClass = "highlight-approved";
+      } else if (editedAnswerObj.isdisapproved) {
+        highlightClass = "highlight-disapproved";
+      } else if (editedAnswerObj.isedited) {
+        highlightClass = "highlight-edited";
+      }
+
+      const isDisabled = highlightClass !== "";
 
       rows.push(
         <li key={i} className="tr">
@@ -165,9 +192,10 @@ const QuizResultEdit = () => {
           <p className="td">
             <input
               type="text"
-              value={editedAnswer}
-              onChange={(e) => handleStudentAnswerChange(i, e.target.value)} 
-              disabled ={status==="PENDING"}
+              className={`${highlightClass}`}
+              value={editedAnswerObj.editeditem}
+              onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
+              disabled={isDisabled}
             />
           </p>
           <p className="td">{correctAnswer}</p>
