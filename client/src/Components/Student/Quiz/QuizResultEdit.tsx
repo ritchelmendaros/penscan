@@ -9,8 +9,9 @@ import { StudentImageResult } from "../../Interface/Quiz";
 import { useCurrUser } from "../../Context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { studentsaveStudentQuiz } from "../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Answer {
   itemnumber: number;
@@ -28,6 +29,11 @@ const StudentQuizResultEdit = () => {
   const { selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [studentQuizId, setStudentQuizId] = useState<string>("");
+  const [isEditingAnswer, setIsEditingAnswer] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editedStatus, setEditedStatus] = useState<string>("");
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -36,6 +42,7 @@ const StudentQuizResultEdit = () => {
         .then((result) => {
           setStudentResult(result);
           setFeedback(result.comment || "No feedback given");
+          setStudentQuizId(result.studentquizid || "");
           return getAnswerKey(selectedQuiz.quizid);
         })
         .then((answerKey) => {
@@ -128,16 +135,12 @@ const StudentQuizResultEdit = () => {
           <p className="td"></p>
           <p className="td">{correctAnswer.itemnumber}</p>
           <p className="td">{studentAnswer.answer}</p>
-          <p className={`td ${highlightClass}`}>
+          <p className="td">
             <input
               type="text"
+              className={`${highlightClass}`}
               value={editedAnswerObj.editeditem}
-              onChange={(e) => {
-                setEditedAnswers((prev) => ({
-                  ...prev,
-                  [correctAnswer.itemnumber]: e.target.value,
-                }));
-              }}
+              onChange={(e) => handleStudentAnswerChange(correctAnswer.itemnumber, e.target.value)}
               disabled={isDisabled}
             />
           </p>
@@ -148,8 +151,54 @@ const StudentQuizResultEdit = () => {
     });
   };
 
+  const handleStudentAnswerChange = (index: number, value: string) => {
+    const updatedAnswers = { ...editedAnswers, [index]: value };
+    setEditedAnswers(updatedAnswers);
+    setEditedStatus("PENDING");
+  };
+
   const handleSave = () => {
-    toast("Edit button clicked");
+    if (isEditingAnswer) {
+      setIsModalOpen(true);
+    } else {
+      confirmSave();
+    }
+  };
+
+  const confirmSave = async () => {
+    setIsModalOpen(false);
+    try {
+      setIsSaving(true);
+
+      if (
+        editedStatus !== "PENDING" &&
+        Object.keys(editedAnswers).some(
+          (key) =>
+            studentAnswers[parseInt(key)] !== editedAnswers[parseInt(key)]
+        )
+      ) {
+        setEditedStatus("PENDING");
+      }
+
+      if (studentQuizId) {
+        const formattedAnswers = Object.keys(editedAnswers)
+          .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
+          .join("\n");
+        await studentsaveStudentQuiz(
+          studentQuizId,
+          formattedAnswers,
+          editedStatus
+        );
+        toast.success("Successfully saved changes!");
+        navigate("/dashboard/class/quiz");
+      } else {
+        toast.error("Quiz ID is required.");
+      }
+    } catch (error) {
+      toast.error("Error saving changes");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleClose = () => {

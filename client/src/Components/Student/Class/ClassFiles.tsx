@@ -12,7 +12,6 @@ import { SyncLoader } from "react-spinners";
 import { ToastContainer, toast } from "react-toastify";
 import { StudentImageResult } from "../../Interface/Quiz";
 import "react-toastify/dist/ReactToastify.css";
-import StudentQuizResults from "../Quiz/QuizResult";
 
 const ClassFiles = () => {
   const navigate = useNavigate();
@@ -31,10 +30,12 @@ const ClassFiles = () => {
             user.userid,
             clickedClass.classid
           );
+          console.log("Fetched quizzes:", quiz);
           setQuizzes(quiz);
           const results = await Promise.all(
             quiz.map((q) => getQuizResults(user.userid, q.quizId))
           );
+          console.log("Fetched quizzes:", quiz);
           setQuizResults(results);
           setLoading(false);
         } catch (err) {
@@ -60,16 +61,22 @@ const ClassFiles = () => {
     setSelectedQuiz(selectedQuiz);
     navigate("/dashboard/class/quiz/quiz-result");
   };
-  
-  const handleViewQuiz = (event: React.MouseEvent<HTMLButtonElement>, quiz: Quizzes) => {
+
+  const handleViewQuiz = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    quiz: Quizzes
+  ) => {
     event.stopPropagation();
     const selectedQuiz = mapQuizzesToQuiz(quiz);
     setSelectedQuiz(selectedQuiz);
     navigate("/dashboard/class/quiz/quiz-result");
   };
 
-  const handleEditQuiz = (event: React.MouseEvent<HTMLButtonElement>, quiz: Quizzes) => {
-    event.stopPropagation(); 
+  const handleEditQuiz = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    quiz: Quizzes
+  ) => {
+    event.stopPropagation();
     const selectedQuiz = mapQuizzesToQuiz(quiz);
     setSelectedQuiz(selectedQuiz);
     navigate("/dashboard/class/quiz/quiz-result-edit");
@@ -105,16 +112,16 @@ const ClassFiles = () => {
                     <p className="td">{score}</p>
                     <p className="td">{status}</p>
                     <p className="td">
-                    <div>
+                      <div>
                         <button
                           className="view"
-                          onClick={(event) => handleViewQuiz(event, quiz)} 
+                          onClick={(event) => handleViewQuiz(event, quiz)}
                         >
                           View
                         </button>
                         <button
                           className="edit"
-                          onClick={(event) => handleEditQuiz(event, quiz)} 
+                          onClick={(event) => handleEditQuiz(event, quiz)}
                         >
                           Edit
                         </button>

@@ -28,6 +28,31 @@ export const uploadStudentQuiz = async (quizid: string, selectedFile: File) => {
   }
 };
 
+export const studentuploadStudentQuiz = async (quizid: string, userid: string, selectedFile: File) => {
+  const formData = new FormData();
+  formData.append("quizid", quizid);
+  formData.append("userid", userid);
+  formData.append("image", selectedFile);
+
+  try {
+    const response = await axios.post(`${BASE_URL}/studentupload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    toast.success(response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || "An error occurred";
+      toast.error(errorMessage);
+    } else {
+      toast.error("An unexpected error occurred");
+    }
+    throw error;
+  }
+};
+
 export const saveStudentQuiz = async (
   studentQuizId: string,
   newText: string,
@@ -41,6 +66,30 @@ export const saveStudentQuiz = async (
       newText,
       comment,
       bonusScore,
+      editedStatus,
+    });
+    toast.success(response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || "Error saving changes";
+      toast.error(errorMessage);
+    } else {
+      toast.error("An unexpected error occurred while saving changes");
+    }
+    throw error;
+  }
+};
+
+export const studentsaveStudentQuiz = async (
+  studentQuizId: string,
+  newText: string,
+  editedStatus: string
+) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/edit`, {
+      studentQuizId,
+      newText,
       editedStatus,
     });
     toast.success(response.data);

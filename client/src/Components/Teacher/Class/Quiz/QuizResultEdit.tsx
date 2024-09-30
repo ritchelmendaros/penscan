@@ -145,11 +145,15 @@ const QuizResultEdit = () => {
   };
 
   const renderRows = () => {
+    const totalItems = Math.max(
+      answers.length,
+      Object.keys(studentAnswers).length
+    );
     const rows = [];
 
-    for (let i = 1; i <= Object.keys(answers).length; i++) {
+    for (let i = 1; i <= totalItems; i++) {
       const studentAnswer = studentAnswers[i] || "";
-      const correctAnswer = answers[i - 1]?.answer || "Skipped";
+      const correctAnswer = answers[i - 1]?.answer || "";
       const editedAnswer = editedAnswers[i] || ""; 
       const status = studentResult?.editedstatus || "";
 

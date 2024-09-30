@@ -15,7 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 
 const QuizResults = () => {
-  const [answers, setAnswers] = useState<{ itemnumber: number; answer: string }[]>([]);
+  const [answers, setAnswers] = useState<
+    { itemnumber: number; answer: string }[]
+  >([]);
 
   const [studentAnswers, setStudentAnswers] = useState<{
     [key: number]: string;
@@ -142,7 +144,6 @@ const QuizResults = () => {
     setSelectedItems([]);
   };
 
-
   useEffect(() => {
     if (studentResult?.recognizedAnswers) {
       const answersMap = studentResult.recognizedAnswers.reduce(
@@ -152,7 +153,7 @@ const QuizResults = () => {
         },
         {}
       );
-      setStudentAnswers(answersMap); 
+      setStudentAnswers(answersMap);
     }
 
     if (selectedQuiz?.quizanswerkey) {
@@ -173,11 +174,15 @@ const QuizResults = () => {
   };
 
   const renderRows = () => {
+    const totalItems = Math.max(
+      answers.length,
+      Object.keys(studentAnswers).length
+    );
     const rows = [];
 
-    for (let i = 1; i <= answers.length; i++) {
+    for (let i = 1; i <= totalItems; i++) {
       const studentAnswer = studentAnswers[i] || "";
-      const correctAnswer = answers[i - 1]?.answer || "Skipped";
+      const correctAnswer = answers[i - 1]?.answer || "";
       const editedStatus = studentResult?.editedstatus;
 
       const editedAnswerObj = editedAnswers[i] || null;
@@ -187,8 +192,7 @@ const QuizResults = () => {
           : "";
 
       const isEditedDifferent =
-        editedAnswer !== "" &&
-        editedAnswer !== studentAnswer 
+        editedAnswer !== "" && editedAnswer !== studentAnswer;
 
       let highlightClass = "";
       if (editedStatus === "NONE") {
@@ -217,13 +221,7 @@ const QuizResults = () => {
           </p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer}</p>
-          <p className={`td ${highlightClass}`}>
-            {editedStatus !== "NONE"
-              ? editedAnswer
-                ? editedAnswer
-                : studentAnswer
-              : ""}
-          </p>
+          <p className={`td ${highlightClass}`}>{editedAnswer || ""}</p>
 
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>

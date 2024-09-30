@@ -1,4 +1,14 @@
 .Classes {
+   .studentupload-download {
+      display: flex;
+      gap: 10px;
+
+      button {
+        background-color: #416edf;
+        color: white;
+        border-radius: 5px;
+      }
+    }
   .table {
     .thead {
       background-color: $blue-btn;
@@ -117,4 +127,64 @@
     justify-content: center; 
     align-items: center; 
     margin-top: 200px;         
+  }
+  .modalquiz-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modalquiz-content {
+    background: #3d3b44;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 500px;
+    max-width: 90%;
+  }
+
+  .modalquiz-input {
+    background: #232324;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    width: 500px;
+    max-width: 90%;
+  }
+
+  .modalquiz-buttons {
+    display: flex;
+    margin-top: 20px;
+    .modalsubmit {
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: bold;
+      margin-left: 150px;
+      background-color: #3e6ab7;
+      color: white;
+    }
+    .modalcancel {
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: bold;
+      margin-left: 20px;
+      background-color: #e94f4f;
+      color: white;
+    }
+  }
+
+  .loader {
+    font-size: 18px;
+    color: #666;
+    margin-top: 10px;
   }
