@@ -6,7 +6,7 @@ export const getAllClasses: (
 ) => Promise<ClassInterface[]> = async (userID) => {
     try {
         const response = await axios.get<ClassInterface[]>(
-            `https://penscan-api.onrender.com/api/classes/getclassesbyteacherid?teacherid=${userID}`,
+            `https://penscan-server.onrender.com/api/classes/getclassesbyteacherid?teacherid=${userID}`,
         );
         return response.data;
     } catch (error) {
@@ -27,13 +27,13 @@ export const postCreateClass = async (
 ): Promise<PostCreateClassResponse | undefined> => {
     try {
         const response = await axios.get(
-            `https://penscan-api.onrender.com/api/classes/checkclass?classname=${className}&teacherid=${teacherID}`,
+            `https://penscan-server.onrender.com/api/classes/checkclass?classname=${className}&teacherid=${teacherID}`,
         );
 
         if (response.data.exists) {
         } else {
             await axios.post(
-                'https://penscan-api.onrender.com/api/classes/add',
+                'https://penscan-server.onrender.com/api/classes/add',
                 { classname: className, teacherid: teacherID },
             );
         }
@@ -49,12 +49,12 @@ export const postCreateClass = async (
 export const getUserClassesByUserId = async (userId: string): Promise<ClassInterface[]> => {
     try {
         const response = await axios.get<ClassInterface[]>(
-            `https://penscan-api.onrender.com/api/students/getclassidsbyuserid?userid=${userId}`,
+            `https://penscan-server.onrender.com/api/students/getclassidsbyuserid?userid=${userId}`,
         );
         const classIds = response.data;
         if (classIds.length > 0) {
             const classDetailsResponse = await axios.get<ClassInterface[]>(
-                `https://penscan-api.onrender.com/api/classes/getclassdetails?classids=${classIds.join(",")}`
+                `https://penscan-server.onrender.com/api/classes/getclassdetails?classids=${classIds.join(",")}`
             );
             return classDetailsResponse.data;
         } else {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://penscan-api.onrender.com/api";
+const API_BASE_URL = "https://penscan-server.onrender.com/api";
 
 // Function to get classes by teacher ID
 export const getClassesByTeacherId = async (teacherId: string) => {

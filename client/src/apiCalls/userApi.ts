@@ -2,8 +2,8 @@ import axios from 'axios';
 import { CurrUser } from '../Components/Interface/CurrUser';
 import { Student } from '../Components/Interface/StudentInterface'; 
 
-const API_BASE_URL = 'https://penscan-api.onrender.com/api/users';
-const USER_DETAILS = 'https://penscan-api.onrender.com/api/users/getuserdetails?username=';
+const API_BASE_URL = 'https://penscan-server.onrender.com/api/users';
+const USER_DETAILS = 'https://penscan-server.onrender.com/api/users/getuserdetails?username=';
 
 export const loginUser = async (username: string, password: string) => {
     const response = await axios.post(

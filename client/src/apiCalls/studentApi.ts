@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Student } from '../Components/Interface/StudentInterface'; 
 
-const API_BASE_URL = 'https://penscan-api.onrender.com/api/students';
+const API_BASE_URL = 'https://penscan-server.onrender.com/api/students';
 
 export const fetchStudentsByClassId = async (classId: string): Promise<Student[]> => {
     try {
