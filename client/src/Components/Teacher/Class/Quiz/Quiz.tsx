@@ -161,7 +161,7 @@ const Quiz = () => {
               <li className="th">
                 <p className="td">Student Name</p>
                 <p className="td">Score</p>
-                <p className="td">Status</p>
+                <p className="td">Modified</p>
                 <p className="td">Actions</p>
               </li>
             </ul>
