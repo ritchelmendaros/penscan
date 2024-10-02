@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle, faClipboardList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faQuestionCircle,
+  faClipboardList,
+} from "@fortawesome/free-solid-svg-icons";
 import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
 import InputContainer from "../../../Common/InputContainer";
@@ -42,8 +45,8 @@ const AddQuiz = () => {
       { length: items },
       (_, i) => `${i + 1}. `
     ).join("\n");
-    
-    setAnswerKey(generatedAnswers); 
+
+    setAnswerKey(generatedAnswers);
   };
 
   const handleAddQuiz = (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,16 +87,16 @@ const AddQuiz = () => {
       <Header />
       <main>
         <div className="content">
-          <h2>Add Quiz</h2>
-          <InputContainer
-            icon={faClipboardList}
-            placeholder={"Quiz Name"}
-            value={quizName}
-            onChange={handleQuizNameChange}
-          />
-
           <form onSubmit={handleAddQuiz}>
-          <div className="input-container">
+            <h2>Add Quiz</h2>
+            <InputContainer
+              icon={faClipboardList}
+              placeholder={"Quiz Name"}
+              value={quizName}
+              onChange={handleQuizNameChange}
+            />
+
+            <div className="input-container">
               <FontAwesomeIcon icon={faQuestionCircle} className="input-icon" />
               <input
                 type="number"
@@ -101,6 +104,7 @@ const AddQuiz = () => {
                 value={numItems}
                 onChange={handleNumItemsChange}
                 className="full-width-input"
+                required
               />
             </div>
             <div className="input-container">
