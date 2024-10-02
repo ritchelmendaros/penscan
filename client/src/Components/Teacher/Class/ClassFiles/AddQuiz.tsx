@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faQuestionCircle,
   faClipboardList,
+  faClipboardQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
@@ -17,11 +18,11 @@ import "react-toastify/dist/ReactToastify.css";
 import ConfirmationModal from "../../../Modal/ConfirmationModal";
 
 const AddQuiz = () => {
-  const [quizName, setQuizName] = useState<string>("");
-  const [answerKey, setAnswerKey] = useState<string>("");
-  const [numItems, setNumItems] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [modalMessage, setModalMessage] = useState<string>("");
+  const [quizName, setQuizName] = useState("");
+  const [answers, setAnswers] = useState(Array(3).fill(""));
+  const [numItems, setNumItems] = useState(3);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
 
   const { user } = useCurrUser();
@@ -33,20 +34,19 @@ const AddQuiz = () => {
     setQuizName(e.target.value);
   };
 
-  const handleAnswerKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setAnswerKey(e.target.value);
-  };
-
   const handleNumItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const items = parseInt(e.target.value);
     setNumItems(items);
+    setAnswers(Array(items).fill(""));
+  };
 
-    const generatedAnswers = Array.from(
-      { length: items },
-      (_, i) => `${i + 1}. `
-    ).join("\n");
-
-    setAnswerKey(generatedAnswers);
+  const handleAnswerChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = e.target.value;
+    setAnswers(newAnswers);
   };
 
   const handleAddQuiz = (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,14 +60,12 @@ const AddQuiz = () => {
       toast.error("Class ID or User ID is missing.");
       return;
     }
-    const answerArray = answerKey.split("\n").map((line) => {
-      const [itemnumber, ...answerParts] = line.split(".");
-      const answer = answerParts.join(".").trim();
-      return {
-        itemnumber: parseInt(itemnumber.trim()),
-        answer,
-      };
-    });
+
+    const answerArray = answers.map((answer, index) => ({
+      itemnumber: index + 1,
+      answer,
+    }));
+
     try {
       await addQuiz(classId, quizName, userId, answerArray);
       navigate(`/dashboard/class`);
@@ -108,15 +106,22 @@ const AddQuiz = () => {
               />
             </div>
             <div className="input-container">
-              <textarea
-                id="answerKey"
-                className="InputContainer"
-                value={answerKey}
-                onChange={handleAnswerKeyChange}
-                placeholder="Enter answer key"
-                rows={10}
-                style={{ resize: "vertical", color: "white" }}
-              />
+              <div className="answers-container">
+                {answers.map((answer, index) => (
+                  <div key={index} className="answer-input">
+                    <label htmlFor={`answer-${index}`}>
+                      Question {index + 1}
+                    </label>
+                    <input
+                      id={`answer-${index}`}
+                      type="text"
+                      value={answer}
+                      onChange={(e) => handleAnswerChange(e, index)}
+                      required
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
             <BtnWithRobot name={"Add"} />

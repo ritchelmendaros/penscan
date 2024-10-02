@@ -1,52 +1,80 @@
 .AddQuiz {
-    main {
-        display: flex;
-        justify-content: center;
+  main {
+    display: flex;
+    justify-content: center;
 
-        .content {
-            margin-top: 70px;
-            width: 50%;
-        }
+    .content {
+      margin-top: 70px;
+      width: 50%;
     }
-    form {
-        display: flex;
-        flex-direction: column;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
 
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            position: relative;
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      position: relative;
 
-            .input-icon {
-                position: absolute;
-                left: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: white;
-              }
+      .input-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+      }
 
-            .full-width-input {
-                width: 100%; 
-                padding: 10px 10px 10px 40px;
-                border-radius: 5px;
-                background-color: $grey; 
-                color: white; 
-                
-            }
-        }
-    }
-
-    .file-input-container {
-        display: flex;
-        flex-direction: column;
+      .full-width-input {
+        width: 100%;
+        padding: 10px 10px 10px 40px;
+        border-radius: 5px;
         background-color: $grey;
-
-        padding: 10px;
-        label {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: $grey-placeholder;
-            padding-left: 10px;
-        }
+        color: white;
+      }
     }
+
+    .answers-container {
+      height: 250px;
+      overflow-y: auto;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #4b5563;
+      border-radius: 4px;
+
+      .answer-input {
+        margin-bottom: 1rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: white;
+          font-size: 14px;
+        }
+
+        input {
+          width: 100%;
+          padding: 7px 15px;
+          border: 1px solid #4b5563;
+          border-radius: 4px;
+          background-color: #3f4045;
+          color: #e5e7eb;
+        }
+      }
+    }
+  }
+
+  .file-input-container {
+    display: flex;
+    flex-direction: column;
+    background-color: $grey;
+
+    padding: 10px;
+    label {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      color: $grey-placeholder;
+      padding-left: 10px;
+    }
+  }
 }
