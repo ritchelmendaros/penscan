@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faQuestionCircle,
   faClipboardList,
-  faClipboardQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
