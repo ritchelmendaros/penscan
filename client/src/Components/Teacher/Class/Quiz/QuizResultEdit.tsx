@@ -24,21 +24,24 @@ interface EditedAnswer {
   isedited: boolean;
 }
 
-
 const QuizResultEdit = () => {
-  const [answers, setAnswers] = useState<{ itemnumber: number; answer: string }[]>([]);
+  const [answers, setAnswers] = useState<
+    { itemnumber: number; answer: string }[]
+  >([]);
   const [studentAnswers, setStudentAnswers] = useState<AnswerMap>({});
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
-  const [bonusScore, setBonusScore] = useState<number>(0);
-    // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
-    //   {}
-    // );
-  const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: EditedAnswer }>({});  
+  const [bonusScore, setBonusScore] = useState(0);
+  // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
+  //   {}
+  // );
+  const [editedAnswers, setEditedAnswers] = useState<{
+    [key: number]: EditedAnswer;
+  }>({});
   const [editedStatus, setEditedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [isEditingAnswer] = useState(false); 
+  const [isEditingAnswer] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -53,7 +56,7 @@ const QuizResultEdit = () => {
           setStudentResult(result);
           setFeedback(result.comment || "");
           setBonusScore(result.bonusscore || 0);
-          setStudentQuizId(result.studentquizid || ""); 
+          setStudentQuizId(result.studentquizid || "");
           setLoading(false);
         })
         .catch((error) => {
@@ -63,13 +66,15 @@ const QuizResultEdit = () => {
     }
   }, [selectedStudentResult, selectedQuiz]);
 
-
   useEffect(() => {
-    if (studentResult?.editedanswer && Array.isArray(studentResult.editedanswer)) {
+    if (
+      studentResult?.editedanswer &&
+      Array.isArray(studentResult.editedanswer)
+    ) {
       const extractedEditedAnswers = studentResult.editedanswer.reduce(
         (acc, curr) => {
           acc[curr.itemnumber] = {
-            itemnumber: curr.itemnumber, 
+            itemnumber: curr.itemnumber,
             editeditem: curr.editeditem,
             isapproved: curr.isapproved,
             isdisapproved: curr.isdisapproved,
@@ -79,7 +84,7 @@ const QuizResultEdit = () => {
         },
         {} as { [key: number]: EditedAnswer }
       );
-      setEditedAnswers(extractedEditedAnswers); 
+      setEditedAnswers(extractedEditedAnswers);
 
       setEditedStatus(studentResult?.editedstatus || "");
     }
@@ -94,7 +99,7 @@ const QuizResultEdit = () => {
         },
         {}
       );
-      setStudentAnswers(answersMap); 
+      setStudentAnswers(answersMap);
     }
 
     if (selectedQuiz?.quizanswerkey) {
@@ -107,7 +112,10 @@ const QuizResultEdit = () => {
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
-    const updatedAnswers = { ...editedAnswers, [index]: { ...editedAnswers[index], editeditem: value } }; 
+    const updatedAnswers = {
+      ...editedAnswers,
+      [index]: { ...editedAnswers[index], editeditem: value },
+    };
     setEditedAnswers(updatedAnswers);
     setEditedStatus("PENDING");
   };
@@ -116,12 +124,12 @@ const QuizResultEdit = () => {
     if (isEditingAnswer) {
       setIsModalOpen(true);
     } else {
-      confirmSave(); 
+      confirmSave();
     }
   };
 
   const confirmSave = async () => {
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
     try {
       setIsSaving(true);
 
@@ -129,7 +137,8 @@ const QuizResultEdit = () => {
         editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some(
           (key) =>
-            studentAnswers[parseInt(key)] !== editedAnswers[parseInt(key)].editeditem 
+            studentAnswers[parseInt(key)] !==
+            editedAnswers[parseInt(key)].editeditem
         )
       ) {
         setEditedStatus("PENDING");
@@ -137,11 +146,11 @@ const QuizResultEdit = () => {
 
       if (studentQuizId) {
         const formattedAnswers = Object.keys(editedAnswers)
-        .map((key) => {
-          const answer = editedAnswers[parseInt(key)];
-          return `${key}. ${answer.editeditem}`; 
-        })
-        .join("\n");
+          .map((key) => {
+            const answer = editedAnswers[parseInt(key)];
+            return `${key}. ${answer.editeditem}`;
+          })
+          .join("\n");
         await saveStudentQuiz(
           studentQuizId,
           formattedAnswers,
@@ -161,13 +170,23 @@ const QuizResultEdit = () => {
     }
   };
 
+  const handleBonusScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const score = parseInt(e.target.value);
+    setBonusScore(score);
+  };
+
   const renderRows = () => {
     const rows = [];
 
     for (let i = 1; i <= Object.keys(answers).length; i++) {
       const studentAnswer = studentAnswers[i] || "";
       const correctAnswer = answers[i - 1]?.answer || "Skipped";
-      const editedAnswerObj = editedAnswers[i] || { editeditem: "", isedited: false, isapproved: false, isdisapproved: false }; 
+      const editedAnswerObj = editedAnswers[i] || {
+        editeditem: "",
+        isedited: false,
+        isapproved: false,
+        isdisapproved: false,
+      };
       // const status = studentResult?.editedstatus || "";
 
       let highlightClass = "";
@@ -231,7 +250,7 @@ const QuizResultEdit = () => {
                   <input
                     type="number"
                     value={bonusScore}
-                    onChange={(e) => setBonusScore(Number(e.target.value))}
+                    onChange={handleBonusScoreChange}
                   />
                 </div>
               </div>
