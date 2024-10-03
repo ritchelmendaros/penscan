@@ -8,7 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
-import InputContainer from "../../../Common/InputContainer";
 import BtnWithRobot from "../../../Common/BtnWithRobot";
 import { useNavigate } from "react-router-dom";
 import { addQuiz } from "../../../../apiCalls/QuizAPIs";
@@ -35,10 +34,30 @@ const AddQuiz = () => {
     setQuizName(e.target.value);
   };
 
+  const updateQuestionsCount = (newCount: number) => {
+    const validCount = Math.max(1, newCount);
+    setNumItems(validCount);
+    setAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      while (newAnswers.length < validCount) {
+        newAnswers.push("");
+      }
+      return newAnswers.slice(0, validCount);
+    });
+  };
+
   const handleNumItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const items = parseInt(e.target.value);
     setNumItems(items);
     setAnswers(Array(items).fill(""));
+  };
+
+  const handleIncrementQuestions = () => {
+    updateQuestionsCount(numItems + 1);
+  };
+
+  const handleDecrementQuestions = () => {
+    updateQuestionsCount(numItems - 1);
   };
 
   const handleAnswerChange = (
@@ -124,18 +143,10 @@ const AddQuiz = () => {
                     required
                   />
                   <div className="number-controls">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setNumItems((prev) => Math.max(1, prev - 1))
-                      }
-                    >
+                    <button type="button" onClick={handleDecrementQuestions}>
                       <FontAwesomeIcon icon={faMinus} />
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setNumItems((prev) => prev + 1)}
-                    >
+                    <button type="button" onClick={handleIncrementQuestions}>
                       <FontAwesomeIcon icon={faPlus} />
                     </button>
                   </div>
