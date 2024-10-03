@@ -1,6 +1,6 @@
 import Header from "../../../Common/Header";
 import Gradients from "../../../Common/Gradients";
-import SmilingRobot from "../../../Common/SmilingRobot";
+// import SmilingRobot from "../../../Common/SmilingRobot";
 import { useQuiz } from "../../../Context/QuizContext";
 import { useEffect, useState } from "react";
 import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
@@ -36,7 +36,7 @@ const QuizResults = () => {
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  // const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
@@ -166,13 +166,13 @@ const QuizResults = () => {
     navigate("/dashboard/class/quiz");
   };
 
-  const handleCheckboxChange = (itemIndex: number) => {
-    setSelectedItems((prevSelected) =>
-      prevSelected.includes(itemIndex)
-        ? prevSelected.filter((index) => index !== itemIndex)
-        : [...prevSelected, itemIndex]
-    );
-  };
+  // const handleCheckboxChange = (itemIndex: number) => {
+  //   setSelectedItems((prevSelected) =>
+  //     prevSelected.includes(itemIndex)
+  //       ? prevSelected.filter((index) => index !== itemIndex)
+  //       : [...prevSelected, itemIndex]
+  //   );
+  // };
 
   const renderRows = () => {
     const totalItems = Math.max(

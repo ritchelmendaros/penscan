@@ -98,10 +98,10 @@ const StudentQuizResults = () => {
       ...studentAnswers.map((ans) => ans.itemnumber)
     );
 
-    const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
-      acc[correctAnswer.itemnumber] = correctAnswer.answer;
-      return acc;
-    }, {} as Record<number, string>);
+    // const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
+    //   acc[correctAnswer.itemnumber] = correctAnswer.answer;
+    //   return acc;
+    // }, {} as Record<number, string>);
 
     const studentAnswerMap = studentAnswers.reduce((acc, studentAnswer) => {
       acc[studentAnswer.itemnumber] = studentAnswer.answer;
@@ -110,7 +110,7 @@ const StudentQuizResults = () => {
 
     const rows = [];
     for (let i = 1; i <= maxItemNumber; i++) {
-      const correctAnswer = correctAnswerMap[i] || "";
+      // const correctAnswer = correctAnswerMap[i] || "";
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",

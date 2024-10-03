@@ -2,8 +2,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import axiosInstance from "./common/axiosInstance";
 
-const BASE_URL = 'https://penscan-server.onrender.com/api/studentquiz';
-// const BASE_URL = "http://localhost:8080/api/studentquiz";
+// const BASE_URL = 'https://penscan-server.onrender.com/api/studentquiz';
+// // const BASE_URL = "http://localhost:8080/api/studentquiz";
 
 export const uploadStudentQuiz = async (quizid: string, selectedFile: File) => {
   const formData = new FormData();
