@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle, faClipboardList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faQuestionCircle,
+  faClipboardList,
+  faPlus,
+  faMinus,
+} from "@fortawesome/free-solid-svg-icons";
 import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
-import InputContainer from "../../../Common/InputContainer";
 import BtnWithRobot from "../../../Common/BtnWithRobot";
 import { useNavigate } from "react-router-dom";
 import { addQuiz } from "../../../../apiCalls/QuizAPIs";
@@ -14,11 +18,11 @@ import "react-toastify/dist/ReactToastify.css";
 import ConfirmationModal from "../../../Modal/ConfirmationModal";
 
 const AddQuiz = () => {
-  const [quizName, setQuizName] = useState<string>("");
-  const [answerKey, setAnswerKey] = useState<string>("");
-  const [numItems, setNumItems] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [modalMessage, setModalMessage] = useState<string>("");
+  const [quizName, setQuizName] = useState("");
+  const [answers, setAnswers] = useState(Array(3).fill(""));
+  const [numItems, setNumItems] = useState(3);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
 
   const { user } = useCurrUser();
@@ -30,20 +34,39 @@ const AddQuiz = () => {
     setQuizName(e.target.value);
   };
 
-  const handleAnswerKeyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setAnswerKey(e.target.value);
+  const updateQuestionsCount = (newCount: number) => {
+    const validCount = Math.max(1, newCount);
+    setNumItems(validCount);
+    setAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      while (newAnswers.length < validCount) {
+        newAnswers.push("");
+      }
+      return newAnswers.slice(0, validCount);
+    });
   };
 
   const handleNumItemsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const items = parseInt(e.target.value);
     setNumItems(items);
+    setAnswers(Array(items).fill(""));
+  };
 
-    const generatedAnswers = Array.from(
-      { length: items },
-      (_, i) => `${i + 1}. `
-    ).join("\n");
-    
-    setAnswerKey(generatedAnswers); 
+  const handleIncrementQuestions = () => {
+    updateQuestionsCount(numItems + 1);
+  };
+
+  const handleDecrementQuestions = () => {
+    updateQuestionsCount(numItems - 1);
+  };
+
+  const handleAnswerChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = e.target.value;
+    setAnswers(newAnswers);
   };
 
   const handleAddQuiz = (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,14 +80,12 @@ const AddQuiz = () => {
       toast.error("Class ID or User ID is missing.");
       return;
     }
-    const answerArray = answerKey.split("\n").map((line) => {
-      const [itemnumber, ...answerParts] = line.split(".");
-      const answer = answerParts.join(".").trim();
-      return {
-        itemnumber: parseInt(itemnumber.trim()),
-        answer,
-      };
-    });
+
+    const answerArray = answers.map((answer, index) => ({
+      itemnumber: index + 1,
+      answer,
+    }));
+
     try {
       await addQuiz(classId, quizName, userId, answerArray);
       navigate(`/dashboard/class`);
@@ -84,39 +105,73 @@ const AddQuiz = () => {
       <Header />
       <main>
         <div className="content">
-          <h2>Add Quiz</h2>
-          <InputContainer
-            icon={faClipboardList}
-            placeholder={"Quiz Name"}
-            value={quizName}
-            onChange={handleQuizNameChange}
-          />
-
-          <form onSubmit={handleAddQuiz}>
-          <div className="input-container">
-              <FontAwesomeIcon icon={faQuestionCircle} className="input-icon" />
-              <input
-                type="number"
-                placeholder="Number of Quiz Items"
-                value={numItems}
-                onChange={handleNumItemsChange}
-                className="full-width-input"
-              />
-            </div>
-            <div className="input-container">
-              <textarea
-                id="answerKey"
-                className="InputContainer"
-                value={answerKey}
-                onChange={handleAnswerKeyChange}
-                placeholder="Enter answer key"
-                rows={10}
-                style={{ resize: "vertical", color: "white" }}
-              />
-            </div>
-
-            <BtnWithRobot name={"Add"} />
-          </form>
+          <div className="quiz-creation-form">
+            <h2>Create New Quiz</h2>
+            <form onSubmit={handleAddQuiz}>
+              <div className="input-group">
+                <label htmlFor="quiz-title">Quiz Title</label>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon
+                    icon={faClipboardList}
+                    className="input-icon"
+                  />
+                  <input
+                    id="quiz-title"
+                    type="text"
+                    value={quizName}
+                    onChange={handleQuizNameChange}
+                    placeholder="Enter the title of your quiz"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="input-group">
+                <label htmlFor="num-questions">Number of Questions</label>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon
+                    icon={faQuestionCircle}
+                    className="input-icon"
+                  />
+                  <input
+                    id="num-questions"
+                    type="number"
+                    value={numItems}
+                    onChange={handleNumItemsChange}
+                    min="1"
+                    placeholder="How many questions in your quiz?"
+                    style={{ appearance: "textfield" }}
+                    required
+                  />
+                  <div className="number-controls">
+                    <button type="button" onClick={handleDecrementQuestions}>
+                      <FontAwesomeIcon icon={faMinus} />
+                    </button>
+                    <button type="button" onClick={handleIncrementQuestions}>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="answers-container">
+                {answers.map((answer, index) => (
+                  <div key={index} className="answer-input">
+                    <label htmlFor={`answer-${index}`}>
+                      Question {index + 1}
+                    </label>
+                    <input
+                      id={`answer-${index}`}
+                      type="text"
+                      value={answer}
+                      onChange={(e) => handleAnswerChange(e, index)}
+                      placeholder={`Type your question here`}
+                      required
+                    />
+                  </div>
+                ))}
+              </div>
+              <BtnWithRobot name={"Create Quiz"} />
+            </form>
+          </div>
         </div>
       </main>
 

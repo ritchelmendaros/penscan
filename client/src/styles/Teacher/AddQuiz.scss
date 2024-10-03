@@ -1,52 +1,146 @@
 .AddQuiz {
-    main {
-        display: flex;
-        justify-content: center;
+  main {
+    display: flex;
+    justify-content: center;
 
-        .content {
-            margin-top: 70px;
-            width: 50%;
-        }
+    .content {
+      margin-top: 10px;
+      width: 50%;
     }
-    form {
-        display: flex;
-        flex-direction: column;
+  }
+  .quiz-creation-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 2rem 1rem;
+    border-radius: 8px;
+    border: 1px solid white;
+    color: white;
 
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-
-            .input-icon {
-                position: absolute;
-                left: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: white;
-              }
-
-            .full-width-input {
-                width: 100%; 
-                padding: 10px 10px 10px 40px;
-                border-radius: 5px;
-                background-color: $grey; 
-                color: white; 
-                
-            }
-        }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: white;
     }
 
-    .file-input-container {
-        display: flex;
-        flex-direction: column;
+    .input-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: white;
+        font-weight: bold;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 1px solid #4b5563;
+        border-radius: 4px;
         background-color: $grey;
+        color: white;
+        font-size: 1rem;
 
-        padding: 10px;
-        label {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: $grey-placeholder;
-            padding-left: 10px;
+        &:focus {
+          outline: none;
+          border-color: #5680e9;
         }
+      }
+
+      .number-controls {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+
+        button {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 1rem;
+          cursor: pointer;
+          padding: 0.25rem 0.5rem;
+
+          &:hover {
+            color: #5680e9;
+          }
+        }
+      }
     }
+
+    .answers-container {
+      height: 150px;
+      overflow-y: auto;
+      padding: 0.5rem;
+      border: 1px solid #4b5563;
+      border-radius: 4px;
+
+      .answer-input {
+        margin-bottom: 1rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: #ffffff;
+          font-weight: bold;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid $grey;
+          border-radius: 4px;
+          background-color: $grey;
+          color: white;
+          font-size: 1rem;
+
+          &:focus {
+            outline: none;
+            border-color: #5680e9;
+          }
+        }
+      }
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #5680e9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #4a6fd6;
+      }
+    }
+  }
+}
+
+/* Hide the up/down arrows in number input for most browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
