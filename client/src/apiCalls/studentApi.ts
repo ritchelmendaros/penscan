@@ -21,7 +21,7 @@ export const addStudentToClass = async (studentId: string, classId: string) => {
     try {
         const response = await axiosInstance.put(
             '/api/students/addclasstostudent',
-            null, 
+            null,
             {
                 params: {
                     userid: studentId,

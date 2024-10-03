@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import axiosInstance from "./common/axiosInstance";
 
-// const BASE_URL = 'https://penscan-server.onrender.com/api/studentquiz';
+const BASE_URL = 'https://penscan-server.onrender.com/api/studentquiz';
 // const BASE_URL = "http://localhost:8080/api/studentquiz";
 
 export const uploadStudentQuiz = async (quizid: string, selectedFile: File) => {
@@ -120,7 +120,7 @@ export const studentsaveStudentQuiz = async (
 export const approveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
       const response = await axiosInstance.put(
-        'api/studentquiz/approve', 
+        '/api/studentquiz/approve', 
         null, 
         {
           params: {
