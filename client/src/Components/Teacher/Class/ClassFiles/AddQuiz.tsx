@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faQuestionCircle,
   faClipboardList,
+  faPlus,
+  faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import Gradients from "../../../Common/Gradients";
 import Header from "../../../Common/Header";
@@ -84,27 +86,60 @@ const AddQuiz = () => {
       <Header />
       <main>
         <div className="content">
-          <form onSubmit={handleAddQuiz}>
-            <h2>Add Quiz</h2>
-            <InputContainer
-              icon={faClipboardList}
-              placeholder={"Quiz Name"}
-              value={quizName}
-              onChange={handleQuizNameChange}
-            />
-
-            <div className="input-container">
-              <FontAwesomeIcon icon={faQuestionCircle} className="input-icon" />
-              <input
-                type="number"
-                placeholder="Number of Quiz Items"
-                value={numItems}
-                onChange={handleNumItemsChange}
-                className="full-width-input"
-                required
-              />
-            </div>
-            <div className="input-container">
+          <div className="quiz-creation-form">
+            <h2>Create New Quiz</h2>
+            <form onSubmit={handleAddQuiz}>
+              <div className="input-group">
+                <label htmlFor="quiz-title">Quiz Title</label>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon
+                    icon={faClipboardList}
+                    className="input-icon"
+                  />
+                  <input
+                    id="quiz-title"
+                    type="text"
+                    value={quizName}
+                    onChange={handleQuizNameChange}
+                    placeholder="Enter the title of your quiz"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="input-group">
+                <label htmlFor="num-questions">Number of Questions</label>
+                <div className="input-wrapper">
+                  <FontAwesomeIcon
+                    icon={faQuestionCircle}
+                    className="input-icon"
+                  />
+                  <input
+                    id="num-questions"
+                    type="number"
+                    value={numItems}
+                    onChange={handleNumItemsChange}
+                    min="1"
+                    placeholder="How many questions in your quiz?"
+                    required
+                  />
+                  <div className="number-controls">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNumItems((prev) => Math.max(1, prev - 1))
+                      }
+                    >
+                      <FontAwesomeIcon icon={faMinus} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNumItems((prev) => prev + 1)}
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                  </div>
+                </div>
+              </div>
               <div className="answers-container">
                 {answers.map((answer, index) => (
                   <div key={index} className="answer-input">
@@ -116,15 +151,17 @@ const AddQuiz = () => {
                       type="text"
                       value={answer}
                       onChange={(e) => handleAnswerChange(e, index)}
+                      placeholder={`Type your question here`}
                       required
                     />
                   </div>
                 ))}
               </div>
-            </div>
-
-            <BtnWithRobot name={"Add"} />
-          </form>
+              <button type="submit" className="submit-btn">
+                Create Quiz
+              </button>
+            </form>
+          </div>
         </div>
       </main>
 
