@@ -120,6 +120,7 @@ const AddQuiz = () => {
                     onChange={handleNumItemsChange}
                     min="1"
                     placeholder="How many questions in your quiz?"
+                    style={{ appearance: "textfield" }}
                     required
                   />
                   <div className="number-controls">
@@ -157,9 +158,7 @@ const AddQuiz = () => {
                   </div>
                 ))}
               </div>
-              <button type="submit" className="submit-btn">
-                Create Quiz
-              </button>
+              <BtnWithRobot name={"Create Quiz"} />
             </form>
           </div>
         </div>
