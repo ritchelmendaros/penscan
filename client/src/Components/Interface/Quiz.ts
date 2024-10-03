@@ -44,7 +44,7 @@ interface StudentImageResult {
 interface RecognizedAnswer {
     itemnumber: number;
     answer: string;
-    iscorrect: boolean;
+    correct: boolean;
 }
 
 interface ItemAnalysisInterface {

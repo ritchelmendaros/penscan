@@ -16,6 +16,7 @@ import { studentuploadStudentQuiz, recordActivityLog } from "../../../apiCalls/s
 interface Answer {
   itemnumber: number;
   answer: string;
+  correct: boolean;
 }
 
 const StudentQuizResults = () => {
@@ -84,6 +85,7 @@ const StudentQuizResults = () => {
         (recognizedAnswer) => ({
           itemnumber: recognizedAnswer.itemnumber,
           answer: recognizedAnswer.answer,
+          correct: recognizedAnswer.correct,
         })
       );
       setStudentAnswers(extractedAnswers);
@@ -141,10 +143,11 @@ const StudentQuizResults = () => {
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
+          <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
           <p className="td">{i}</p>
-          <p className="td">{studentAnswer}</p>
-          <p className={`td ${highlightClass}`}>{editedItem}</p>
-          <p className="td">{correctAnswer}</p>
+          <p className="td" style={{marginLeft:"-50px"}}>{studentAnswer}</p>
+          <p className={`td ${highlightClass}`} style={{marginLeft:"-40px"}}>{editedItem}</p>
+          {/* <p className="td">{correctAnswer}</p> */}
           <p className="td"></p>
         </li>
       );
@@ -249,10 +252,11 @@ const StudentQuizResults = () => {
                 <ul className="thead">
                   <li className="th">
                     <p />
+                    <p className="td"></p>
                     <p className="td">Item No.</p>
-                    <p className="td">Scanned Answer</p>
-                    <p className="td">Edited Answer</p>
-                    <p className="td">Correct Answer</p>
+                    <p className="td" style={{marginLeft:"-50px"}}>Scanned Answer</p>
+                    <p className="td" style={{marginLeft:"-30px"}}>Edited Answer</p>
+                    {/* <p className="td">Correct Answer</p> */}
                     <p />
                   </li>
                 </ul>
