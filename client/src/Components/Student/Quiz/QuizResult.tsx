@@ -11,11 +11,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
+import { studentuploadStudentQuiz, recordActivityLog } from "../../../apiCalls/studentQuizApi";
 
 interface Answer {
   itemnumber: number;
   answer: string;
+  correct: boolean;
 }
 
 const StudentQuizResults = () => {
@@ -84,6 +85,7 @@ const StudentQuizResults = () => {
         (recognizedAnswer) => ({
           itemnumber: recognizedAnswer.itemnumber,
           answer: recognizedAnswer.answer,
+          correct: recognizedAnswer.correct,
         })
       );
       setStudentAnswers(extractedAnswers);
@@ -141,10 +143,11 @@ const StudentQuizResults = () => {
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
+          <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
           <p className="td">{i}</p>
-          <p className="td">{studentAnswer}</p>
-          <p className={`td ${highlightClass}`}>{editedItem}</p>
-          <p className="td">{correctAnswer}</p>
+          <p className="td" style={{marginLeft:"-50px"}}>{studentAnswer}</p>
+          <p className={`td ${highlightClass}`} style={{marginLeft:"-40px"}}>{editedItem}</p>
+          {/* <p className="td">{correctAnswer}</p> */}
           <p className="td"></p>
         </li>
       );
@@ -174,11 +177,20 @@ const StudentQuizResults = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        await studentuploadStudentQuiz(
+        const response = await studentuploadStudentQuiz(
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile
         );
+
+        const studentQuizId = response.data.studentQuizId;
+
+        await recordActivityLog(
+          user?.userid || "",
+          studentQuizId,
+          "UPLOAD"
+        );        
+
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
         setIsModalOpen(false);
@@ -240,10 +252,11 @@ const StudentQuizResults = () => {
                 <ul className="thead">
                   <li className="th">
                     <p />
+                    <p className="td"></p>
                     <p className="td">Item No.</p>
-                    <p className="td">Scanned Answer</p>
-                    <p className="td">Edited Answer</p>
-                    <p className="td">Correct Answer</p>
+                    <p className="td" style={{marginLeft:"-50px"}}>Scanned Answer</p>
+                    <p className="td" style={{marginLeft:"-30px"}}>Edited Answer</p>
+                    {/* <p className="td">Correct Answer</p> */}
                     <p />
                   </li>
                 </ul>
