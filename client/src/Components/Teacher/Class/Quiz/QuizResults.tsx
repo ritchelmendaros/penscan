@@ -210,27 +210,28 @@ const QuizResults = () => {
         <tr key={i}>
           <td>{i}</td>
           <td>
-            <button
-              onClick={() => handleApprove(i)}
-              className={`btn ${
-                editedAnswerObj?.isapproved ? "btn-primary" : "btn-outline"
-              }`}
-              disabled={editedAnswerObj?.isapproved}
-            >
-              Accept
-            </button>
-            <button
-              onClick={() => handleDisapprove(i)}
-              className={`btn ${
-                editedAnswerObj?.isdisapproved ? "btn-danger" : "btn-outline"
-              }`}
-              disabled={editedAnswerObj?.isdisapproved}
-            >
-              Reject
-            </button>
+            {editedStatus !== "NONE" &&
+              !editedAnswerObj?.isapproved &&
+              !editedAnswerObj?.isdisapproved &&
+              isEditedDifferent && (
+                <div className="approval-buttons">
+                  <button
+                    onClick={() => handleApprove(i)}
+                    className="btn btn-outline"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleDisapprove(i)}
+                    className="btn btn-outline"
+                  >
+                    Disapprove
+                  </button>
+                </div>
+              )}
           </td>
           <td>{studentAnswer}</td>
-          <td className={highlightClass}>{editedAnswer || ""}</td>
+          <td className={`td ${highlightClass}`}>{editedAnswer || ""}</td>
           <td>{correctAnswer}</td>
         </tr>
       );
@@ -239,32 +240,6 @@ const QuizResults = () => {
     return rows;
   };
 
-  const data = [
-    {
-      id: 1,
-      question: "1",
-      scannedAnswer: "Paris",
-      editedAnswer: "Paris",
-      correctAnswer: "Paris",
-      approval: "Accept",
-    },
-    {
-      id: 2,
-      question: "2",
-      scannedAnswer: "Shakespeare",
-      editedAnswer: "William Shakespeare",
-      correctAnswer: "William Shakespeare",
-      approval: "Accept",
-    },
-    {
-      id: 3,
-      question: "3",
-      scannedAnswer: "5",
-      editedAnswer: "4",
-      correctAnswer: "4",
-      approval: "Reject",
-    },
-  ];
   return (
     <div className="QuizResults Main MainContent">
       <Header />
