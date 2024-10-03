@@ -98,7 +98,7 @@ export const studentsaveStudentQuiz = async (
 ) => {
   try {
     const response = await axiosInstance.put(
-      '/api/studentquiz/edit', 
+      '/api/studentquiz/studentedit', 
       {
         studentQuizId,
         newText,
