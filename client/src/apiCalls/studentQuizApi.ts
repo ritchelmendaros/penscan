@@ -120,7 +120,7 @@ export const studentsaveStudentQuiz = async (
 export const approveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
       const response = await axiosInstance.put(
-        'api/students/approve', 
+        'api/studentquiz/approve', 
         null, 
         {
           params: {
@@ -174,6 +174,35 @@ export const deleteStudentQuiz = async (studentId: string, quizId: string) => {
       toast.error(errorMessage);
     } else {
       toast.error("An unexpected error occurred");
+    }
+    throw error;
+  }
+};
+
+export const recordActivityLog = async (userId: string, studentQuizId: string, activity: string,) => {
+  try {
+    const response = await axiosInstance.post(
+      '/api/studentquiz/record',   
+      {
+        userId: userId,
+        studentQuizId: studentQuizId,
+        activity: activity,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json", 
+        },
+      }
+    );
+
+    toast.success("Activity logged successfully!");
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || "Error logging activity";
+      toast.error(errorMessage);
+    } else {
+      toast.error("An unexpected error occurred while logging activity");
     }
     throw error;
   }
