@@ -76,7 +76,7 @@ const QuizResults = () => {
     }
   }, [studentResult]);
 
-  const handleApprove = async () => {
+  const handleApprove = async (itemIndex: number) => {
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -85,33 +85,32 @@ const QuizResults = () => {
       return;
     }
 
-    const updatedAnswers = { ...editedAnswers };
+    try {
+      await approveQuizAnswer(
+        studentResult.studentquizid,
+        selectedStudentResult.userId,
+        selectedQuiz.quizid,
+        itemIndex,
+        editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
+      );
 
-    for (const itemIndex of selectedItems) {
-      if (updatedAnswers[itemIndex]) {
-        try {
-          await approveQuizAnswer(
-            studentResult.studentquizid,
-            selectedStudentResult?.userId!,
-            selectedQuiz?.quizid!,
-            itemIndex,
-            updatedAnswers[itemIndex].editeditem
-          );
+      setEditedAnswers((prev) => ({
+        ...prev,
+        [itemIndex]: {
+          ...prev[itemIndex],
+          isapproved: true,
+          isdisapproved: false,
+        },
+      }));
 
-          updatedAnswers[itemIndex].isapproved = true;
-          updatedAnswers[itemIndex].isdisapproved = false;
-        } catch (error) {
-          toast.error("Error approving item " + itemIndex);
-        }
-      }
+      toast.success(`Answer for item ${itemIndex} approved`);
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      toast.error(`Error approving item ${itemIndex}`);
     }
-
-    setEditedAnswers(updatedAnswers);
-    setSelectedItems([]);
-    setRefresh((prev) => prev + 1);
   };
 
-  const handleDisapprove = async () => {
+  const handleDisapprove = async (itemIndex: number) => {
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -121,29 +120,29 @@ const QuizResults = () => {
       return;
     }
 
-    const updatedAnswers = { ...editedAnswers };
+    try {
+      await disapproveQuizAnswer(
+        studentResult.studentquizid,
+        selectedStudentResult.userId,
+        selectedQuiz.quizid,
+        itemIndex,
+        editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
+      );
 
-    for (const itemIndex of selectedItems) {
-      if (updatedAnswers[itemIndex]) {
-        try {
-          await disapproveQuizAnswer(
-            studentResult.studentquizid,
-            selectedStudentResult?.userId!,
-            selectedQuiz?.quizid!,
-            itemIndex,
-            updatedAnswers[itemIndex].editeditem
-          );
-          updatedAnswers[itemIndex].isapproved = false;
-          updatedAnswers[itemIndex].isdisapproved = true;
-        } catch (error) {
-          toast.error("Error disapproving item " + itemIndex);
-        }
-      }
+      setEditedAnswers((prev) => ({
+        ...prev,
+        [itemIndex]: {
+          ...prev[itemIndex],
+          isapproved: false,
+          isdisapproved: true,
+        },
+      }));
+
+      toast.success(`Answer for item ${itemIndex} disapproved`);
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      toast.error(`Error disapproving item ${itemIndex}`);
     }
-
-    setEditedAnswers(updatedAnswers);
-    setSelectedItems([]);
-    setRefresh((prev) => prev + 1);
   };
 
   useEffect(() => {
@@ -208,26 +207,32 @@ const QuizResults = () => {
       }
 
       rows.push(
-        <li key={i} className="tr">
-          <p className="td">
-            {editedStatus !== "NONE" &&
-              !editedAnswerObj?.isapproved &&
-              !editedAnswerObj?.isdisapproved &&
-              isEditedDifferent && (
-                <input
-                  type="checkbox"
-                  checked={selectedItems.includes(i)}
-                  onChange={() => handleCheckboxChange(i)}
-                />
-              )}
-          </p>
-          <p className="td">{i}</p>
-          <p className="td">{studentAnswer}</p>
-          <p className={`td ${highlightClass}`}>{editedAnswer || ""}</p>
-
-          <p className="td">{correctAnswer}</p>
-          <p className="td"></p>
-        </li>
+        <tr key={i}>
+          <td>{i}</td>
+          <td>
+            <button
+              onClick={() => handleApprove(i)}
+              className={`btn ${
+                editedAnswerObj?.isapproved ? "btn-primary" : "btn-outline"
+              }`}
+              disabled={editedAnswerObj?.isapproved}
+            >
+              Accept
+            </button>
+            <button
+              onClick={() => handleDisapprove(i)}
+              className={`btn ${
+                editedAnswerObj?.isdisapproved ? "btn-danger" : "btn-outline"
+              }`}
+              disabled={editedAnswerObj?.isdisapproved}
+            >
+              Reject
+            </button>
+          </td>
+          <td>{studentAnswer}</td>
+          <td className={highlightClass}>{editedAnswer || ""}</td>
+          <td>{correctAnswer}</td>
+        </tr>
       );
     }
 
@@ -289,7 +294,7 @@ const QuizResults = () => {
               <div className="image-feedback-container">
                 <img
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
-                  alt=""
+                  alt="Student's quiz"
                 />
                 {feedback === "No feedback given" ? (
                   <p className="no-feedback">{feedback}</p>
@@ -311,57 +316,19 @@ const QuizResults = () => {
                       <th>Correct Answer</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {data.map((row) => (
-                      <tr key={row.id}>
-                        <td>{row.question}</td>
-                        <td>
-                          <div className="approval-buttons">
-                            <button
-                              className={`btn ${
-                                row.approval === "Accept"
-                                  ? "btn-primary"
-                                  : "btn-outline"
-                              }`}
-                            >
-                              Accept
-                            </button>
-                            <button
-                              className={`btn ${
-                                row.approval === "Reject"
-                                  ? "btn-danger"
-                                  : "btn-outline"
-                              }`}
-                            >
-                              Reject
-                            </button>
-                          </div>
-                        </td>
-                        <td>{row.scannedAnswer}</td>
-                        <td>{row.editedAnswer}</td>
-                        <td>{row.correctAnswer}</td>
-                      </tr>
-                    ))}
-                  </tbody>
+                  <tbody>{renderRows()}</tbody>
                 </table>
+                <div className="viewcenter-button">
+                  <button className="viewclose" onClick={handleClose}>
+                    Close
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="viewcenter-button">
-              <button className="viewapprove" onClick={handleApprove}>
-                Approve
-              </button>
-              <button className="viewdisapprove" onClick={handleDisapprove}>
-                Disapprove
-              </button>
-              <button className="viewclose" onClick={handleClose}>
-                Close
-              </button>
             </div>
           </>
         )}
       </main>
 
-      <SmilingRobot />
       <Gradients />
       <ToastContainer />
     </div>
