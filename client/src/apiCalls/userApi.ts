@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { CurrUser } from '../Components/Interface/CurrUser';
 import { Student } from '../Components/Interface/StudentInterface'; 
+import axiosInstance from './common/axiosInstance';
 
 const API_BASE_URL = 'https://penscan-server.onrender.com/api/users';
 const USER_DETAILS = 'https://penscan-server.onrender.com/api/users/getuserdetails?username=';
 
 export const loginUser = async (username: string, password: string) => {
-    const response = await axios.post(
-        `${API_BASE_URL}/login`,
+    const response = await axiosInstance.post(
+        '/api/users/login',
         {
             username,
             password,
@@ -22,8 +23,11 @@ export const loginUser = async (username: string, password: string) => {
 };
 
 export const getUserType = async (username: string) => {
-    const response = await axios.get(
-        `${API_BASE_URL}/getusertype?username=${username}`,
+    const response = await axiosInstance.get(
+        '/api/users/getusertype',
+        {
+            params : { username: username }
+        }
     );
     return response.data;
 };
@@ -32,8 +36,11 @@ export const getDetailsByUsername = async (
     username: string,
 ): Promise<CurrUser> => {
     try {
-        const response = await axios.get<CurrUser>(
-            `${USER_DETAILS}${username}`,
+        const response = await axiosInstance.get<CurrUser>(
+            '/api/users/getuserdetails',
+            {
+                params : { username: username }
+            }
         );
         return response.data;
     } catch (error) {
@@ -49,8 +56,8 @@ export const registerUser = async (
     password: string,
     userType: string,
 ) => {
-    const response = await axios.post(
-        `${API_BASE_URL}/register`,
+    const response = await axiosInstance.post(
+        '/api/users/register',
         {
             firstname,
             lastname,
@@ -69,7 +76,9 @@ export const registerUser = async (
 
 export const fetchAllStudents = async (): Promise<Student[]> => {
     try {
-        const response = await axios.get<Student[]>(`${API_BASE_URL}/getallstudents`);
+        const response = await axiosInstance.get<Student[]>(
+            '/api/users/getallstudents'
+        );
         return response.data;
     } catch (error) {
         console.error('Error fetching students:', error);
@@ -84,8 +93,8 @@ export const updateUserDetails = async (
     lastName: string,
 ) => {
     try {
-        const response = await axios.put(
-            `${API_BASE_URL}/updateuserdetails`,
+        const response = await axiosInstance.put(
+            '/api/users/updateuserdetails',
             {
                 username,
                 firstname: firstName,

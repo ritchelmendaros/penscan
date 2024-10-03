@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import axiosInstance from "./common/axiosInstance";
 
-const BASE_URL = 'https://penscan-server.onrender.com/api/studentquiz';
+// const BASE_URL = 'https://penscan-server.onrender.com/api/studentquiz';
 // const BASE_URL = "http://localhost:8080/api/studentquiz";
 
 export const uploadStudentQuiz = async (quizid: string, selectedFile: File) => {
@@ -10,14 +11,19 @@ export const uploadStudentQuiz = async (quizid: string, selectedFile: File) => {
   formData.append("image", selectedFile);
 
   try {
-    const response = await axios.post(`${BASE_URL}/upload`, formData, {
+    const response = await axiosInstance.post(
+      '/api/studentquiz/upload', 
+      formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+
     toast.success(response.data);
     return response.data;
+
   } catch (error) {
+
     if (axios.isAxiosError(error)) {
       const errorMessage = error.response?.data || "An error occurred";
       toast.error(errorMessage);
@@ -35,7 +41,9 @@ export const studentuploadStudentQuiz = async (quizid: string, userid: string, s
   formData.append("image", selectedFile);
 
   try {
-    const response = await axios.post(`${BASE_URL}/studentupload`, formData, {
+    const response = await axiosInstance.post(
+      '/api/studentquiz/studentupload', 
+      formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -61,13 +69,15 @@ export const saveStudentQuiz = async (
   editedStatus: string
 ) => {
   try {
-    const response = await axios.put(`${BASE_URL}/edit`, {
-      studentQuizId,
-      newText,
-      comment,
-      bonusScore,
-      editedStatus,
-    });
+    const response = await axiosInstance.put(
+      '/api/studentquiz/edit', 
+      {
+        studentQuizId,
+        newText,
+        comment,
+        bonusScore,
+        editedStatus,
+      });
     toast.success(response.data);
     return response.data;
   } catch (error) {
@@ -87,11 +97,13 @@ export const studentsaveStudentQuiz = async (
   editedStatus: string
 ) => {
   try {
-    const response = await axios.put(`${BASE_URL}/edit`, {
-      studentQuizId,
-      newText,
-      editedStatus,
-    });
+    const response = await axiosInstance.put(
+      '/api/studentquiz/edit', 
+      {
+        studentQuizId,
+        newText,
+        editedStatus,
+      });
     toast.success(response.data);
     return response.data;
   } catch (error) {
@@ -107,7 +119,10 @@ export const studentsaveStudentQuiz = async (
 
 export const approveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
-      const response = await axios.put(`${BASE_URL}/approve`, null, {
+      const response = await axiosInstance.put(
+        'api/students/approve', 
+        null, 
+        {
           params: {
               studentQuizId,
               editedItem,  
@@ -115,7 +130,7 @@ export const approveQuizAnswer = async (studentQuizId: string, studentId: string
               quizId,
               itemId,
           }
-      });
+        });
       return response.data;
   } catch (error) {
       console.error('Error approving answer:', error);
@@ -125,15 +140,18 @@ export const approveQuizAnswer = async (studentQuizId: string, studentId: string
 
 export const disapproveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
-    const response = await axios.put(`${BASE_URL}/disapprove`, null, {
-      params: {
-        studentQuizId, 
-        editedItem,
-        studentId,
-        quizId,
-        itemId,
-      }
-    });
+    const response = await axiosInstance.put(
+      '/api/studentquiz/disapprove', 
+      null, 
+      {
+        params: {
+          studentQuizId, 
+          editedItem,
+          studentId,
+          quizId,
+          itemId,
+        }
+      });
     return response.data;
   } catch (error) {
     console.error('Error disapproving answer:', error);
@@ -143,9 +161,11 @@ export const disapproveQuizAnswer = async (studentQuizId: string, studentId: str
   
 export const deleteStudentQuiz = async (studentId: string, quizId: string) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/delete`, {
-      params: { studentId, quizId },
-    });
+    const response = await axiosInstance.delete(
+      '/api/studentquiz/delete', 
+      {
+        params: { studentId, quizId },
+      });
     toast.success("Score deleted successfully!");
     return response.data;
   } catch (error) {
