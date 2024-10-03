@@ -126,7 +126,7 @@ const AddQuiz = () => {
                 </div>
               </div>
               <div className="input-group">
-                <label htmlFor="num-questions">Number of Questions</label>
+                <label htmlFor="num-questions">Number of Items</label>
                 <div className="input-wrapper">
                   <FontAwesomeIcon
                     icon={faQuestionCircle}
@@ -138,7 +138,7 @@ const AddQuiz = () => {
                     value={numItems}
                     onChange={handleNumItemsChange}
                     min="1"
-                    placeholder="How many questions in your quiz?"
+                    placeholder="How many items in your quiz?"
                     style={{ appearance: "textfield" }}
                     required
                   />
@@ -156,14 +156,14 @@ const AddQuiz = () => {
                 {answers.map((answer, index) => (
                   <div key={index} className="answer-input">
                     <label htmlFor={`answer-${index}`}>
-                      Question {index + 1}
+                      Item {index + 1}
                     </label>
                     <input
                       id={`answer-${index}`}
                       type="text"
                       value={answer}
                       onChange={(e) => handleAnswerChange(e, index)}
-                      placeholder={`Type your question here`}
+                      placeholder={`Type item answer here`}
                       required
                     />
                   </div>

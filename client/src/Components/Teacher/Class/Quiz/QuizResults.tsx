@@ -284,7 +284,7 @@ const QuizResults = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Question</th>
+                      <th>Item</th>
                       <th>Approval</th>
                       <th>Scanned Answer</th>
                       <th>Edited Answer</th>
@@ -293,12 +293,12 @@ const QuizResults = () => {
                   </thead>
                   <tbody>{renderRows()}</tbody>
                 </table>
-                <div className="viewcenter-button">
+              </div>
+              <div className="viewcenter-button">
                   <button className="viewclose" onClick={handleClose}>
                     Close
                   </button>
                 </div>
-              </div>
             </div>
           </>
         )}
