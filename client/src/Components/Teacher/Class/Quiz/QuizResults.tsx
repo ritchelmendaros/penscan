@@ -37,7 +37,7 @@ const QuizResults = () => {
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [refresh, setRefresh] = useState(0); 
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -234,6 +234,32 @@ const QuizResults = () => {
     return rows;
   };
 
+  const data = [
+    {
+      id: 1,
+      question: "1",
+      scannedAnswer: "Paris",
+      editedAnswer: "Paris",
+      correctAnswer: "Paris",
+      approval: "Accept",
+    },
+    {
+      id: 2,
+      question: "2",
+      scannedAnswer: "Shakespeare",
+      editedAnswer: "William Shakespeare",
+      correctAnswer: "William Shakespeare",
+      approval: "Accept",
+    },
+    {
+      id: 3,
+      question: "3",
+      scannedAnswer: "5",
+      editedAnswer: "4",
+      correctAnswer: "4",
+      approval: "Reject",
+    },
+  ];
   return (
     <div className="QuizResults Main MainContent">
       <Header />
@@ -274,18 +300,50 @@ const QuizResults = () => {
                 )}
               </div>
 
-              <div className="table">
-                <ul className="thead">
-                  <li className="thview">
-                    <p />
-                    <p className="tdview">Item </p>
-                    <p className="tdview">Scanned Answer</p>
-                    <p className="tdview">Edited Answer</p>
-                    <p className="tdview">Correct Answer</p>
-                    <p />
-                  </li>
-                </ul>
-                <ul className="tbody">{renderRows()}</ul>
+              <div className="question-answer-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Question</th>
+                      <th>Approval</th>
+                      <th>Scanned Answer</th>
+                      <th>Edited Answer</th>
+                      <th>Correct Answer</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((row) => (
+                      <tr key={row.id}>
+                        <td>{row.question}</td>
+                        <td>
+                          <div className="approval-buttons">
+                            <button
+                              className={`btn ${
+                                row.approval === "Accept"
+                                  ? "btn-primary"
+                                  : "btn-outline"
+                              }`}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className={`btn ${
+                                row.approval === "Reject"
+                                  ? "btn-danger"
+                                  : "btn-outline"
+                              }`}
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        </td>
+                        <td>{row.scannedAnswer}</td>
+                        <td>{row.editedAnswer}</td>
+                        <td>{row.correctAnswer}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
             <div className="viewcenter-button">
