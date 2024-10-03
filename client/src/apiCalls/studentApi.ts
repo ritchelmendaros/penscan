@@ -20,7 +20,7 @@ export const fetchStudentsByClassId = async (classId: string): Promise<Student[]
 export const addStudentToClass = async (studentId: string, classId: string) => {
     try {
         const response = await axiosInstance.put(
-            '/api/addclasstostudent',
+            '/api/students/addclasstostudent',
             {
                 params : {
                     userid: studentId,
