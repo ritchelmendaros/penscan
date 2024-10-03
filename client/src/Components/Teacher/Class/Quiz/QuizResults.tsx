@@ -217,13 +217,13 @@ const QuizResults = () => {
                 <div className="approval-buttons">
                   <button
                     onClick={() => handleApprove(i)}
-                    className="btn btn-outline"
+                    className="btn btn-primary"
                   >
                     Approve
                   </button>
                   <button
                     onClick={() => handleDisapprove(i)}
-                    className="btn btn-outline"
+                    className="btn btn-danger"
                   >
                     Disapprove
                   </button>
