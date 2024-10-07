@@ -50,7 +50,7 @@ $border-color: #333333;
       height: 450px;
       border-radius: 10px;
       overflow-x: auto;
-      scrollbar-width: thin;
+      scrollbar-width: none;
       -ms-overflow-style: none;
       
       table {
@@ -84,7 +84,7 @@ $border-color: #333333;
 
         th,
         td {
-          padding: 15px;
+          padding: 10px;
           text-align: left;
           border-bottom: 1px solid $border-color;
         }

@@ -5,11 +5,13 @@ interface Quiz {
     teacherid: string;
     // quizanswerkey: string;
     quizanswerkey: { itemnumber: number; answer: string }[];
+    dueDateTime: string;
 }
 //Student Quiz
 interface Quizzes {
     quizId: string;
     quizName: string;
+    dueDateTime: string;
 }
 
 interface StudentQuiz {

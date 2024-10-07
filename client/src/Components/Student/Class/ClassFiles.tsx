@@ -31,6 +31,7 @@ const ClassFiles = () => {
           const quizzesWithProperMapping: Quizzes[] = quiz.map((q) => ({
             quizId: q.quizid,
             quizName: q.quizname,
+            dueDateTime: formatDueDate(q.dueDateTime),
           }));
           setQuizzes(quizzesWithProperMapping);
 
@@ -61,14 +62,38 @@ const ClassFiles = () => {
 
     fetchQuizData();
   }, [clickedClass, user]);
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+  
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+  
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+  
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date.toLocaleTimeString(undefined, timeOptions).replace(':00 ', ' '); 
+  
+    return `${formattedDate} | ${formattedTime}`;
+  };
+  
 
-  const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
-    quizid: quiz.quizId,
-    classid: clickedClass?.classid || "",
-    quizname: quiz.quizName,
-    teacherid: user?.userid || "",
-    quizanswerkey: [],
-  });
+  const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => {
+    return {
+      quizid: quiz.quizId,
+      classid: clickedClass?.classid || "",
+      quizname: quiz.quizName,
+      teacherid: user?.userid || "",
+      quizanswerkey: [],
+      dueDateTime: quiz.dueDateTime, 
+    };
+  };
 
   const handleClick = (quiz: Quizzes) => {
     const selectedQuiz = mapQuizzesToQuiz(quiz);
@@ -96,6 +121,12 @@ const ClassFiles = () => {
     navigate("/dashboard/class/quiz/quiz-result-edit");
   };
 
+  const isQuizOverdue = (dueDateTime: string): boolean => {
+    const dueDate = new Date(dueDateTime); 
+    const currentDate = new Date();
+    return currentDate > dueDate;
+  };
+
   const displayedQuizzes = new Set();
 
   return (
@@ -111,6 +142,7 @@ const ClassFiles = () => {
               <p className="td">Quiz Name</p>
               <p className="td">Score</p>
               <p className="td"></p>
+              <p className="td">Due Date</p>
               <p className="td" style={{ marginLeft: "30px" }}>
                 Action
               </p>
@@ -132,11 +164,13 @@ const ClassFiles = () => {
                   ? result.editedstatus
                   : "Not Yet Uploaded";
                 const score = result ? result.finalscore : "N/A";
+                const isOverdue = isQuizOverdue(quiz.dueDateTime);
                 return (
                   <div className="tr" onClick={() => handleClick(quiz)} key={i}>
                     <p className="td">{quiz.quizName}</p>
                     <p className="td">{score}</p>
                     <p className="td">{status === "NONE" ? "" : status}</p>
+                    <p className="td">{quiz.dueDateTime}</p>
                     <p className="td">
                       <div>
                         <button
@@ -145,26 +179,27 @@ const ClassFiles = () => {
                         >
                           View
                         </button>
-                        {status === "NONE" ? (
-                          <button
-                            className="edit"
-                            onClick={(event) => handleEditQuiz(event, quiz)}
-                          >
-                            Edit
-                          </button>
-                        ) : (
-                          <button
-                            className="edit"
-                            onClick={(event) => {
+                        <button
+                          className="edit"
+                          onClick={(event) => {
+                            if (isOverdue) {
                               event.stopPropagation();
                               toast(
-                                "This quiz has pending approval or not processed, you can't edit more than once."
+                                "This quiz is overdue. You can't edit it."
                               );
-                            }}
-                          >
-                            Edit
-                          </button>
-                        )}
+                            } else if (status === "NONE") {
+                              handleEditQuiz(event, quiz);
+                            } else {
+                              event.stopPropagation();
+                              toast(
+                                "This quiz has is not yet uploaded or already edited."
+                              );
+                            }
+                          }}
+                          disabled={isOverdue} 
+                        >
+                          Edit
+                        </button>
                       </div>
                     </p>
                   </div>

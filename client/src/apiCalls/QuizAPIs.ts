@@ -81,7 +81,8 @@ export const addQuiz = async (
     classid: string,
     quizName: string,
     userId: string,
-    correctAnswer: { itemnumber: number; answer: string }[]
+    correctAnswer: { itemnumber: number; answer: string }[],
+    dueDateTime: string
 ) => {
     try {
         const response = await axiosInstance.post(
@@ -91,6 +92,7 @@ export const addQuiz = async (
                 quizname: quizName,
                 teacherid: userId,
                 quizanswerkey: correctAnswer,
+                dueDateTime: dueDateTime,
             },
         );
         // console.log('Quiz added:', response.data);

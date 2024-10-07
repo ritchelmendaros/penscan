@@ -39,6 +39,8 @@ const StudentQuizResultEdit = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [dueDate, setDueDate] = useState<string | null>(null);
+  const [formattedDueDate, setFormattedDueDate] = useState<string | null>(null);
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -53,7 +55,11 @@ const StudentQuizResultEdit = () => {
         .then((answerKey) => {
           const parsedAnswerKey =
             typeof answerKey === "string" ? JSON.parse(answerKey) : answerKey;
-          setCorrectAnswers(parsedAnswerKey);
+          setCorrectAnswers(parsedAnswerKey.quizanswerkey);
+          const dueDate = parsedAnswerKey.dueDateTime;
+          setDueDate(dueDate);
+          const formattedDueDate = formatDueDate(dueDate);
+          setFormattedDueDate(formattedDueDate);
         })
         .catch(() => {})
         .finally(() => {
@@ -173,6 +179,29 @@ const StudentQuizResultEdit = () => {
     return rows;
   };
 
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
+
   const handleStudentAnswerChange = (index: number, value: string) => {
     const updatedAnswers = { ...editedAnswers, [index]: value };
     setEditedAnswers(updatedAnswers);
@@ -279,6 +308,13 @@ const StudentQuizResultEdit = () => {
                   {user?.firstname} {user?.lastname}
                 </h3>
               </div>
+              {formattedDueDate && (
+                <div className="due-date">
+                  <h5>
+                    Due Date: <em>{formattedDueDate}</em>
+                  </h5>
+                </div>
+              )}
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
                 <div className="additional-points">

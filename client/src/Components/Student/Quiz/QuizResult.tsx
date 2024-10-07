@@ -33,7 +33,9 @@ const StudentQuizResults = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); 
+  const [isHovered, setIsHovered] = useState(false);
+  const [dueDate, setDueDate] = useState<string | null>(null);
+  const [formattedDueDate, setFormattedDueDate] = useState<string | null>(null);
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -47,7 +49,11 @@ const StudentQuizResults = () => {
         .then((answerKey) => {
           const parsedAnswerKey =
             typeof answerKey === "string" ? JSON.parse(answerKey) : answerKey;
-          setCorrectAnswers(parsedAnswerKey);
+          setCorrectAnswers(parsedAnswerKey.quizanswerkey);
+          const dueDate = parsedAnswerKey.dueDateTime;
+          setDueDate(dueDate);
+          const formattedDueDate = formatDueDate(dueDate);
+          setFormattedDueDate(formattedDueDate);
         })
         .catch(() => {
           // toast.error("No data found", error);
@@ -110,14 +116,19 @@ const StudentQuizResults = () => {
     }, {} as Record<number, string>);
 
     const rows = [];
+    const currentDate = new Date();
+    const dueDateTime = dueDate ? new Date(dueDate) : null;
+
     for (let i = 1; i <= maxItemNumber; i++) {
-      // const correctAnswer = correctAnswerMap[i] || "";
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
         isapproved: false,
         isdisapproved: false,
       };
+      const correctAnswer = dueDateTime && dueDateTime < currentDate
+        ? correctAnswers.find(ans => ans.itemnumber === i)?.answer || ""
+        : "";
 
       const editedStatus = studentResult?.editedstatus;
 
@@ -142,14 +153,18 @@ const StudentQuizResults = () => {
       }
 
       rows.push(
-        <li key={i} className="tr">
-          <p className="td"></p>
-          <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
-          <p className="td">{i}</p>
-          <p className="td" style={{marginLeft:"-50px"}}>{studentAnswer}</p>
-          <p className={`td ${highlightClass}`} style={{marginLeft:"-40px"}}>{editedItem}</p>
-          {/* <p className="td">{correctAnswer}</p> */}
-          <p className="td"></p>
+        <li key={i} className="tr1">
+          <p className="td1"></p>
+          <p className="td1">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
+          <p className="td1">{i}</p>
+          <p className="td1" style={{ marginLeft: "-50px" }}>
+            {studentAnswer}
+          </p>
+          <p className={`td1 ${highlightClass}`} style={{ marginLeft: "-40px" }}>
+            {editedItem}
+          </p>
+          <p className="td1">{correctAnswer}</p>
+          <p className="td1"></p>
         </li>
       );
     }
@@ -157,12 +172,49 @@ const StudentQuizResults = () => {
     return rows;
   };
 
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
+
   const handleEdit = () => {
     const editedStatus = studentResult?.editedstatus;
-    console.log(editedStatus)
+    const currentDate = new Date();
+
+    if (!dueDate) {
+      toast.error("Due date is not available.");
+      return;
+    }
+
+    const dueDateTime = new Date(dueDate);
+
+    if (dueDateTime < currentDate) {
+      toast.error("Can't edit, the due date has already passed.");
+      return;
+    }
 
     if (editedStatus === "PENDING") {
-      toast("This quiz has pending approval or already processed, you can't edit more than once."); 
+      toast(
+        "This quiz has pending approval or already processed, you can't edit more than once."
+      );
     } else {
       navigate(`/dashboard/class/quiz/quiz-result-edit`);
     }
@@ -189,7 +241,7 @@ const StudentQuizResults = () => {
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile
-        );      
+        );
 
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
@@ -225,6 +277,14 @@ const StudentQuizResults = () => {
                   {user?.firstname} {user?.lastname}
                 </h3>
               </div>
+              {formattedDueDate && (
+                <div className="due-date">
+                  <h5>
+                    Due Date: <em>{formattedDueDate}</em>
+                  </h5>
+                </div>
+              )}
+
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
                 <div className="additional-points">
@@ -235,7 +295,7 @@ const StudentQuizResults = () => {
 
             <div className="main-results">
               <div className="image-feedback-container">
-              <img
+                <img
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
                   alt=""
                   onMouseEnter={() => setIsHovered(true)}
@@ -251,19 +311,23 @@ const StudentQuizResults = () => {
                 )}
               </div>
 
-              <div className="table">
-                <ul className="thead">
-                  <li className="th">
+              <div className="table1">
+                <ul className="thead1">
+                  <li className="th1">
                     <p />
-                    <p className="td"></p>
-                    <p className="td">Item No.</p>
-                    <p className="td" style={{marginLeft:"-50px"}}>Scanned Answer</p>
-                    <p className="td" style={{marginLeft:"-30px"}}>Edited Answer</p>
-                    {/* <p className="td">Correct Answer</p> */}
+                    <p className="td1"></p>
+                    <p className="td1">Item</p>
+                    <p className="td1" style={{ marginLeft: "-50px" }}>
+                      Scanned Answer
+                    </p>
+                    <p className="td1" style={{ marginLeft: "-30px" }}>
+                      Edited Answer
+                    </p>
+                    <p className="td1">Correct Answer</p>
                     <p />
                   </li>
                 </ul>
-                <ul className="tbody">{renderRows()}</ul>
+                <ul className="tbody1">{renderRows()}</ul>
                 <div className="buttons-container">
                   {!studentResult && (
                     <button

@@ -24,7 +24,7 @@ const AddQuiz = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
-
+  const [dueDate, setDueDate] = useState("");
   const { user } = useCurrUser();
   const userId = user?.userid;
   const { clickedClass } = useClass();
@@ -87,7 +87,7 @@ const AddQuiz = () => {
     }));
 
     try {
-      await addQuiz(classId, quizName, userId, answerArray);
+      await addQuiz(classId, quizName, userId, answerArray, dueDate);
       navigate(`/dashboard/class`);
     } catch (error) {
       toast.error("Error adding quiz. Please try again.");
@@ -125,39 +125,54 @@ const AddQuiz = () => {
                   />
                 </div>
               </div>
-              <div className="input-group">
-                <label htmlFor="num-questions">Number of Items</label>
-                <div className="input-wrapper">
-                  <FontAwesomeIcon
-                    icon={faQuestionCircle}
-                    className="input-icon"
-                  />
-                  <input
-                    id="num-questions"
-                    type="number"
-                    value={numItems}
-                    onChange={handleNumItemsChange}
-                    min="1"
-                    placeholder="How many items in your quiz?"
-                    style={{ appearance: "textfield" }}
-                    required
-                  />
-                  <div className="number-controls">
-                    <button type="button" onClick={handleDecrementQuestions}>
-                      <FontAwesomeIcon icon={faMinus} />
-                    </button>
-                    <button type="button" onClick={handleIncrementQuestions}>
-                      <FontAwesomeIcon icon={faPlus} />
-                    </button>
+              <div className="due-date-items-row">
+                <div className="input-group half-width">
+                  <label htmlFor="due-date">Due Date</label>
+                  <div className="input-wrapper">
+                    <input
+                      id="due-date-time"
+                      type="datetime-local"
+                      value={dueDate}
+                      className="date-picker"
+                      onChange={(e) => setDueDate(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="input-group half-width">
+                  <label htmlFor="num-questions">Number of Items</label>
+                  <div className="input-wrapper">
+                    <FontAwesomeIcon
+                      icon={faQuestionCircle}
+                      className="input-icon"
+                    />
+                    <input
+                      id="num-questions"
+                      type="number"
+                      value={numItems}
+                      onChange={handleNumItemsChange}
+                      min="1"
+                      placeholder="How many items in your quiz?"
+                      style={{ appearance: "textfield" }}
+                      required
+                    />
+                    <div className="number-controls">
+                      <button type="button" onClick={handleDecrementQuestions}>
+                        <FontAwesomeIcon icon={faMinus} />
+                      </button>
+                      <button type="button" onClick={handleIncrementQuestions}>
+                        <FontAwesomeIcon icon={faPlus} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
+
               <div className="answers-container">
                 {answers.map((answer, index) => (
                   <div key={index} className="answer-input">
-                    <label htmlFor={`answer-${index}`}>
-                      Item {index + 1}
-                    </label>
+                    <label htmlFor={`answer-${index}`}>Item {index + 1}</label>
                     <input
                       id={`answer-${index}`}
                       type="text"
