@@ -13,10 +13,15 @@ interface TeacherDashboardProps {
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
   const { setClass } = useClass();
   const [loading, setLoading] = useState(true);
+  const [activeOptions, setActiveOptions] = useState<number | null>(null);
 
   useEffect(() => {
     setLoading(false);
   }, [classes]);
+
+  const handleOptionsToggle = (index: number) => {
+    setActiveOptions(activeOptions === index ? null : index);
+  };
 
   return (
     <div className="TeacherDashboard MainContent">
@@ -39,6 +44,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ classes }) => {
                     <Thumbnail name={item.classname} />
                   </li>
                 </Link>
+
+                
               ))
             ) : (
               <div className="empty-state">

@@ -7,12 +7,14 @@ import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
   approveQuizAnswer,
   disapproveQuizAnswer,
+  recordActivityLog,
 } from "../../../../apiCalls/studentQuizApi";
 import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
+import { useCurrUser } from "../../../Context/UserContext";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -38,6 +40,8 @@ const QuizResults = () => {
   const navigate = useNavigate();
   // const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
+  const { user } = useCurrUser();
+  const [studentQuizId, setStudentQuizId] = useState("");
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -45,6 +49,7 @@ const QuizResults = () => {
         .then((result) => {
           setStudentResult(result);
           setFeedback(result.comment || "No feedback given");
+          // setStudentQuizId(result.studentquizid);
           setLoading(false);
         })
         .catch((error) => {
@@ -93,6 +98,9 @@ const QuizResults = () => {
         itemIndex,
         editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
       );
+
+      // await recordActivityLog(user?.userid || "", studentResult.studentquizid, "APPROVE");
+      // console.log("Logging approve");
 
       setEditedAnswers((prev) => ({
         ...prev,
@@ -295,10 +303,10 @@ const QuizResults = () => {
                 </table>
               </div>
               <div className="viewcenter-button">
-                  <button className="viewclose" onClick={handleClose}>
-                    Close
-                  </button>
-                </div>
+                <button className="viewclose" onClick={handleClose}>
+                  Close
+                </button>
+              </div>
             </div>
           </>
         )}

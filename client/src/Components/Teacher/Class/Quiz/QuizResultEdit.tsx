@@ -177,10 +177,14 @@ const QuizResultEdit = () => {
 
   const renderRows = () => {
     const rows = [];
+    const maxItemNumber = Math.max(
+      ...answers.map((ans) => ans.itemnumber),
+      ...Object.keys(studentAnswers).map((key) => parseInt(key))
+    );    
 
-    for (let i = 1; i <= Object.keys(answers).length; i++) {
+    for (let i = 1; i <= maxItemNumber; i++) {
       const studentAnswer = studentAnswers[i] || "";
-      const correctAnswer = answers[i - 1]?.answer || "Skipped";
+      const correctAnswer = answers[i - 1]?.answer || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
         isedited: false,
@@ -202,6 +206,7 @@ const QuizResultEdit = () => {
       }
 
       const isDisabled = highlightClass !== "";
+      const hasCorrectAnswer = correctAnswer !== "";
 
       rows.push(
         <li key={i} className="tr">
@@ -209,6 +214,7 @@ const QuizResultEdit = () => {
           <p className="td">{i}</p>
           <p className="td">{studentAnswer}</p>
           <p className="td">
+          {hasCorrectAnswer ? (
             <input
               type="text"
               className={`${highlightClass}`}
@@ -216,7 +222,10 @@ const QuizResultEdit = () => {
               onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
               disabled={isDisabled}
             />
-          </p>
+          ) : (
+            <span></span> 
+          )}
+        </p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>

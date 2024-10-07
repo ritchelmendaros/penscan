@@ -45,6 +45,7 @@ export const getQuizzesByClassId = async (classId: string): Promise<Quiz[]> => {
 
 export const getAllQuizScores = async (quizID: string) => {
     try {
+        console.log(quizID);
         const response = await axiosInstance.get<StudentQuiz[]>(
             `/api/studentquiz/getscoresandstudentids`,
             {
