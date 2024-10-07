@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { studentuploadStudentQuiz, recordActivityLog } from "../../../apiCalls/studentQuizApi";
+import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
 
 interface Answer {
   itemnumber: number;
@@ -33,6 +33,7 @@ const StudentQuizResults = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); 
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -48,8 +49,8 @@ const StudentQuizResults = () => {
             typeof answerKey === "string" ? JSON.parse(answerKey) : answerKey;
           setCorrectAnswers(parsedAnswerKey);
         })
-        .catch((error) => {
-          toast.error("No data found", error);
+        .catch(() => {
+          // toast.error("No data found", error);
         })
         .finally(() => {
           setLoading(false);
@@ -157,7 +158,14 @@ const StudentQuizResults = () => {
   };
 
   const handleEdit = () => {
-    navigate(`/dashboard/class/quiz/quiz-result-edit`);
+    const editedStatus = studentResult?.editedstatus;
+    console.log(editedStatus)
+
+    if (editedStatus === "PENDING") {
+      toast("This quiz has pending approval or already processed, you can't edit more than once."); 
+    } else {
+      navigate(`/dashboard/class/quiz/quiz-result-edit`);
+    }
   };
 
   const handleClose = () => {
@@ -177,19 +185,11 @@ const StudentQuizResults = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        const response = await studentuploadStudentQuiz(
+        await studentuploadStudentQuiz(
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile
-        );
-
-        const studentQuizId = response.data.studentQuizId;
-
-        await recordActivityLog(
-          user?.userid || "",
-          studentQuizId,
-          "UPLOAD"
-        );        
+        );      
 
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
@@ -235,9 +235,12 @@ const StudentQuizResults = () => {
 
             <div className="main-results">
               <div className="image-feedback-container">
-                <img
+              <img
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
                   alt=""
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className={isHovered ? "hovered" : ""}
                 />
                 {feedback === "No feedback given" ? (
                   <p className="no-feedback">{feedback}</p>

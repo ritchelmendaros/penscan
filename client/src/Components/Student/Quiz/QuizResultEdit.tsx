@@ -38,6 +38,7 @@ const StudentQuizResultEdit = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -54,9 +55,7 @@ const StudentQuizResultEdit = () => {
             typeof answerKey === "string" ? JSON.parse(answerKey) : answerKey;
           setCorrectAnswers(parsedAnswerKey);
         })
-        .catch((error) => {
-          toast.error("Error fetching data", error);
-        })
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });
@@ -153,8 +152,10 @@ const StudentQuizResultEdit = () => {
           <p className="td"></p>
           <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
           <p className="td">{i}</p>
-          <p className="td" style={{marginLeft:"-50px"}}>{studentAnswer}</p>
-          <p className="td" style={{marginLeft:"-40px"}}>
+          <p className="td" style={{ marginLeft: "-50px" }}>
+            {studentAnswer}
+          </p>
+          <p className="td" style={{ marginLeft: "-40px" }}>
             <input
               type="text"
               className={`${highlightClass}`}
@@ -190,7 +191,7 @@ const StudentQuizResultEdit = () => {
     setIsModalOpen(false);
     try {
       setIsSaving(true);
-      console.log(isSaving)
+      console.log(isSaving);
       if (
         editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some(
@@ -291,6 +292,9 @@ const StudentQuizResultEdit = () => {
                 <img
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
                   alt=""
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className={isHovered ? "hovered" : ""}
                 />
                 {feedback === "No feedback given" ? (
                   <p className="no-feedback">{feedback}</p>
@@ -307,8 +311,12 @@ const StudentQuizResultEdit = () => {
                     <p />
                     <p className="td"></p>
                     <p className="td">Item</p>
-                    <p className="td" style={{marginLeft:"-50px"}}>Scanned Answer</p>
-                    <p className="td" style={{marginLeft:"-30px"}}>Edited Answer</p>
+                    <p className="td" style={{ marginLeft: "-50px" }}>
+                      Scanned Answer
+                    </p>
+                    <p className="td" style={{ marginLeft: "-30px" }}>
+                      Edited Answer
+                    </p>
                     {/* <p className="td">Correct Answer</p> */}
                     <p />
                   </li>

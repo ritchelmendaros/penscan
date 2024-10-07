@@ -4,12 +4,12 @@ import { useCurrUser } from "../../../Components/Context/UserContext";
 import { Quizzes, Quiz } from "../../Interface/Quiz";
 import {
   getQuizResults,
-  getQuizzesByClassId
+  getQuizzesByClassId,
 } from "../../../apiCalls/QuizAPIs";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../../Components/Context/QuizContext";
 import { SyncLoader } from "react-spinners";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { StudentImageResult } from "../../Interface/Quiz";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,19 +22,18 @@ const ClassFiles = () => {
   const { user } = useCurrUser();
   const { setSelectedQuiz } = useQuiz();
 
- 
   useEffect(() => {
     const fetchQuizData = async () => {
       if (clickedClass?.classid) {
         try {
           const quiz: Quiz[] = await getQuizzesByClassId(clickedClass.classid);
-  
-          const quizzesWithProperMapping: Quizzes[] = quiz.map(q => ({
-            quizId: q.quizid, 
-            quizName: q.quizname,  
+
+          const quizzesWithProperMapping: Quizzes[] = quiz.map((q) => ({
+            quizId: q.quizid,
+            quizName: q.quizname,
           }));
           setQuizzes(quizzesWithProperMapping);
-  
+
           if (user?.userid) {
             const results = await Promise.all(
               quizzesWithProperMapping.map(async (q) => {
@@ -46,8 +45,10 @@ const ClassFiles = () => {
                 }
               })
             );
-  
-            const filteredResults = results.filter((result): result is StudentImageResult => result !== null);
+
+            const filteredResults = results.filter(
+              (result): result is StudentImageResult => result !== null
+            );
             setQuizResults(filteredResults);
             console.log("Fetched quiz results:", filteredResults);
           }
@@ -57,19 +58,17 @@ const ClassFiles = () => {
         }
       }
     };
-  
+
     fetchQuizData();
   }, [clickedClass, user]);
-  
-  
 
-const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
-  quizid: quiz.quizId,
-  classid: clickedClass?.classid || "",
-  quizname: quiz.quizName,
-  teacherid: user?.userid || "",
-  quizanswerkey: [],
-});
+  const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
+    quizid: quiz.quizId,
+    classid: clickedClass?.classid || "",
+    quizname: quiz.quizName,
+    teacherid: user?.userid || "",
+    quizanswerkey: [],
+  });
 
   const handleClick = (quiz: Quizzes) => {
     const selectedQuiz = mapQuizzesToQuiz(quiz);
@@ -111,29 +110,33 @@ const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
             <div className="tr">
               <p className="td">Quiz Name</p>
               <p className="td">Score</p>
-              <p className="td">Status</p>
-              <p className="td" style={{marginLeft:"20px"}}>Action</p>
+              <p className="td"></p>
+              <p className="td" style={{ marginLeft: "30px" }}>
+                Action
+              </p>
             </div>
           </div>
           <div className="tbody">
             {quizzes.length > 0 ? (
               quizzes.map((quiz, i) => {
                 if (displayedQuizzes.has(quiz.quizId)) {
-                  return null; 
+                  return null;
                 }
-                
+
                 displayedQuizzes.add(quiz.quizId);
 
                 const result = quizResults.find(
                   (r) => r.quizid === quiz.quizId
                 );
-                const status = result ? result.editedstatus : "Not Yet Uploaded";
+                const status = result
+                  ? result.editedstatus
+                  : "Not Yet Uploaded";
                 const score = result ? result.finalscore : "N/A";
                 return (
                   <div className="tr" onClick={() => handleClick(quiz)} key={i}>
                     <p className="td">{quiz.quizName}</p>
                     <p className="td">{score}</p>
-                    <p className="td">{status}</p>
+                    <p className="td">{status === "NONE" ? "" : status}</p>
                     <p className="td">
                       <div>
                         <button
@@ -142,12 +145,26 @@ const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
                         >
                           View
                         </button>
-                        <button
-                          className="edit"
-                          onClick={(event) => handleEditQuiz(event, quiz)}
-                        >
-                          Edit
-                        </button>
+                        {status === "NONE" ? (
+                          <button
+                            className="edit"
+                            onClick={(event) => handleEditQuiz(event, quiz)}
+                          >
+                            Edit
+                          </button>
+                        ) : (
+                          <button
+                            className="edit"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toast(
+                                "This quiz has pending approval or not processed, you can't edit more than once."
+                              );
+                            }}
+                          >
+                            Edit
+                          </button>
+                        )}
                       </div>
                     </p>
                   </div>
