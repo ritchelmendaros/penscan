@@ -115,7 +115,7 @@
         outline: none;
         font-size: 14px;
         color: white;
-        resize: vertical; 
+        resize: vertical;
       }
     }
 
@@ -127,7 +127,7 @@
       .th1,
       .tr1 {
         display: grid;
-        grid-template-columns:  40px 1fr 1.5fr 3fr 3fr 3fr;  
+        grid-template-columns: 40px 1fr 1.5fr 3fr 3fr 3fr;
         text-align: left;
       }
 
@@ -142,8 +142,8 @@
         background-color: rgb(53, 53, 53);
         height: 350px;
         max-height: 350px;
-        overflow-y: scroll; 
-        scrollbar-width: none; 
+        overflow-y: scroll;
+        scrollbar-width: none;
         -ms-overflow-style: none;
 
         .highlight-edited {
@@ -154,19 +154,19 @@
         }
 
         .highlight-approved {
-          background-color: rgba(76, 175, 80, 0.2); 
-          color: white; 
-          padding-left: 5px;
-          border-radius: 4px;
-        }
-        
-        .highlight-disapproved {
-          background-color: rgba(175, 76, 76, 0.2);  
+          background-color: rgba(76, 175, 80, 0.2);
           color: white;
           padding-left: 5px;
           border-radius: 4px;
         }
-        
+
+        .highlight-disapproved {
+          background-color: rgba(175, 76, 76, 0.2);
+          color: white;
+          padding-left: 5px;
+          border-radius: 4px;
+        }
+
         &::-webkit-scrollbar {
           display: none;
         }
@@ -178,7 +178,6 @@
     }
   }
 
-  
   // Grid layout for quiz results
   .quiz-results-container {
     display: grid;

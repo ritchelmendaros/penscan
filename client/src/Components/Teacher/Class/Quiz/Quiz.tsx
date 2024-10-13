@@ -95,8 +95,10 @@ const Quiz = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        // console.log(selectedFile);
-        const response = await uploadStudentQuiz(selectedQuiz.quizid, selectedFile);
+        await uploadStudentQuiz(
+          selectedQuiz.quizid,
+          selectedFile
+        );
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
         setIsModalOpen(false);
@@ -265,7 +267,6 @@ const Quiz = () => {
           </div>
         )}
       </main>
-      {/* Modal for File Upload */}
       {isModalOpen && (
         <div className="modalquiz-overlay">
           <div className="modalquiz-content">

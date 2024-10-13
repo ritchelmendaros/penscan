@@ -1,13 +1,12 @@
 import Header from "../../../Common/Header";
 import Gradients from "../../../Common/Gradients";
-// import SmilingRobot from "../../../Common/SmilingRobot";
 import { useQuiz } from "../../../Context/QuizContext";
 import { useEffect, useState } from "react";
 import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
   approveQuizAnswer,
   disapproveQuizAnswer,
-  getAllActivityLogs
+  getAllActivityLogs,
 } from "../../../../apiCalls/studentQuizApi";
 import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
@@ -41,7 +40,6 @@ const QuizResults = () => {
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
   const [dueDate, setDueDate] = useState<string | null>(null);
-  // const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { user } = useCurrUser();
   const [studentQuizId, setStudentQuizId] = useState("");
@@ -88,17 +86,15 @@ const QuizResults = () => {
 
   const handleFetchLogs = async () => {
     if (showModal) {
-      // If modal is already shown, close it
       setShowModal(false);
       return;
     }
 
-    // If modal is not shown, fetch logs
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
-        setLogs(response.logs); // Make sure you're setting logs from the correct property
-        setShowModal(true); 
+        setLogs(response.logs); 
+        setShowModal(true);
       } else {
         toast.error("Unexpected response format");
       }
@@ -233,13 +229,6 @@ const QuizResults = () => {
     navigate("/dashboard/class/quiz");
   };
 
-  // const handleCheckboxChange = (itemIndex: number) => {
-  //   setSelectedItems((prevSelected) =>
-  //     prevSelected.includes(itemIndex)
-  //       ? prevSelected.filter((index) => index !== itemIndex)
-  //       : [...prevSelected, itemIndex]
-  //   );
-  // };
 
   const renderRows = () => {
     const totalItems = Math.max(
@@ -382,22 +371,28 @@ const QuizResults = () => {
       </main>
 
       {showModal && (
-    <div className="modal">
-        <div className="modal-content">
+        <div className="modal">
+          <div className="modal-content">
             <ul>
-              <h4 style={{marginBottom: "10px"}}><i>Logs</i></h4>
-                {logs.length > 0 ? (
-                    logs.map((log, index) => (
-                        <li key={index} style={{marginBottom: "15px", fontSize: "12px"}}><i>{log}</i></li>
-                    ))
-                ) : (
-                    <li>No logs available</li>
-                )}
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
             </ul>
+          </div>
         </div>
-    </div>
-)}
-
+      )}
 
       <Gradients />
       <ToastContainer />

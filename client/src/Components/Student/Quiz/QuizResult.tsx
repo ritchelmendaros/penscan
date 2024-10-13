@@ -65,7 +65,7 @@ const StudentQuizResults = () => {
           setFormattedDueDate(formattedDueDate);
         })
         .catch(() => {
-          // toast.error("No data found", error);
+         
         })
         .finally(() => {
           setLoading(false);
@@ -110,16 +110,14 @@ const StudentQuizResults = () => {
 
   const handleFetchLogs = async () => {
     if (showModal) {
-      // If modal is already shown, close it
       setShowModal(false);
       return;
     }
 
-    // If modal is not shown, fetch logs
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
-        setLogs(response.logs); // Make sure you're setting logs from the correct property
+        setLogs(response.logs);
         setShowModal(true);
       } else {
         toast.error("Unexpected response format");
@@ -134,11 +132,6 @@ const StudentQuizResults = () => {
       ...correctAnswers.map((ans) => ans.itemnumber),
       ...studentAnswers.map((ans) => ans.itemnumber)
     );
-
-    // const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
-    //   acc[correctAnswer.itemnumber] = correctAnswer.answer;
-    //   return acc;
-    // }, {} as Record<number, string>);
 
     const studentAnswerMap = studentAnswers.reduce((acc, studentAnswer) => {
       acc[studentAnswer.itemnumber] = studentAnswer.answer;
@@ -271,7 +264,7 @@ const StudentQuizResults = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        const response = await studentuploadStudentQuiz(
+        await studentuploadStudentQuiz(
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile
@@ -321,9 +314,6 @@ const StudentQuizResults = () => {
 
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
-                {/* <div className="additional-points">
-                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
-                </div> */}
                 <div className="additional-points">
                   <h3>
                     Bonus Points: {studentResult?.bonusscore}
@@ -386,9 +376,6 @@ const StudentQuizResults = () => {
                       Edit
                     </button>
                   )}
-                  {/* <button onClick={handleEdit} className="studentviewedit">
-                    Edit
-                  </button> */}
                   <button onClick={handleClose} className="studentviewclose">
                     Close
                   </button>

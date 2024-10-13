@@ -9,7 +9,10 @@ import { StudentImageResult } from "../../Interface/Quiz";
 import { useCurrUser } from "../../Context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { studentsaveStudentQuiz, getAllActivityLogs } from "../../../apiCalls/studentQuizApi";
+import {
+  studentsaveStudentQuiz,
+  getAllActivityLogs,
+} from "../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
@@ -109,16 +112,14 @@ const StudentQuizResultEdit = () => {
 
   const handleFetchLogs = async () => {
     if (showModal) {
-      // If modal is already shown, close it
       setShowModal(false);
       return;
     }
 
-    // If modal is not shown, fetch logs
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
-        setLogs(response.logs); // Make sure you're setting logs from the correct property
+        setLogs(response.logs); 
         setShowModal(true);
       } else {
         toast.error("Unexpected response format");
@@ -128,17 +129,12 @@ const StudentQuizResultEdit = () => {
     }
   };
 
-
   const renderRows = () => {
     const maxItemNumber = Math.max(
       ...correctAnswers.map((ans) => ans.itemnumber),
       ...studentAnswers.map((ans) => ans.itemnumber)
     );
 
-    // const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
-    //   acc[correctAnswer.itemnumber] = correctAnswer.answer;
-    //   return acc;
-    // }, {} as Record<number, string>);
     const studentAnswerMap = studentAnswers.reduce((acc, studentAnswer) => {
       acc[studentAnswer.itemnumber] = studentAnswer.answer;
       return acc;
@@ -146,7 +142,6 @@ const StudentQuizResultEdit = () => {
 
     const rows = [];
     for (let i = 1; i <= maxItemNumber; i++) {
-      // const correctAnswer = correctAnswerMap[i] || "";
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
@@ -157,9 +152,6 @@ const StudentQuizResultEdit = () => {
 
       const editedStatus = studentResult?.editedstatus;
 
-      // let editedItem = editedAnswerObj.isedited
-      //   ? editedAnswerObj.editeditem
-      //   : "";
 
       let highlightClass = "";
 
@@ -196,7 +188,6 @@ const StudentQuizResultEdit = () => {
               disabled={isDisabled}
             />
           </p>
-          {/* <p className="td">{correctAnswer}</p> */}
           <p className="td"></p>
         </li>
       );
@@ -258,7 +249,7 @@ const StudentQuizResultEdit = () => {
       }
 
       if (!user?.userid) {
-        throw new Error('User ID is undefined'); 
+        throw new Error("User ID is undefined");
       }
 
       if (studentQuizId) {
@@ -348,12 +339,9 @@ const StudentQuizResultEdit = () => {
               )}
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
-                {/* <div className="additional-points">
-                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
-                </div> */}
                 <div className="additional-points">
                   <h3>
-                  Bonus Points: {studentResult?.bonusscore}
+                    Bonus Points: {studentResult?.bonusscore}
                     <FontAwesomeIcon
                       icon={faBell}
                       className="notification-icon"
@@ -394,7 +382,6 @@ const StudentQuizResultEdit = () => {
                     <p className="td" style={{ marginLeft: "-30px" }}>
                       Edited Answer
                     </p>
-                    {/* <p className="td">Correct Answer</p> */}
                     <p />
                   </li>
                 </ul>
@@ -459,7 +446,7 @@ const StudentQuizResultEdit = () => {
         </div>
       )}
 
-{showModal && (
+      {showModal && (
         <div className="modal">
           <div className="modal-content">
             <ul>

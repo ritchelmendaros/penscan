@@ -47,7 +47,6 @@ const ClassFiles = () => {
 
     setLocalStorage("cid", quiz.classid);
     setLocalStorage("qid", quiz.quizid);
-    // setLocalStorage("qans", quiz.quizanswerkey);
     setLocalStorage("qname", quiz.quizname);
     setLocalStorage("qtid", quiz.teacherid);
 
@@ -69,7 +68,7 @@ const ClassFiles = () => {
     setEditDueDate(dueDate);
     setEditAnswerKeyState(answerKey);
     setIsModalOpen(true);
-  };  
+  };
 
   const handleDelete = (quizId: string) => {
     toast("Delete quiz");
@@ -95,7 +94,6 @@ const ClassFiles = () => {
       }
     }
   };
-  
 
   return (
     <div className="ClassFiles">
@@ -123,7 +121,7 @@ const ClassFiles = () => {
                     <div className="options-menu">
                       <button
                         onClick={(event) => {
-                          event.stopPropagation(); // Prevent triggering the li click
+                          event.stopPropagation(); 
                           handleEdit(
                             quiz.quizid,
                             quiz.quizname,
@@ -196,8 +194,12 @@ const ClassFiles = () => {
             </div>
 
             <div className="button-container">
-              <button className="modal-buttonsubmit" onClick={handleSaveEdit}>Save</button>
-              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+              <button className="modal-buttonsubmit" onClick={handleSaveEdit}>
+                Save
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>

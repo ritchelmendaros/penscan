@@ -8,7 +8,10 @@ import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { saveStudentQuiz, getAllActivityLogs } from "../../../../apiCalls/studentQuizApi";
+import {
+  saveStudentQuiz,
+  getAllActivityLogs,
+} from "../../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import ConfirmationModal from "../../../Modal/ConfirmationModal";
 import { useCurrUser } from "../../../Context/UserContext";
@@ -115,24 +118,21 @@ const QuizResultEdit = () => {
 
   const handleFetchLogs = async () => {
     if (showModal) {
-      // If modal is already shown, close it
       setShowModal(false);
       return;
     }
-
-    // If modal is not shown, fetch logs
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
-        setLogs(response.logs); // Make sure you're setting logs from the correct property
-        setShowModal(true); 
+        setLogs(response.logs); 
+        setShowModal(true);
       } else {
         toast.error("Unexpected response format");
       }
     } catch (error) {
       toast.error("Error fetching logs");
     }
-};
+  };
 
   const formatDueDate = (dueDateTime: string): string => {
     const date = new Date(dueDateTime);
@@ -195,7 +195,7 @@ const QuizResultEdit = () => {
       }
 
       if (!user?.userid) {
-        throw new Error('User ID is undefined'); 
+        throw new Error("User ID is undefined");
       }
 
       if (studentQuizId) {
@@ -235,7 +235,7 @@ const QuizResultEdit = () => {
     const maxItemNumber = Math.max(
       ...answers.map((ans) => ans.itemnumber),
       ...Object.keys(studentAnswers).map((key) => parseInt(key))
-    );    
+    );
 
     for (let i = 1; i <= maxItemNumber; i++) {
       const studentAnswer = studentAnswers[i] || "";
@@ -246,7 +246,6 @@ const QuizResultEdit = () => {
         isapproved: false,
         isdisapproved: false,
       };
-      // const status = studentResult?.editedstatus || "";
 
       let highlightClass = "";
 
@@ -270,18 +269,18 @@ const QuizResultEdit = () => {
           <p className="td">{i}</p>
           <p className="td">{studentAnswer}</p>
           <p className="td">
-          {hasCorrectAnswer ? (
-            <input
-              type="text"
-              className={`${highlightClass}`}
-              value={editedAnswerObj.editeditem}
-              onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
-              disabled={isDisabled}
-            />
-          ) : (
-            <span></span> 
-          )}
-        </p>
+            {hasCorrectAnswer ? (
+              <input
+                type="text"
+                className={`${highlightClass}`}
+                value={editedAnswerObj.editeditem}
+                onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
+                disabled={isDisabled}
+              />
+            ) : (
+              <span></span>
+            )}
+          </p>
           <p className="td">{correctAnswer}</p>
           <p className="td"></p>
         </li>
@@ -308,26 +307,20 @@ const QuizResultEdit = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
-              <h5><i>{dueDate}</i></h5>
+              <h5>
+                <i>{dueDate}</i>
+              </h5>
               <div className="score-container">
                 <h3 className="score">Score: {selectedStudentResult?.score}</h3>
-                {/* <div className="additional-points">
-                  <span>Bonus Points:</span>
-                  <input
-                    type="number"
-                    value={bonusScore}
-                    onChange={handleBonusScoreChange}
-                  />
-                </div> */}
                 <div className="additional-points">
                   <h3>
-                  <span>Bonus Points:</span>
-                  <input
-                  style={{marginLeft: "10px"}}
-                    type="number"
-                    value={bonusScore}
-                    onChange={handleBonusScoreChange}
-                  />
+                    <span>Bonus Points:</span>
+                    <input
+                      style={{ marginLeft: "10px" }}
+                      type="number"
+                      value={bonusScore}
+                      onChange={handleBonusScoreChange}
+                    />
                     <FontAwesomeIcon
                       icon={faBell}
                       className="notification-icon"
@@ -391,22 +384,28 @@ const QuizResultEdit = () => {
         )}
       </main>
       {showModal && (
-    <div className="modal">
-        <div className="modal-content">
+        <div className="modal">
+          <div className="modal-content">
             <ul>
-              <h4 style={{marginBottom: "10px"}}><i>Logs</i></h4>
-                {logs.length > 0 ? (
-                    logs.map((log, index) => (
-                        <li key={index} style={{marginBottom: "15px", fontSize: "12px"}}><i>{log}</i></li>
-                    ))
-                ) : (
-                    <li>No logs available</li>
-                )}
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
             </ul>
+          </div>
         </div>
-    </div>
-)}
-
+      )}
 
       <SmilingRobot />
       <Gradients />
