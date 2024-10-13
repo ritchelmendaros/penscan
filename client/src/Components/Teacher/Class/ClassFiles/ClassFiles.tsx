@@ -71,6 +71,7 @@ const ClassFiles = () => {
   };
 
   const handleDelete = (quizId: string) => {
+    console.log(quizId)
     toast("Delete quiz");
   };
 

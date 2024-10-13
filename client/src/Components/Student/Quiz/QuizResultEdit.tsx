@@ -111,6 +111,7 @@ const StudentQuizResultEdit = () => {
   }, [studentResult]);
 
   const handleFetchLogs = async () => {
+    console.log(dueDate)
     if (showModal) {
       setShowModal(false);
       return;

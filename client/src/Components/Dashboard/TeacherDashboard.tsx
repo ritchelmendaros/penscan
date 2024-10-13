@@ -36,7 +36,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   };
 
   const handleDelete = (classId: string) => {
-    
+    console.log(classId)
     toast("Delete class");
   };
 
