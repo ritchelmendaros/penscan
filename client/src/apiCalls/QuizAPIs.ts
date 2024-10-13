@@ -152,3 +152,26 @@ export const getAnswerKey = async (quizId: string): Promise<string> => {
     }
 };
 
+export const editQuiz = async (
+    quizId: string,
+    quizName: string,
+    dueDateTime: string,
+    answerKeys: { itemnumber: number; answer: string }[]
+  ) => {
+    try {
+      const response = await axiosInstance.put(
+        '/api/quiz/edit', 
+        {
+          quizId: quizId,
+          quizName: quizName,
+          dueDateTime: dueDateTime,
+          answerKeys: answerKeys
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error editing quiz:', error);
+      throw error;
+    }
+  };
+  
