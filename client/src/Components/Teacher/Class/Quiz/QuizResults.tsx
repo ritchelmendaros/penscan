@@ -7,7 +7,7 @@ import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
   approveQuizAnswer,
   disapproveQuizAnswer,
-  recordActivityLog,
+  getAllActivityLogs
 } from "../../../../apiCalls/studentQuizApi";
 import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,6 +15,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 import { useCurrUser } from "../../../Context/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -43,6 +45,8 @@ const QuizResults = () => {
   const [refresh, setRefresh] = useState(0);
   const { user } = useCurrUser();
   const [studentQuizId, setStudentQuizId] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -50,7 +54,7 @@ const QuizResults = () => {
         .then((result) => {
           setStudentResult(result);
           setFeedback(result.comment || "No feedback given");
-          // setStudentQuizId(result.studentquizid);
+          setStudentQuizId(result.studentquizid);
           setLoading(false);
         })
         .catch((error) => {
@@ -82,6 +86,27 @@ const QuizResults = () => {
     }
   }, [studentResult]);
 
+  const handleFetchLogs = async () => {
+    if (showModal) {
+      // If modal is already shown, close it
+      setShowModal(false);
+      return;
+    }
+
+    // If modal is not shown, fetch logs
+    try {
+      const response = await getAllActivityLogs(studentQuizId);
+      if (response && Array.isArray(response.logs)) {
+        setLogs(response.logs); // Make sure you're setting logs from the correct property
+        setShowModal(true); 
+      } else {
+        toast.error("Unexpected response format");
+      }
+    } catch (error) {
+      toast.error("Error fetching logs");
+    }
+  };
+
   const handleApprove = async (itemIndex: number) => {
     if (
       !studentResult ||
@@ -91,17 +116,19 @@ const QuizResults = () => {
       return;
     }
 
+    if (!user?.userid) {
+      throw new Error("User ID is undefined");
+    }
+
     try {
       await approveQuizAnswer(
         studentResult.studentquizid,
+        user.userid,
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
         editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
       );
-
-      // await recordActivityLog(user?.userid || "", studentResult.studentquizid, "APPROVE");
-      // console.log("Logging approve");
 
       setEditedAnswers((prev) => ({
         ...prev,
@@ -129,9 +156,14 @@ const QuizResults = () => {
       return;
     }
 
+    if (!user?.userid) {
+      throw new Error("User ID is undefined");
+    }
+
     try {
       await disapproveQuizAnswer(
         studentResult.studentquizid,
+        user.userid,
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
@@ -172,7 +204,6 @@ const QuizResults = () => {
     if (selectedQuiz?.dueDateTime) {
       setDueDate(formatDueDate(selectedQuiz.dueDateTime));
     }
-
   }, [selectedQuiz, studentResult]);
 
   const formatDueDate = (dueDateTime: string): string => {
@@ -293,11 +324,20 @@ const QuizResults = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
-              <h5><i>{dueDate}</i></h5>
+              <h5>
+                <i>{dueDate}</i>
+              </h5>
               <div className="score-container">
                 <h3>Score: {selectedStudentResult?.score}</h3>
                 <div className="additional-points">
-                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
+                  <h3>
+                    Bonus Points: {studentResult?.bonusscore}
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      className="notification-icon"
+                      onClick={handleFetchLogs}
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -340,6 +380,24 @@ const QuizResults = () => {
           </>
         )}
       </main>
+
+      {showModal && (
+    <div className="modal">
+        <div className="modal-content">
+            <ul>
+              <h4 style={{marginBottom: "10px"}}><i>Logs</i></h4>
+                {logs.length > 0 ? (
+                    logs.map((log, index) => (
+                        <li key={index} style={{marginBottom: "15px", fontSize: "12px"}}><i>{log}</i></li>
+                    ))
+                ) : (
+                    <li>No logs available</li>
+                )}
+            </ul>
+        </div>
+    </div>
+)}
+
 
       <Gradients />
       <ToastContainer />

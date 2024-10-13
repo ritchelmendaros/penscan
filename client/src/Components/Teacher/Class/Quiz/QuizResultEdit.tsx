@@ -8,9 +8,12 @@ import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { saveStudentQuiz } from "../../../../apiCalls/studentQuizApi";
+import { saveStudentQuiz, getAllActivityLogs } from "../../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import ConfirmationModal from "../../../Modal/ConfirmationModal";
+import { useCurrUser } from "../../../Context/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 interface AnswerMap {
   [key: number]: string;
@@ -33,9 +36,7 @@ const QuizResultEdit = () => {
   const [feedback, setFeedback] = useState<string>("");
   const [bonusScore, setBonusScore] = useState(0);
   const [dueDate, setDueDate] = useState<string | null>(null);
-  // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
-  //   {}
-  // );
+  const { user } = useCurrUser();
   const [editedAnswers, setEditedAnswers] = useState<{
     [key: number]: EditedAnswer;
   }>({});
@@ -47,7 +48,8 @@ const QuizResultEdit = () => {
 
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
-
+  const [showModal, setShowModal] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -111,6 +113,27 @@ const QuizResultEdit = () => {
     }
   }, [selectedQuiz, studentResult]);
 
+  const handleFetchLogs = async () => {
+    if (showModal) {
+      // If modal is already shown, close it
+      setShowModal(false);
+      return;
+    }
+
+    // If modal is not shown, fetch logs
+    try {
+      const response = await getAllActivityLogs(studentQuizId);
+      if (response && Array.isArray(response.logs)) {
+        setLogs(response.logs); // Make sure you're setting logs from the correct property
+        setShowModal(true); 
+      } else {
+        toast.error("Unexpected response format");
+      }
+    } catch (error) {
+      toast.error("Error fetching logs");
+    }
+};
+
   const formatDueDate = (dueDateTime: string): string => {
     const date = new Date(dueDateTime);
 
@@ -171,6 +194,10 @@ const QuizResultEdit = () => {
         setEditedStatus("PENDING");
       }
 
+      if (!user?.userid) {
+        throw new Error('User ID is undefined'); 
+      }
+
       if (studentQuizId) {
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => {
@@ -180,6 +207,7 @@ const QuizResultEdit = () => {
           .join("\n");
         await saveStudentQuiz(
           studentQuizId,
+          user.userid,
           formattedAnswers,
           feedback,
           bonusScore,
@@ -283,13 +311,29 @@ const QuizResultEdit = () => {
               <h5><i>{dueDate}</i></h5>
               <div className="score-container">
                 <h3 className="score">Score: {selectedStudentResult?.score}</h3>
-                <div className="additional-points">
+                {/* <div className="additional-points">
                   <span>Bonus Points:</span>
                   <input
                     type="number"
                     value={bonusScore}
                     onChange={handleBonusScoreChange}
                   />
+                </div> */}
+                <div className="additional-points">
+                  <h3>
+                  <span>Bonus Points:</span>
+                  <input
+                  style={{marginLeft: "10px"}}
+                    type="number"
+                    value={bonusScore}
+                    onChange={handleBonusScoreChange}
+                  />
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      className="notification-icon"
+                      onClick={handleFetchLogs}
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -346,6 +390,23 @@ const QuizResultEdit = () => {
           </>
         )}
       </main>
+      {showModal && (
+    <div className="modal">
+        <div className="modal-content">
+            <ul>
+              <h4 style={{marginBottom: "10px"}}><i>Logs</i></h4>
+                {logs.length > 0 ? (
+                    logs.map((log, index) => (
+                        <li key={index} style={{marginBottom: "15px", fontSize: "12px"}}><i>{log}</i></li>
+                    ))
+                ) : (
+                    <li>No logs available</li>
+                )}
+            </ul>
+        </div>
+    </div>
+)}
+
 
       <SmilingRobot />
       <Gradients />

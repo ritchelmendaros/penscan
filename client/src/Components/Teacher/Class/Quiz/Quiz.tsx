@@ -96,7 +96,7 @@ const Quiz = () => {
       setIsLoading(true);
       try {
         // console.log(selectedFile);
-        await uploadStudentQuiz(selectedQuiz.quizid, selectedFile);
+        const response = await uploadStudentQuiz(selectedQuiz.quizid, selectedFile);
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
         setIsModalOpen(false);

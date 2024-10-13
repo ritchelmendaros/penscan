@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
+import { studentuploadStudentQuiz, recordActivityLog } from "../../../apiCalls/studentQuizApi";
 
 interface Answer {
   itemnumber: number;
@@ -237,7 +237,7 @@ const StudentQuizResults = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        await studentuploadStudentQuiz(
+         const response = await studentuploadStudentQuiz(
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile

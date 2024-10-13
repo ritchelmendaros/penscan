@@ -231,12 +231,17 @@ const StudentQuizResultEdit = () => {
         setEditedStatus("PENDING");
       }
 
+      if (!user?.userid) {
+        throw new Error('User ID is undefined'); 
+      }
+
       if (studentQuizId) {
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
           .join("\n");
         await studentsaveStudentQuiz(
           studentQuizId,
+          user.userid,
           formattedAnswers,
           editedStatus
         );
