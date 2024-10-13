@@ -38,6 +38,7 @@ const QuizResults = () => {
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
+  const [dueDate, setDueDate] = useState<string | null>(null);
   // const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { user } = useCurrUser();
@@ -168,7 +169,34 @@ const QuizResults = () => {
     if (selectedQuiz?.quizanswerkey) {
       setAnswers(selectedQuiz.quizanswerkey);
     }
+    if (selectedQuiz?.dueDateTime) {
+      setDueDate(formatDueDate(selectedQuiz.dueDateTime));
+    }
+
   }, [selectedQuiz, studentResult]);
+
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
 
   const handleClose = () => {
     navigate("/dashboard/class/quiz");
@@ -265,6 +293,7 @@ const QuizResults = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
+              <h5><i>{dueDate}</i></h5>
               <div className="score-container">
                 <h3>Score: {selectedStudentResult?.score}</h3>
                 <div className="additional-points">

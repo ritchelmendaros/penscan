@@ -32,6 +32,7 @@ const QuizResultEdit = () => {
   const [studentQuizId, setStudentQuizId] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
   const [bonusScore, setBonusScore] = useState(0);
+  const [dueDate, setDueDate] = useState<string | null>(null);
   // const [editedAnswers, setEditedAnswers] = useState<{ [key: number]: string }>(
   //   {}
   // );
@@ -105,7 +106,33 @@ const QuizResultEdit = () => {
     if (selectedQuiz?.quizanswerkey) {
       setAnswers(selectedQuiz.quizanswerkey);
     }
+    if (selectedQuiz?.dueDateTime) {
+      setDueDate(formatDueDate(selectedQuiz.dueDateTime));
+    }
   }, [selectedQuiz, studentResult]);
+
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
 
   const handleClose = () => {
     navigate("/dashboard/class/quiz");
@@ -253,6 +280,7 @@ const QuizResultEdit = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
+              <h5><i>{dueDate}</i></h5>
               <div className="score-container">
                 <h3 className="score">Score: {selectedStudentResult?.score}</h3>
                 <div className="additional-points">

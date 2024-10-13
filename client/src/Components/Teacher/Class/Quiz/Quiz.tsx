@@ -9,7 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as XLSX from "xlsx";
-import { uploadStudentQuiz, deleteStudentQuiz } from "../../../../apiCalls/studentQuizApi";
+import {
+  uploadStudentQuiz,
+  deleteStudentQuiz,
+} from "../../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import Analysis from "./Analysis";
 import noDataGif from "../../../../assets/nodata.gif";
@@ -120,12 +123,35 @@ const Quiz = () => {
     );
     if (confirmDelete && selectedQuiz?.quizid) {
       try {
-        await deleteStudentQuiz(student.userId, selectedQuiz.quizid); 
-        setRefreshScores(true);  
+        await deleteStudentQuiz(student.userId, selectedQuiz.quizid);
+        setRefreshScores(true);
       } catch (error) {
         toast.error("Failed to delete the score.");
       }
     }
+  };
+
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
   };
 
   return (
@@ -148,6 +174,11 @@ const Quiz = () => {
               Analysis
             </button>
           </div>
+          {selectedQuiz?.dueDateTime && (
+            <h5 style={{ marginLeft: "10px", fontStyle: "italic" }}>
+              Due Date: {formatDueDate(selectedQuiz.dueDateTime)}
+            </h5>
+          )}
           <div className="upload-download">
             {/* <button onClick={() => setIsModalOpen(true)}>Upload</button> */}
             <button onClick={handleDownloadExcel}>Download Excel</button>
@@ -161,7 +192,10 @@ const Quiz = () => {
               <li className="th">
                 <p className="td">Student Name</p>
                 <p className="td">Score</p>
-                <p className="td">Modified</p>
+                <p className="td"></p>
+                <p className="td" style={{ marginLeft: "-5px" }}>
+                  Due Date
+                </p>
                 <p className="td">Actions</p>
               </li>
             </ul>
@@ -193,8 +227,11 @@ const Quiz = () => {
                     <p className="td">
                       {student.firstName} {student.lastName}
                     </p>
-                    <p className="td" style={{marginLeft: "20px"}}>{student.finalScore}</p>
+                    <p className="td" style={{ marginLeft: "20px" }}>
+                      {student.finalScore}
+                    </p>
                     <p className="td">{student.editedStatus}</p>
+                    <p className="td">{formatDueDate(student.dueDateTime)}</p>
                     <div>
                       <button
                         className="view"
@@ -217,7 +254,7 @@ const Quiz = () => {
                           style={{
                             color: "red",
                             backgroundColor: "transparent",
-                          }} 
+                          }}
                         />
                       </button>
                     </div>

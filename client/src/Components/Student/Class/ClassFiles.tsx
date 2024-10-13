@@ -32,6 +32,7 @@ const ClassFiles = () => {
             quizId: q.quizid,
             quizName: q.quizname,
             dueDateTime: formatDueDate(q.dueDateTime),
+            dueDateTimeRaw: q.dueDateTime,
           }));
           setQuizzes(quizzesWithProperMapping);
 
@@ -62,27 +63,29 @@ const ClassFiles = () => {
 
     fetchQuizData();
   }, [clickedClass, user]);
+
   const formatDueDate = (dueDateTime: string): string => {
     const date = new Date(dueDateTime);
-  
+
     const dateOptions: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     };
-  
+
     const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
+      hour: "numeric",
+      minute: "numeric",
       hour12: true,
     };
-  
+
     const formattedDate = date.toLocaleDateString(undefined, dateOptions);
-    const formattedTime = date.toLocaleTimeString(undefined, timeOptions).replace(':00 ', ' '); 
-  
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
     return `${formattedDate} | ${formattedTime}`;
   };
-  
 
   const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => {
     return {
@@ -91,7 +94,7 @@ const ClassFiles = () => {
       quizname: quiz.quizName,
       teacherid: user?.userid || "",
       quizanswerkey: [],
-      dueDateTime: quiz.dueDateTime, 
+      dueDateTime: quiz.dueDateTime,
     };
   };
 
@@ -116,13 +119,19 @@ const ClassFiles = () => {
     quiz: Quizzes
   ) => {
     event.stopPropagation();
-    const selectedQuiz = mapQuizzesToQuiz(quiz);
-    setSelectedQuiz(selectedQuiz);
-    navigate("/dashboard/class/quiz/quiz-result-edit");
+    const currentDateTime = new Date();
+    const dueDateTime = new Date(quiz.dueDateTimeRaw);
+    if (dueDateTime < currentDateTime) {
+      toast.error("Can't edit: Due date has passed.");
+    } else {
+      const selectedQuiz = mapQuizzesToQuiz(quiz);
+      setSelectedQuiz(selectedQuiz);
+      navigate("/dashboard/class/quiz/quiz-result-edit");
+    }
   };
 
   const isQuizOverdue = (dueDateTime: string): boolean => {
-    const dueDate = new Date(dueDateTime); 
+    const dueDate = new Date(dueDateTime);
     const currentDate = new Date();
     return currentDate > dueDate;
   };
@@ -184,19 +193,18 @@ const ClassFiles = () => {
                           onClick={(event) => {
                             if (isOverdue) {
                               event.stopPropagation();
-                              toast(
-                                "This quiz is overdue. You can't edit it."
-                              );
-                            } else if (status === "NONE") {
+                              toast("This quiz is overdue. You can't edit it.");
+                            } else if (status === "NONE" && !isOverdue) {
                               handleEditQuiz(event, quiz);
+                            } else if (status === "PENDING") {
+                              event.stopPropagation();
+                              toast("This quiz is already edited.");
                             } else {
                               event.stopPropagation();
-                              toast(
-                                "This quiz has is not yet uploaded or already edited."
-                              );
+                              toast("Upload your quiz first.");
                             }
                           }}
-                          disabled={isOverdue} 
+                          disabled={isOverdue}
                         >
                           Edit
                         </button>

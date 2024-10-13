@@ -207,7 +207,7 @@ const StudentQuizResults = () => {
     const dueDateTime = new Date(dueDate);
 
     if (dueDateTime < currentDate) {
-      toast.error("Can't edit, the due date has already passed.");
+      toast.error("Can't edit: Due date has passed.");
       return;
     }
 
@@ -284,7 +284,7 @@ const StudentQuizResults = () => {
                   </h5>
                 </div>
               )}
-
+  
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
                 <div className="additional-points">
@@ -337,9 +337,17 @@ const StudentQuizResults = () => {
                       Upload
                     </button>
                   )}
-                  <button onClick={handleEdit} className="studentviewedit">
+                  {studentResult && (
+                    <button
+                      className="studentviewedit"
+                      onClick={handleEdit}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  {/* <button onClick={handleEdit} className="studentviewedit">
                     Edit
-                  </button>
+                  </button> */}
                   <button onClick={handleClose} className="studentviewclose">
                     Close
                   </button>
