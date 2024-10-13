@@ -9,10 +9,12 @@ import { StudentImageResult } from "../../Interface/Quiz";
 import { useCurrUser } from "../../Context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { studentsaveStudentQuiz } from "../../../apiCalls/studentQuizApi";
+import { studentsaveStudentQuiz, getAllActivityLogs } from "../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 interface Answer {
   itemnumber: number;
@@ -41,6 +43,8 @@ const StudentQuizResultEdit = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [formattedDueDate, setFormattedDueDate] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -102,6 +106,28 @@ const StudentQuizResultEdit = () => {
       setStudentAnswers(extractedAnswers);
     }
   }, [studentResult]);
+
+  const handleFetchLogs = async () => {
+    if (showModal) {
+      // If modal is already shown, close it
+      setShowModal(false);
+      return;
+    }
+
+    // If modal is not shown, fetch logs
+    try {
+      const response = await getAllActivityLogs(studentQuizId);
+      if (response && Array.isArray(response.logs)) {
+        setLogs(response.logs); // Make sure you're setting logs from the correct property
+        setShowModal(true);
+      } else {
+        toast.error("Unexpected response format");
+      }
+    } catch (error) {
+      toast.error("Error fetching logs");
+    }
+  };
+
 
   const renderRows = () => {
     const maxItemNumber = Math.max(
@@ -322,8 +348,18 @@ const StudentQuizResultEdit = () => {
               )}
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
-                <div className="additional-points">
+                {/* <div className="additional-points">
                   <h3>Bonus Points: {studentResult?.bonusscore}</h3>
+                </div> */}
+                <div className="additional-points">
+                  <h3>
+                  Bonus Points: {studentResult?.bonusscore}
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      className="notification-icon"
+                      onClick={handleFetchLogs}
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -423,6 +459,29 @@ const StudentQuizResultEdit = () => {
         </div>
       )}
 
+{showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <ul>
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
       <SmilingRobot />
       <Gradients />
       <ToastContainer />
