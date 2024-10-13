@@ -194,7 +194,7 @@ const Quiz = () => {
                 <p className="td">Score</p>
                 <p className="td"></p>
                 <p className="td" style={{ marginLeft: "-5px" }}>
-                  Due Date
+                  Last Modified
                 </p>
                 <p className="td">Actions</p>
               </li>
@@ -231,7 +231,7 @@ const Quiz = () => {
                       {student.finalScore}
                     </p>
                     <p className="td">{student.editedStatus}</p>
-                    <p className="td">{formatDueDate(student.dueDateTime)}</p>
+                    <p className="td">{formatDueDate(student.lastModified)}</p>
                     <div>
                       <button
                         className="view"

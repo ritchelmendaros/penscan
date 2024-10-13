@@ -11,7 +11,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { studentuploadStudentQuiz, getAllActivityLogs } from "../../../apiCalls/studentQuizApi";
+import {
+  studentuploadStudentQuiz,
+  getAllActivityLogs,
+} from "../../../apiCalls/studentQuizApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 
@@ -117,15 +120,14 @@ const StudentQuizResults = () => {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
         setLogs(response.logs); // Make sure you're setting logs from the correct property
-        setShowModal(true); 
+        setShowModal(true);
       } else {
         toast.error("Unexpected response format");
       }
     } catch (error) {
       toast.error("Error fetching logs");
     }
-};
-
+  };
 
   const renderRows = () => {
     const maxItemNumber = Math.max(
@@ -154,9 +156,10 @@ const StudentQuizResults = () => {
         isapproved: false,
         isdisapproved: false,
       };
-      const correctAnswer = dueDateTime && dueDateTime < currentDate
-        ? correctAnswers.find(ans => ans.itemnumber === i)?.answer || ""
-        : "";
+      const correctAnswer =
+        dueDateTime && dueDateTime < currentDate
+          ? correctAnswers.find((ans) => ans.itemnumber === i)?.answer || ""
+          : "";
 
       const editedStatus = studentResult?.editedstatus;
 
@@ -188,7 +191,10 @@ const StudentQuizResults = () => {
           <p className="td1" style={{ marginLeft: "-50px" }}>
             {studentAnswer}
           </p>
-          <p className={`td1 ${highlightClass}`} style={{ marginLeft: "-40px" }}>
+          <p
+            className={`td1 ${highlightClass}`}
+            style={{ marginLeft: "-40px" }}
+          >
             {editedItem}
           </p>
           <p className="td1">{correctAnswer}</p>
@@ -265,7 +271,7 @@ const StudentQuizResults = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-         const response = await studentuploadStudentQuiz(
+        const response = await studentuploadStudentQuiz(
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile
@@ -312,7 +318,7 @@ const StudentQuizResults = () => {
                   </h5>
                 </div>
               )}
-  
+
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
                 {/* <div className="additional-points">
@@ -320,7 +326,7 @@ const StudentQuizResults = () => {
                 </div> */}
                 <div className="additional-points">
                   <h3>
-                  Bonus Points: {studentResult?.bonusscore}
+                    Bonus Points: {studentResult?.bonusscore}
                     <FontAwesomeIcon
                       icon={faBell}
                       className="notification-icon"
@@ -376,10 +382,7 @@ const StudentQuizResults = () => {
                     </button>
                   )}
                   {studentResult && (
-                    <button
-                      className="studentviewedit"
-                      onClick={handleEdit}
-                    >
+                    <button className="studentviewedit" onClick={handleEdit}>
                       Edit
                     </button>
                   )}
@@ -434,23 +437,29 @@ const StudentQuizResults = () => {
         </div>
       )}
 
-
-{showModal && (
-    <div className="modal">
-        <div className="modal-content">
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
             <ul>
-              <h4 style={{marginBottom: "10px"}}><i>Logs</i></h4>
-                {logs.length > 0 ? (
-                    logs.map((log, index) => (
-                        <li key={index} style={{marginBottom: "15px", fontSize: "12px"}}><i>{log}</i></li>
-                    ))
-                ) : (
-                    <li>No logs available</li>
-                )}
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
             </ul>
+          </div>
         </div>
-    </div>
-)}
+      )}
       <SmilingRobot />
       <Gradients />
       <ToastContainer />

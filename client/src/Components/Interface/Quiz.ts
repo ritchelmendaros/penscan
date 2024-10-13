@@ -24,6 +24,7 @@ interface StudentQuiz {
     username: string;
     editedStatus: string;
     dueDateTime: string;
+    lastModified: string;
 }
 
 interface StudentImageResult {
