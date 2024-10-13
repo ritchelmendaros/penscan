@@ -63,6 +63,7 @@ export const studentuploadStudentQuiz = async (quizid: string, userid: string, s
 
 export const saveStudentQuiz = async (
   studentQuizId: string,
+  userId: string,
   newText: string,
   comment: string,
   bonusScore: number,
@@ -73,6 +74,7 @@ export const saveStudentQuiz = async (
       '/api/studentquiz/edit', 
       {
         studentQuizId,
+        userId,
         newText,
         comment,
         bonusScore,
@@ -93,6 +95,7 @@ export const saveStudentQuiz = async (
 
 export const studentsaveStudentQuiz = async (
   studentQuizId: string,
+  userId: string,
   newText: string,
   editedStatus: string
 ) => {
@@ -101,6 +104,7 @@ export const studentsaveStudentQuiz = async (
       '/api/studentquiz/studentedit', 
       {
         studentQuizId,
+        userId,
         newText,
         editedStatus,
       });
@@ -117,7 +121,7 @@ export const studentsaveStudentQuiz = async (
   }
 };
 
-export const approveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
+export const approveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
       const response = await axiosInstance.put(
         '/api/studentquiz/approve', 
@@ -125,6 +129,7 @@ export const approveQuizAnswer = async (studentQuizId: string, studentId: string
         {
           params: {
               studentQuizId,
+              userId,
               editedItem,  
               studentId,
               quizId,
@@ -138,14 +143,15 @@ export const approveQuizAnswer = async (studentQuizId: string, studentId: string
   }
 };
 
-export const disapproveQuizAnswer = async (studentQuizId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
+export const disapproveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
     const response = await axiosInstance.put(
       '/api/studentquiz/disapprove', 
       null, 
       {
         params: {
-          studentQuizId, 
+          studentQuizId,
+          userId, 
           editedItem,
           studentId,
           quizId,
@@ -203,6 +209,29 @@ export const recordActivityLog = async (userId: string, studentQuizId: string, a
       toast.error(errorMessage);
     } else {
       toast.error("An unexpected error occurred while logging activity");
+    }
+    throw error;
+  }
+};
+
+export const getAllActivityLogs = async (studentQuizId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      '/api/studentquiz/logs/all',
+      {
+        params: {
+          studentQuizId, 
+        },
+      }
+    );
+
+    return response.data; 
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || "Error retrieving activity logs";
+      toast.error(errorMessage);
+    } else {
+      toast.error("An unexpected error occurred while retrieving activity logs");
     }
     throw error;
   }

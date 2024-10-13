@@ -81,3 +81,15 @@ export const getUserClassesByUserId = async (
     throw error;
   }
 };
+
+export const editClassName = async (classId: string, classname: string) => {
+  try {
+    const response = await axiosInstance.put("/api/classes/name/edit", null, {
+      params: { classId, classname },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating class name:", error);
+    throw error; 
+  }
+};

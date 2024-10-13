@@ -1,18 +1,21 @@
 import Header from "../../../Common/Header";
 import Gradients from "../../../Common/Gradients";
-// import SmilingRobot from "../../../Common/SmilingRobot";
 import { useQuiz } from "../../../Context/QuizContext";
 import { useEffect, useState } from "react";
 import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
   approveQuizAnswer,
   disapproveQuizAnswer,
+  getAllActivityLogs,
 } from "../../../../apiCalls/studentQuizApi";
 import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
+import { useCurrUser } from "../../../Context/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -36,8 +39,12 @@ const QuizResults = () => {
   const { selectedStudentResult, selectedQuiz } = useQuiz();
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const navigate = useNavigate();
-  // const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [dueDate, setDueDate] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
+  const { user } = useCurrUser();
+  const [studentQuizId, setStudentQuizId] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -45,6 +52,7 @@ const QuizResults = () => {
         .then((result) => {
           setStudentResult(result);
           setFeedback(result.comment || "No feedback given");
+          setStudentQuizId(result.studentquizid);
           setLoading(false);
         })
         .catch((error) => {
@@ -76,6 +84,25 @@ const QuizResults = () => {
     }
   }, [studentResult]);
 
+  const handleFetchLogs = async () => {
+    if (showModal) {
+      setShowModal(false);
+      return;
+    }
+
+    try {
+      const response = await getAllActivityLogs(studentQuizId);
+      if (response && Array.isArray(response.logs)) {
+        setLogs(response.logs); 
+        setShowModal(true);
+      } else {
+        toast.error("Unexpected response format");
+      }
+    } catch (error) {
+      toast.error("Error fetching logs");
+    }
+  };
+
   const handleApprove = async (itemIndex: number) => {
     if (
       !studentResult ||
@@ -85,9 +112,14 @@ const QuizResults = () => {
       return;
     }
 
+    if (!user?.userid) {
+      throw new Error("User ID is undefined");
+    }
+
     try {
       await approveQuizAnswer(
         studentResult.studentquizid,
+        user.userid,
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
@@ -120,9 +152,14 @@ const QuizResults = () => {
       return;
     }
 
+    if (!user?.userid) {
+      throw new Error("User ID is undefined");
+    }
+
     try {
       await disapproveQuizAnswer(
         studentResult.studentquizid,
+        user.userid,
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
@@ -160,19 +197,38 @@ const QuizResults = () => {
     if (selectedQuiz?.quizanswerkey) {
       setAnswers(selectedQuiz.quizanswerkey);
     }
+    if (selectedQuiz?.dueDateTime) {
+      setDueDate(formatDueDate(selectedQuiz.dueDateTime));
+    }
   }, [selectedQuiz, studentResult]);
+
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
 
   const handleClose = () => {
     navigate("/dashboard/class/quiz");
   };
 
-  // const handleCheckboxChange = (itemIndex: number) => {
-  //   setSelectedItems((prevSelected) =>
-  //     prevSelected.includes(itemIndex)
-  //       ? prevSelected.filter((index) => index !== itemIndex)
-  //       : [...prevSelected, itemIndex]
-  //   );
-  // };
 
   const renderRows = () => {
     const totalItems = Math.max(
@@ -257,10 +313,20 @@ const QuizResults = () => {
                   {selectedStudentResult?.lastName}
                 </h3>
               </div>
+              <h5>
+                <i>{dueDate}</i>
+              </h5>
               <div className="score-container">
                 <h3>Score: {selectedStudentResult?.score}</h3>
                 <div className="additional-points">
-                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
+                  <h3>
+                    Bonus Points: {studentResult?.bonusscore}
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      className="notification-icon"
+                      onClick={handleFetchLogs}
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -295,14 +361,38 @@ const QuizResults = () => {
                 </table>
               </div>
               <div className="viewcenter-button">
-                  <button className="viewclose" onClick={handleClose}>
-                    Close
-                  </button>
-                </div>
+                <button className="viewclose" onClick={handleClose}>
+                  Close
+                </button>
+              </div>
             </div>
           </>
         )}
       </main>
+
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <ul>
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
 
       <Gradients />
       <ToastContainer />

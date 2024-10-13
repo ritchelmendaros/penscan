@@ -37,6 +37,7 @@ $border-color: #333333;
         height: 80px;
       }
     }
+
     .no-feedback {
       width: 250px;
       margin-top: 20px;
@@ -50,7 +51,7 @@ $border-color: #333333;
       height: 450px;
       border-radius: 10px;
       overflow-x: auto;
-      scrollbar-width: thin;
+      scrollbar-width: none;
       -ms-overflow-style: none;
       
       table {
@@ -84,7 +85,7 @@ $border-color: #333333;
 
         th,
         td {
-          padding: 15px;
+          padding: 10px;
           text-align: left;
           border-bottom: 1px solid $border-color;
         }
@@ -145,6 +146,7 @@ $border-color: #333333;
       }
     }
   }
+
   .viewcenter-button {
     display: flex;
     margin-top: 20px;
@@ -158,6 +160,7 @@ $border-color: #333333;
       font-size: 15px;
       background-color: rgb(0, 124, 41);
     }
+
     .viewclose {
       width: 155px;
       padding: 7px 50px;
@@ -165,6 +168,7 @@ $border-color: #333333;
       margin-left: 1150px;
       font-size: 15px;
     }
+
     .viewdisapprove {
       width: 125px;
       padding: 7px 10px;
@@ -174,6 +178,7 @@ $border-color: #333333;
       background-color: #e94f4f;
     }
   }
+
   .loader-container {
     display: flex;
     justify-content: center;
@@ -186,4 +191,73 @@ $border-color: #333333;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 1000;
   }
+
+  .modal {
+    display: flex; 
+    justify-content: center;
+    align-items: flex-start; 
+    position: fixed; 
+    margin-top: 140px;
+    margin-right: 160px;
+    top: 0; 
+    right: 0; 
+    width: 23%; 
+    height: auto; 
+    z-index: 1000; 
+
+    .modal-content {
+        background-color: #242526;
+        margin: 20px; 
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%; 
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h2 {
+                margin: 0;
+                color: white;
+            }
+
+            .close {
+                color: white;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+
+                &:hover,
+                &:focus {
+                    color: #bbb;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .modal-body {
+            color: white;
+            padding: 10px 0;
+
+            .log-item {
+                font-style: italic; 
+                color: #b0c4de; 
+                font-size: 12px; 
+            }
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+
+            .btn {
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+
 }

@@ -4,12 +4,12 @@ import { useCurrUser } from "../../../Components/Context/UserContext";
 import { Quizzes, Quiz } from "../../Interface/Quiz";
 import {
   getQuizResults,
-  getQuizzesByClassId
+  getQuizzesByClassId,
 } from "../../../apiCalls/QuizAPIs";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../../Components/Context/QuizContext";
 import { SyncLoader } from "react-spinners";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { StudentImageResult } from "../../Interface/Quiz";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,19 +22,20 @@ const ClassFiles = () => {
   const { user } = useCurrUser();
   const { setSelectedQuiz } = useQuiz();
 
- 
   useEffect(() => {
     const fetchQuizData = async () => {
       if (clickedClass?.classid) {
         try {
           const quiz: Quiz[] = await getQuizzesByClassId(clickedClass.classid);
-  
-          const quizzesWithProperMapping: Quizzes[] = quiz.map(q => ({
-            quizId: q.quizid, 
-            quizName: q.quizname,  
+
+          const quizzesWithProperMapping: Quizzes[] = quiz.map((q) => ({
+            quizId: q.quizid,
+            quizName: q.quizname,
+            dueDateTime: formatDueDate(q.dueDateTime),
+            dueDateTimeRaw: q.dueDateTime,
           }));
           setQuizzes(quizzesWithProperMapping);
-  
+
           if (user?.userid) {
             const results = await Promise.all(
               quizzesWithProperMapping.map(async (q) => {
@@ -46,8 +47,10 @@ const ClassFiles = () => {
                 }
               })
             );
-  
-            const filteredResults = results.filter((result): result is StudentImageResult => result !== null);
+
+            const filteredResults = results.filter(
+              (result): result is StudentImageResult => result !== null
+            );
             setQuizResults(filteredResults);
             console.log("Fetched quiz results:", filteredResults);
           }
@@ -57,19 +60,43 @@ const ClassFiles = () => {
         }
       }
     };
-  
+
     fetchQuizData();
   }, [clickedClass, user]);
-  
-  
 
-const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
-  quizid: quiz.quizId,
-  classid: clickedClass?.classid || "",
-  quizname: quiz.quizName,
-  teacherid: user?.userid || "",
-  quizanswerkey: [],
-});
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
+
+  const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => {
+    return {
+      quizid: quiz.quizId,
+      classid: clickedClass?.classid || "",
+      quizname: quiz.quizName,
+      teacherid: user?.userid || "",
+      quizanswerkey: [],
+      dueDateTime: quiz.dueDateTime,
+    };
+  };
 
   const handleClick = (quiz: Quizzes) => {
     const selectedQuiz = mapQuizzesToQuiz(quiz);
@@ -92,9 +119,21 @@ const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
     quiz: Quizzes
   ) => {
     event.stopPropagation();
-    const selectedQuiz = mapQuizzesToQuiz(quiz);
-    setSelectedQuiz(selectedQuiz);
-    navigate("/dashboard/class/quiz/quiz-result-edit");
+    const currentDateTime = new Date();
+    const dueDateTime = new Date(quiz.dueDateTimeRaw);
+    if (dueDateTime < currentDateTime) {
+      toast.error("Can't edit: Due date has passed.");
+    } else {
+      const selectedQuiz = mapQuizzesToQuiz(quiz);
+      setSelectedQuiz(selectedQuiz);
+      navigate("/dashboard/class/quiz/quiz-result-edit");
+    }
+  };
+
+  const isQuizOverdue = (dueDateTime: string): boolean => {
+    const dueDate = new Date(dueDateTime);
+    const currentDate = new Date();
+    return currentDate > dueDate;
   };
 
   const displayedQuizzes = new Set();
@@ -111,29 +150,36 @@ const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
             <div className="tr">
               <p className="td">Quiz Name</p>
               <p className="td">Score</p>
-              <p className="td">Status</p>
-              <p className="td" style={{marginLeft:"20px"}}>Action</p>
+              <p className="td"></p>
+              <p className="td">Due Date</p>
+              <p className="td" style={{ marginLeft: "30px" }}>
+                Action
+              </p>
             </div>
           </div>
           <div className="tbody">
             {quizzes.length > 0 ? (
               quizzes.map((quiz, i) => {
                 if (displayedQuizzes.has(quiz.quizId)) {
-                  return null; 
+                  return null;
                 }
-                
+
                 displayedQuizzes.add(quiz.quizId);
 
                 const result = quizResults.find(
                   (r) => r.quizid === quiz.quizId
                 );
-                const status = result ? result.editedstatus : "Not Yet Uploaded";
+                const status = result
+                  ? result.editedstatus
+                  : "Not Yet Uploaded";
                 const score = result ? result.finalscore : "N/A";
+                const isOverdue = isQuizOverdue(quiz.dueDateTime);
                 return (
                   <div className="tr" onClick={() => handleClick(quiz)} key={i}>
                     <p className="td">{quiz.quizName}</p>
                     <p className="td">{score}</p>
-                    <p className="td">{status}</p>
+                    <p className="td">{status === "NONE" ? "" : status}</p>
+                    <p className="td">{quiz.dueDateTime}</p>
                     <p className="td">
                       <div>
                         <button
@@ -144,7 +190,21 @@ const mapQuizzesToQuiz = (quiz: Quizzes): Quiz => ({
                         </button>
                         <button
                           className="edit"
-                          onClick={(event) => handleEditQuiz(event, quiz)}
+                          onClick={(event) => {
+                            if (isOverdue) {
+                              event.stopPropagation();
+                              toast("This quiz is overdue. You can't edit it.");
+                            } else if (status === "NONE" && !isOverdue) {
+                              handleEditQuiz(event, quiz);
+                            } else if (status === "PENDING") {
+                              event.stopPropagation();
+                              toast("This quiz is already edited.");
+                            } else {
+                              event.stopPropagation();
+                              toast("Upload your quiz first.");
+                            }
+                          }}
+                          disabled={isOverdue}
                         >
                           Edit
                         </button>

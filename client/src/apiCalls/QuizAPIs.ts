@@ -45,6 +45,7 @@ export const getQuizzesByClassId = async (classId: string): Promise<Quiz[]> => {
 
 export const getAllQuizScores = async (quizID: string) => {
     try {
+        console.log(quizID);
         const response = await axiosInstance.get<StudentQuiz[]>(
             `/api/studentquiz/getscoresandstudentids`,
             {
@@ -80,7 +81,8 @@ export const addQuiz = async (
     classid: string,
     quizName: string,
     userId: string,
-    correctAnswer: { itemnumber: number; answer: string }[]
+    correctAnswer: { itemnumber: number; answer: string }[],
+    dueDateTime: string
 ) => {
     try {
         const response = await axiosInstance.post(
@@ -90,6 +92,7 @@ export const addQuiz = async (
                 quizname: quizName,
                 teacherid: userId,
                 quizanswerkey: correctAnswer,
+                dueDateTime: dueDateTime,
             },
         );
         // console.log('Quiz added:', response.data);
@@ -149,3 +152,26 @@ export const getAnswerKey = async (quizId: string): Promise<string> => {
     }
 };
 
+export const editQuiz = async (
+    quizId: string,
+    quizName: string,
+    dueDateTime: string,
+    answerKeys: { itemnumber: number; answer: string }[]
+  ) => {
+    try {
+      const response = await axiosInstance.put(
+        '/api/quiz/edit', 
+        {
+          quizId: quizId,
+          quizName: quizName,
+          dueDateTime: dueDateTime,
+          answerKeys: answerKeys
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error editing quiz:', error);
+      throw error;
+    }
+  };
+  

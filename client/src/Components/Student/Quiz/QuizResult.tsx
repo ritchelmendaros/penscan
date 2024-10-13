@@ -11,7 +11,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { studentuploadStudentQuiz, recordActivityLog } from "../../../apiCalls/studentQuizApi";
+import {
+  studentuploadStudentQuiz,
+  getAllActivityLogs,
+} from "../../../apiCalls/studentQuizApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 interface Answer {
   itemnumber: number;
@@ -33,6 +38,12 @@ const StudentQuizResults = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [dueDate, setDueDate] = useState<string | null>(null);
+  const [formattedDueDate, setFormattedDueDate] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [studentQuizId, setStudentQuizId] = useState("");
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -41,15 +52,20 @@ const StudentQuizResults = () => {
         .then((result) => {
           setStudentResult(result);
           setFeedback(result.comment || "No feedback given");
+          setStudentQuizId(result.studentquizid);
           return getAnswerKey(selectedQuiz.quizid);
         })
         .then((answerKey) => {
           const parsedAnswerKey =
             typeof answerKey === "string" ? JSON.parse(answerKey) : answerKey;
-          setCorrectAnswers(parsedAnswerKey);
+          setCorrectAnswers(parsedAnswerKey.quizanswerkey);
+          const dueDate = parsedAnswerKey.dueDateTime;
+          setDueDate(dueDate);
+          const formattedDueDate = formatDueDate(dueDate);
+          setFormattedDueDate(formattedDueDate);
         })
-        .catch((error) => {
-          toast.error("No data found", error);
+        .catch(() => {
+         
         })
         .finally(() => {
           setLoading(false);
@@ -92,16 +108,30 @@ const StudentQuizResults = () => {
     }
   }, [studentResult]);
 
+  const handleFetchLogs = async () => {
+    if (showModal) {
+      setShowModal(false);
+      return;
+    }
+
+    try {
+      const response = await getAllActivityLogs(studentQuizId);
+      if (response && Array.isArray(response.logs)) {
+        setLogs(response.logs);
+        setShowModal(true);
+      } else {
+        toast.error("Unexpected response format");
+      }
+    } catch (error) {
+      toast.error("Error fetching logs");
+    }
+  };
+
   const renderRows = () => {
     const maxItemNumber = Math.max(
       ...correctAnswers.map((ans) => ans.itemnumber),
       ...studentAnswers.map((ans) => ans.itemnumber)
     );
-
-    // const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
-    //   acc[correctAnswer.itemnumber] = correctAnswer.answer;
-    //   return acc;
-    // }, {} as Record<number, string>);
 
     const studentAnswerMap = studentAnswers.reduce((acc, studentAnswer) => {
       acc[studentAnswer.itemnumber] = studentAnswer.answer;
@@ -109,14 +139,20 @@ const StudentQuizResults = () => {
     }, {} as Record<number, string>);
 
     const rows = [];
+    const currentDate = new Date();
+    const dueDateTime = dueDate ? new Date(dueDate) : null;
+
     for (let i = 1; i <= maxItemNumber; i++) {
-      // const correctAnswer = correctAnswerMap[i] || "";
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
         isapproved: false,
         isdisapproved: false,
       };
+      const correctAnswer =
+        dueDateTime && dueDateTime < currentDate
+          ? correctAnswers.find((ans) => ans.itemnumber === i)?.answer || ""
+          : "";
 
       const editedStatus = studentResult?.editedstatus;
 
@@ -141,14 +177,21 @@ const StudentQuizResults = () => {
       }
 
       rows.push(
-        <li key={i} className="tr">
-          <p className="td"></p>
-          <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
-          <p className="td">{i}</p>
-          <p className="td" style={{marginLeft:"-50px"}}>{studentAnswer}</p>
-          <p className={`td ${highlightClass}`} style={{marginLeft:"-40px"}}>{editedItem}</p>
-          {/* <p className="td">{correctAnswer}</p> */}
-          <p className="td"></p>
+        <li key={i} className="tr1">
+          <p className="td1"></p>
+          <p className="td1">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
+          <p className="td1">{i}</p>
+          <p className="td1" style={{ marginLeft: "-50px" }}>
+            {studentAnswer}
+          </p>
+          <p
+            className={`td1 ${highlightClass}`}
+            style={{ marginLeft: "-40px" }}
+          >
+            {editedItem}
+          </p>
+          <p className="td1">{correctAnswer}</p>
+          <p className="td1"></p>
         </li>
       );
     }
@@ -156,8 +199,52 @@ const StudentQuizResults = () => {
     return rows;
   };
 
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
+  };
+
   const handleEdit = () => {
-    navigate(`/dashboard/class/quiz/quiz-result-edit`);
+    const editedStatus = studentResult?.editedstatus;
+    const currentDate = new Date();
+
+    if (!dueDate) {
+      toast.error("Due date is not available.");
+      return;
+    }
+
+    const dueDateTime = new Date(dueDate);
+
+    if (dueDateTime < currentDate) {
+      toast.error("Can't edit: Due date has passed.");
+      return;
+    }
+
+    if (editedStatus === "PENDING") {
+      toast(
+        "This quiz has pending approval or already processed, you can't edit more than once."
+      );
+    } else {
+      navigate(`/dashboard/class/quiz/quiz-result-edit`);
+    }
   };
 
   const handleClose = () => {
@@ -177,19 +264,11 @@ const StudentQuizResults = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
-        const response = await studentuploadStudentQuiz(
+        await studentuploadStudentQuiz(
           selectedQuiz.quizid,
           user?.userid || "",
           selectedFile
         );
-
-        const studentQuizId = response.data.studentQuizId;
-
-        await recordActivityLog(
-          user?.userid || "",
-          studentQuizId,
-          "UPLOAD"
-        );        
 
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
@@ -225,10 +304,25 @@ const StudentQuizResults = () => {
                   {user?.firstname} {user?.lastname}
                 </h3>
               </div>
+              {formattedDueDate && (
+                <div className="due-date">
+                  <h5>
+                    Due Date: <em>{formattedDueDate}</em>
+                  </h5>
+                </div>
+              )}
+
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
                 <div className="additional-points">
-                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
+                  <h3>
+                    Bonus Points: {studentResult?.bonusscore}
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      className="notification-icon"
+                      onClick={handleFetchLogs}
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -238,6 +332,9 @@ const StudentQuizResults = () => {
                 <img
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
                   alt=""
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className={isHovered ? "hovered" : ""}
                 />
                 {feedback === "No feedback given" ? (
                   <p className="no-feedback">{feedback}</p>
@@ -248,19 +345,23 @@ const StudentQuizResults = () => {
                 )}
               </div>
 
-              <div className="table">
-                <ul className="thead">
-                  <li className="th">
+              <div className="table1">
+                <ul className="thead1">
+                  <li className="th1">
                     <p />
-                    <p className="td"></p>
-                    <p className="td">Item No.</p>
-                    <p className="td" style={{marginLeft:"-50px"}}>Scanned Answer</p>
-                    <p className="td" style={{marginLeft:"-30px"}}>Edited Answer</p>
-                    {/* <p className="td">Correct Answer</p> */}
+                    <p className="td1"></p>
+                    <p className="td1">Item</p>
+                    <p className="td1" style={{ marginLeft: "-50px" }}>
+                      Scanned Answer
+                    </p>
+                    <p className="td1" style={{ marginLeft: "-30px" }}>
+                      Edited Answer
+                    </p>
+                    <p className="td1">Correct Answer</p>
                     <p />
                   </li>
                 </ul>
-                <ul className="tbody">{renderRows()}</ul>
+                <ul className="tbody1">{renderRows()}</ul>
                 <div className="buttons-container">
                   {!studentResult && (
                     <button
@@ -270,9 +371,11 @@ const StudentQuizResults = () => {
                       Upload
                     </button>
                   )}
-                  <button onClick={handleEdit} className="studentviewedit">
-                    Edit
-                  </button>
+                  {studentResult && (
+                    <button className="studentviewedit" onClick={handleEdit}>
+                      Edit
+                    </button>
+                  )}
                   <button onClick={handleClose} className="studentviewclose">
                     Close
                   </button>
@@ -321,6 +424,29 @@ const StudentQuizResults = () => {
         </div>
       )}
 
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <ul>
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
       <SmilingRobot />
       <Gradients />
       <ToastContainer />

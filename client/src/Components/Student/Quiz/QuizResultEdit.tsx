@@ -9,10 +9,15 @@ import { StudentImageResult } from "../../Interface/Quiz";
 import { useCurrUser } from "../../Context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { studentsaveStudentQuiz } from "../../../apiCalls/studentQuizApi";
+import {
+  studentsaveStudentQuiz,
+  getAllActivityLogs,
+} from "../../../apiCalls/studentQuizApi";
 import { SyncLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 interface Answer {
   itemnumber: number;
@@ -38,6 +43,11 @@ const StudentQuizResultEdit = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [dueDate, setDueDate] = useState<string | null>(null);
+  const [formattedDueDate, setFormattedDueDate] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -52,11 +62,13 @@ const StudentQuizResultEdit = () => {
         .then((answerKey) => {
           const parsedAnswerKey =
             typeof answerKey === "string" ? JSON.parse(answerKey) : answerKey;
-          setCorrectAnswers(parsedAnswerKey);
+          setCorrectAnswers(parsedAnswerKey.quizanswerkey);
+          const dueDate = parsedAnswerKey.dueDateTime;
+          setDueDate(dueDate);
+          const formattedDueDate = formatDueDate(dueDate);
+          setFormattedDueDate(formattedDueDate);
         })
-        .catch((error) => {
-          toast.error("Error fetching data", error);
-        })
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });
@@ -98,16 +110,32 @@ const StudentQuizResultEdit = () => {
     }
   }, [studentResult]);
 
+  const handleFetchLogs = async () => {
+    console.log(dueDate)
+    if (showModal) {
+      setShowModal(false);
+      return;
+    }
+
+    try {
+      const response = await getAllActivityLogs(studentQuizId);
+      if (response && Array.isArray(response.logs)) {
+        setLogs(response.logs); 
+        setShowModal(true);
+      } else {
+        toast.error("Unexpected response format");
+      }
+    } catch (error) {
+      toast.error("Error fetching logs");
+    }
+  };
+
   const renderRows = () => {
     const maxItemNumber = Math.max(
       ...correctAnswers.map((ans) => ans.itemnumber),
       ...studentAnswers.map((ans) => ans.itemnumber)
     );
 
-    // const correctAnswerMap = correctAnswers.reduce((acc, correctAnswer) => {
-    //   acc[correctAnswer.itemnumber] = correctAnswer.answer;
-    //   return acc;
-    // }, {} as Record<number, string>);
     const studentAnswerMap = studentAnswers.reduce((acc, studentAnswer) => {
       acc[studentAnswer.itemnumber] = studentAnswer.answer;
       return acc;
@@ -115,7 +143,6 @@ const StudentQuizResultEdit = () => {
 
     const rows = [];
     for (let i = 1; i <= maxItemNumber; i++) {
-      // const correctAnswer = correctAnswerMap[i] || "";
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
@@ -126,9 +153,6 @@ const StudentQuizResultEdit = () => {
 
       const editedStatus = studentResult?.editedstatus;
 
-      // let editedItem = editedAnswerObj.isedited
-      //   ? editedAnswerObj.editeditem
-      //   : "";
 
       let highlightClass = "";
 
@@ -153,8 +177,10 @@ const StudentQuizResultEdit = () => {
           <p className="td"></p>
           <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
           <p className="td">{i}</p>
-          <p className="td" style={{marginLeft:"-50px"}}>{studentAnswer}</p>
-          <p className="td" style={{marginLeft:"-40px"}}>
+          <p className="td" style={{ marginLeft: "-50px" }}>
+            {studentAnswer}
+          </p>
+          <p className="td" style={{ marginLeft: "-40px" }}>
             <input
               type="text"
               className={`${highlightClass}`}
@@ -163,13 +189,35 @@ const StudentQuizResultEdit = () => {
               disabled={isDisabled}
             />
           </p>
-          {/* <p className="td">{correctAnswer}</p> */}
           <p className="td"></p>
         </li>
       );
     }
 
     return rows;
+  };
+
+  const formatDueDate = (dueDateTime: string): string => {
+    const date = new Date(dueDateTime);
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+    const formattedTime = date
+      .toLocaleTimeString(undefined, timeOptions)
+      .replace(":00 ", " ");
+
+    return `${formattedDate} | ${formattedTime}`;
   };
 
   const handleStudentAnswerChange = (index: number, value: string) => {
@@ -190,7 +238,7 @@ const StudentQuizResultEdit = () => {
     setIsModalOpen(false);
     try {
       setIsSaving(true);
-      console.log(isSaving)
+      console.log(isSaving);
       if (
         editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some(
@@ -201,12 +249,17 @@ const StudentQuizResultEdit = () => {
         setEditedStatus("PENDING");
       }
 
+      if (!user?.userid) {
+        throw new Error("User ID is undefined");
+      }
+
       if (studentQuizId) {
         const formattedAnswers = Object.keys(editedAnswers)
           .map((key) => `${key}. ${editedAnswers[parseInt(key)]}`)
           .join("\n");
         await studentsaveStudentQuiz(
           studentQuizId,
+          user.userid,
           formattedAnswers,
           editedStatus
         );
@@ -278,10 +331,24 @@ const StudentQuizResultEdit = () => {
                   {user?.firstname} {user?.lastname}
                 </h3>
               </div>
+              {formattedDueDate && (
+                <div className="due-date">
+                  <h5>
+                    Due Date: <em>{formattedDueDate}</em>
+                  </h5>
+                </div>
+              )}
               <div className="score-container">
                 <h3 className="score">Score: {studentResult?.score}</h3>
                 <div className="additional-points">
-                  <h3>Bonus Points: {studentResult?.bonusscore}</h3>
+                  <h3>
+                    Bonus Points: {studentResult?.bonusscore}
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      className="notification-icon"
+                      onClick={handleFetchLogs}
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -291,6 +358,9 @@ const StudentQuizResultEdit = () => {
                 <img
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
                   alt=""
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className={isHovered ? "hovered" : ""}
                 />
                 {feedback === "No feedback given" ? (
                   <p className="no-feedback">{feedback}</p>
@@ -307,9 +377,12 @@ const StudentQuizResultEdit = () => {
                     <p />
                     <p className="td"></p>
                     <p className="td">Item</p>
-                    <p className="td" style={{marginLeft:"-50px"}}>Scanned Answer</p>
-                    <p className="td" style={{marginLeft:"-30px"}}>Edited Answer</p>
-                    {/* <p className="td">Correct Answer</p> */}
+                    <p className="td" style={{ marginLeft: "-50px" }}>
+                      Scanned Answer
+                    </p>
+                    <p className="td" style={{ marginLeft: "-30px" }}>
+                      Edited Answer
+                    </p>
                     <p />
                   </li>
                 </ul>
@@ -374,6 +447,29 @@ const StudentQuizResultEdit = () => {
         </div>
       )}
 
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <ul>
+              <h4 style={{ marginBottom: "10px" }}>
+                <i>Logs</i>
+              </h4>
+              {logs.length > 0 ? (
+                logs.map((log, index) => (
+                  <li
+                    key={index}
+                    style={{ marginBottom: "15px", fontSize: "12px" }}
+                  >
+                    <i>{log}</i>
+                  </li>
+                ))
+              ) : (
+                <li>No logs available</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
       <SmilingRobot />
       <Gradients />
       <ToastContainer />

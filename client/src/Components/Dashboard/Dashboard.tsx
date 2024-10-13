@@ -46,18 +46,44 @@ const Dashboard = () => {
                         toast.error('Failed to get user classes:', error);
                     })
                     .finally(() => {
-                            setLoading(false); // End loading
+                            setLoading(false); 
                     });
             }
         }
     }, [setClassList, user, userType]);
+
+    const fetchClasses = async () => {
+        setLoading(true); 
+        try {
+            if (user) { 
+                if (userType === 'Teacher' && user.userid) {
+                    const classes = await getAllClasses(user.userid);
+                    setClasses(classes);
+                    setClassList(classes);
+                } else if (userType === 'Student' && user.username) {
+                    const userDetails = await getDetailsByUsername(user.username);
+                    const userClasses = await getUserClassesByUserId(userDetails.userid);
+                    setClasses(userClasses);
+                    setClassList(userClasses);
+                }
+            }
+        } catch (error) {
+            toast.error('Failed to fetch classes');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchClasses(); 
+    }, [user, userType]);
 
     return (
         <div className='Dashboard Main MainContent'>
             <Header />
             <main>
                 {userType === 'Teacher' ? (
-                    <TeacherDashboard classes={classes} />
+                    <TeacherDashboard classes={classes} fetchClasses={fetchClasses} />
                 ) : userType === 'Student' ? (
                     <StudentDashboard classes={classes} loading={loading} />
                 ) : null}

@@ -1,29 +1,192 @@
 .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
 }
 
 .ClassFiles {
-    ul {
-        display: grid;
-        gap: 20px;
-        grid-template-columns: repeat(5, 1fr);
-        .empty-state {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 100%;
-            padding: 50px;
-    
-            img {
-              max-width: 350px;
-              max-height: 250px; 
-              margin-left: 300px;
-            }
+  ul {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(5, 1fr);
+
+    li {
+      position: relative;
+      margin-bottom: 15px;
+
+      .options-container {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+
+        .three-dots {
+          background-color: transparent;
+          border: none;
+          margin-right: -10px;
+          cursor: pointer;
+          color: white;
+          font-size: 25px;
         }
+      }
+
+      .options-menu {
+        position: absolute;
+        background-color: #4a4a4a;
+        border: 1px solid;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        border-radius: 8px;
+        margin-top: -10px;
+
+        button {
+          display: block;
+          width: 100%;
+          padding: 8px;
+          border: none;
+          background: none;
+          text-align: left;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #f0f0f0;
+            color: #4a4a4a;
+            border-radius: 8px;
+          }
+        }
+      }
     }
 
+    .empty-state {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      padding: 50px;
+
+      img {
+        max-width: 350px;
+        max-height: 250px;
+        margin-left: 300px;
+      }
+    }
+  }
+}
+
+.quizmodal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .quizmodal-content {
+    background-color: #2e2d32;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 600px;
+    color: white;
+
+    h2 {
+      margin-bottom: 15px;
+      color: white;
+      letter-spacing: 1px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: white;
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+      }
+
+
+      textarea {
+        resize: none;
+      }
+    }
+
+    .answer-key-container {
+      max-height: 150px;
+      overflow-y: auto;
+      background-color: #2e2d33;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      .answer-input {
+        margin-bottom: 1rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: #ffffff;
+          font-weight: bold;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid $grey;
+          border-radius: 4px;
+          background-color: $grey;
+          color: white;
+          font-size: 1rem;
+
+          &:focus {
+            outline: none;
+            border-color: #5680e9;
+          }
+        }
+      }
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+
+      .modal-button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #3498db;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+      .modal-buttonsubmit {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #03578f;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+    }
+  }
 }

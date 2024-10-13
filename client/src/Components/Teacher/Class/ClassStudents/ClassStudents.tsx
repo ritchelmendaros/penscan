@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { fetchStudentsByClassId } from "../../../../apiCalls/studentApi";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SyncLoader } from "react-spinners";
 import noDataImage from "../../../../assets/nodata.gif";
+import { faTrash } from "@fortawesome/free-solid-svg-icons"; 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { deleteStudentById } from "../../../../apiCalls/studentApi";
 
 interface Student {
   userid: string;
@@ -38,6 +41,16 @@ const ClassStudents: React.FC<ClassStudentsProps> = ({ classId }) => {
     fetchStudents();
   }, [classId]);
 
+  const handleDeleteStudent = async (userid: string) => {
+    try {
+      await deleteStudentById(classId, userid); 
+      setStudents(students.filter(student => student.userid !== userid)); 
+      toast.success("Student deleted successfully!"); 
+    } catch (error) {
+      toast.error("Error deleting student");
+    }
+  };
+
   return (
     <div className="ClassStudents">
       {loading ? (
@@ -51,6 +64,7 @@ const ClassStudents: React.FC<ClassStudentsProps> = ({ classId }) => {
               <p className="th">Lastname</p>
               <p className="th">Firstname</p>
               <p className="th">Username</p>
+              <p className="th"></p> 
             </li>
           </ul>
           <ul className="tbody">
@@ -66,6 +80,13 @@ const ClassStudents: React.FC<ClassStudentsProps> = ({ classId }) => {
                   <p className="td">{student.lastname}</p>
                   <p className="td">{`${student.firstname}`}</p>
                   <p className="td">{student.username}</p>
+                  <p className="td"> 
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      style={{ cursor: "pointer", color: "red", marginLeft: "250px"}}
+                      onClick={() => handleDeleteStudent(student.userid)}
+                    />
+                  </p>
                 </li>
               ))
             )}
