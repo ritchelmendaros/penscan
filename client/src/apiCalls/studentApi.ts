@@ -36,5 +36,17 @@ export const addStudentToClass = async (studentId: string, classId: string) => {
     }
 };
 
-
-
+export const deleteStudentById = async (classId: string, studentId: string) => {
+    try {
+        const response = await axiosInstance.delete('/api/classes/student/delete', {
+            params: {
+                classId: classId,
+                studentId: studentId
+            }
+        });
+        return response.data; 
+    } catch (error) {
+        console.error('Error deleting student:', error);
+        throw error; 
+    }
+};
