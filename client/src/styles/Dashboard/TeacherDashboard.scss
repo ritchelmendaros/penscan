@@ -1,47 +1,174 @@
 .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
 }
 
 .Dashboard {
-    .TeacherDashboard {
-        .title-container {
-            display: flex;
-            justify-content: space-between;
+  .TeacherDashboard {
+    .title-container {
+      display: flex;
+      justify-content: space-between;
 
-            a {
-                background-color: $blue-btn;
-                padding: 10px 30px;
-                border-radius: 10px;
-                font-weight: bold;
+      a {
+        background-color: $blue-btn;
+        padding: 10px 30px;
+        border-radius: 10px;
+        font-weight: bold;
 
-                &:hover {
-                    padding: 10px 40px;
-                    transition: 0.3s;
-                }
-            }
+        &:hover {
+          padding: 10px 40px;
+          transition: 0.3s;
         }
-        .classes {
-            display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-
-            .empty-state {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-                width: 100%;
-                padding: 50px;
-
-                img {
-                    max-width: 350px;
-                    max-height: 250px;
-                    margin-left: 400px;
-                }
-            }
-        }
+      }
     }
+
+    .classes {
+      display: grid;
+      gap: 0px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+      li {
+        position: relative;
+        margin-bottom: 15px;
+        background-color: none;
+        padding: 5px;
+        border-radius: 8px;
+        color: white;
+
+        .options-container {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+
+          .three-dots {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 25px;
+          }
+        }
+
+        .options-menu {
+          position: absolute;
+          background-color: #4a4a4a;
+          border: 1px solid;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          z-index: 10;
+          border-radius: 8px;
+          margin-top: 5px;
+
+          button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #f0f0f0;
+              color: #4a4a4a;
+              border-radius: 8px;
+            }
+          }
+        }
+      }
+
+      .empty-state {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        padding: 50px;
+
+        img {
+          max-width: 350px;
+          max-height: 250px;
+          margin-left: 400px;
+        }
+      }
+    }
+  }
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    h2 {
+      letter-spacing: 1px;
+      text-align: center;
+    }
+  }
+
+  .modal-content {
+    background: #3d3b44;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input {
+      width: 80%;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 10px;
+      align-content: center;
+      border: 1px solid #ccc;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+
+      .modal-button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #3498db;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+      .modal-buttonsubmit {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #03578f;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+    }
+  }
+
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
 }
