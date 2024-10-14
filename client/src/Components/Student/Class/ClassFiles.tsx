@@ -150,7 +150,7 @@ const ClassFiles = () => {
             <div className="tr">
               <p className="td">Quiz Name</p>
               <p className="td">Score</p>
-              <p className="td"></p>
+              <p className="td">Status</p>
               <p className="td">Due Date</p>
               <p className="td" style={{ marginLeft: "30px" }}>
                 Action

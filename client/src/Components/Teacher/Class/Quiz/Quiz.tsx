@@ -194,7 +194,7 @@ const Quiz = () => {
               <li className="th">
                 <p className="td">Student Name</p>
                 <p className="td">Score</p>
-                <p className="td"></p>
+                <p className="td" style={{ marginLeft: "-5px" }}>Status</p>
                 <p className="td" style={{ marginLeft: "-5px" }}>
                   Last Modified
                 </p>
