@@ -85,7 +85,7 @@ const AddStudent: React.FC = () => {
         toast.dark("Student added successfully!"); 
             setTimeout(() => {
                 navigate(`/dashboard/class`); 
-            }, 2000);
+            }, 500);
       } catch (error) {
         setLoading(false);
         toast.error("Error adding student");

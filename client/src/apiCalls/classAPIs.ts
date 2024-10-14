@@ -93,3 +93,15 @@ export const editClassName = async (classId: string, classname: string) => {
     throw error; 
   }
 };
+
+export const deleteClass = async (classId: string) => {
+  try {
+    const response = await axiosInstance.delete(`/api/classes/delete`, {
+      params: { classId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting class:", error);
+    throw error;
+  }
+};

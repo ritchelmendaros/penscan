@@ -79,6 +79,7 @@ const CreateClass: React.FC = () => {
         onConfirm={handleConfirm}
         onCancel={handleCancel}
         message="Are you sure you want to create this class?"
+        loading={loading}
       />
     </div>
   );

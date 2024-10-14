@@ -28,6 +28,7 @@ const AddQuiz = () => {
   const { user } = useCurrUser();
   const userId = user?.userid;
   const { clickedClass } = useClass();
+  const [isLoading, setIsLoading] = useState(false); 
   const classId = clickedClass?.classid;
 
   const handleQuizNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,12 +87,14 @@ const AddQuiz = () => {
       answer,
     }));
 
+    setIsLoading(true);
     try {
       await addQuiz(classId, quizName, userId, answerArray, dueDate);
       navigate(`/dashboard/class`);
     } catch (error) {
       toast.error("Error adding quiz. Please try again.");
     } finally {
+      setIsLoading(false);
       setIsModalOpen(false);
     }
   };
@@ -197,6 +200,7 @@ const AddQuiz = () => {
         onConfirm={confirmAddQuiz}
         onCancel={cancelAddQuiz}
         message={modalMessage}
+        loading={isLoading} 
       />
     </div>
   );

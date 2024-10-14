@@ -6,7 +6,7 @@ import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
 import noDataGif from "../../assets/nodata.gif";
 import { ToastContainer, toast } from "react-toastify";
-import { editClassName } from "../../apiCalls/classAPIs";
+import { editClassName, deleteClass } from "../../apiCalls/classAPIs";
 
 interface TeacherDashboardProps {
   classes: ClassInterface[];
@@ -19,6 +19,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editClassNameState, setEditClassName] = useState("");
   const [editingClassId, setEditingClassId] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [classToDelete, setClassToDelete] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false); 
+  const [isDeleting, setIsDeleting] = useState(false);
   
 
   useEffect(() => {
@@ -35,23 +39,44 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
     setIsModalOpen(true); 
   };
 
-  const handleDelete = (classId: string) => {
-    console.log(classId)
-    toast("Delete class");
+  const handleDeleteConfirmation = (classId: string) => {
+    setClassToDelete(classId);
+    setIsDeleteModalOpen(true); 
+  };
+
+  const handleDelete = async () => {
+    if (classToDelete) {
+      setIsDeleting(true); 
+      try {
+        await deleteClass(classToDelete); 
+        setIsDeleteModalOpen(false); 
+        await fetchClasses();
+        toast.success("Class deleted successfully.");
+      } catch (error) {
+        toast.error("Failed to delete class."); 
+      } finally {
+        setIsDeleting(false); 
+      }
+    }
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setIsDeleteModalOpen(false); 
+    setClassToDelete(null); 
   };
 
   const handleSaveEdit = async () => {
     if (editingClassId && editClassNameState) {
+      setIsEditing(true);
       try {
         await editClassName(editingClassId, editClassNameState);
         setIsModalOpen(false);
         await fetchClasses(); 
       } catch (error) {
         toast.error("Failed to update class name.");
+      } finally {
+        setIsEditing(false); 
       }
     }
   };  
@@ -95,7 +120,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
                         >
                           Edit
                         </button>
-                        <button onClick={() => handleDelete(item.classid)}>
+                        <button onClick={() => handleDeleteConfirmation(item.classid)}>
                           Delete
                         </button>
                       </div>
@@ -123,7 +148,27 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
               placeholder="Enter class name"
             />
             <div className="button-container">
-              <button className="modal-buttonsubmit" onClick={handleSaveEdit}>Submit</button>
+              {/* <button className="modal-buttonsubmit" onClick={handleSaveEdit}>Submit</button>
+               */}
+               <button className="modal-buttonsubmit" onClick={handleSaveEdit} disabled={isEditing}>
+                {isEditing ? <SyncLoader color="#fff" loading={isEditing} size={7} /> : "Submit"}
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+            </div>
+          </div>
+          <div className="modal-overlay" onClick={handleModalClose} />
+        </div>
+      )}
+      {isDeleteModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2 style={{marginBottom: "10px"}}>Confirm Deletion</h2>
+            <p><i>Are you sure you want to delete this class?</i></p>
+            <div className="button-container">
+              {/* <button className="modal-buttonsubmit" onClick={handleDelete}>Yes, Delete</button> */}
+              <button className="modal-buttonsubmit" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? <SyncLoader color="#fff" loading={isDeleting} size={7} /> : "Yes, Delete"}
+              </button>
               <button className="modal-button" onClick={handleModalClose}>Cancel</button>
             </div>
           </div>

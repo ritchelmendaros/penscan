@@ -56,6 +56,7 @@ const QuizResultEdit = () => {
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const [showModal, setShowModal] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const [ismodalloading, setModalLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -188,7 +189,7 @@ const QuizResultEdit = () => {
     setIsModalOpen(false);
     try {
       setIsSaving(true);
-
+      setModalLoading(true);
       if (
         editedStatus !== "PENDING" &&
         Object.keys(editedAnswers).some((key) => {
@@ -229,6 +230,7 @@ const QuizResultEdit = () => {
       toast.error("Error saving changes");
     } finally {
       setIsSaving(false);
+      setModalLoading(false);
     }
   };
 
@@ -384,6 +386,7 @@ const QuizResultEdit = () => {
               onConfirm={confirmSave}
               onCancel={() => setIsModalOpen(false)}
               message="Are you sure you want to edit? You can only edit once."
+              loading={ismodalloading}
             />
           </>
         )}

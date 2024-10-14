@@ -30,8 +30,8 @@ const Dashboard = () => {
                         setClasses(classes);
                         setClassList(classes);
                     })
-                    .catch((error) => {
-                        toast.error('Failed to get classes:', error);
+                    .catch(() => {
+                        // toast.error('Failed to get classes:', error);
                     });
             } else if (userType === 'Student') {
                 getDetailsByUsername(user.username)
@@ -42,8 +42,8 @@ const Dashboard = () => {
                         setClasses(userClasses);
                         setClassList(userClasses);
                     })
-                    .catch((error) => {
-                        toast.error('Failed to get user classes:', error);
+                    .catch(() => {
+                        // toast.error('Failed to get user classes:', error);
                     })
                     .finally(() => {
                             setLoading(false); 
@@ -68,7 +68,7 @@ const Dashboard = () => {
                 }
             }
         } catch (error) {
-            toast.error('Failed to fetch classes');
+            // toast.error('Failed to fetch classes');
         } finally {
             setLoading(false);
         }
