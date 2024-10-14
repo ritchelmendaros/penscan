@@ -274,7 +274,7 @@ const QuizResultEdit = () => {
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
-          <p className="td">{i} {studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
+          <p className="td">{i} {studentAnswers[i]?.correct ? "✔️" : "❌"}</p>
           <p className="td">{studentAnswer.answer}</p>
           <p className="td">
             {hasCorrectAnswer ? (

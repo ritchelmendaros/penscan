@@ -282,7 +282,7 @@ const QuizResults = () => {
       rows.push(
         <tr key={i}>
           <td>
-            {i} {studentAnswers[i - 1]?.correct ? "✔️" : "❌"}
+            {i} {studentAnswers[i]?.correct ? "✔️" : "❌"}
           </td>
           <td>
             {editedStatus !== "NONE" &&
