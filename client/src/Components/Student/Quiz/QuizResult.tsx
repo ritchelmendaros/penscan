@@ -44,6 +44,7 @@ const StudentQuizResults = () => {
   const [showModal, setShowModal] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
   const [studentQuizId, setStudentQuizId] = useState("");
+  const currentDate = new Date();
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -64,9 +65,7 @@ const StudentQuizResults = () => {
           const formattedDueDate = formatDueDate(dueDate);
           setFormattedDueDate(formattedDueDate);
         })
-        .catch(() => {
-         
-        })
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });
@@ -234,14 +233,12 @@ const StudentQuizResults = () => {
     const dueDateTime = new Date(dueDate);
 
     if (dueDateTime < currentDate) {
-      toast.error("Can't edit: Due date has passed.");
+      toast.error("Can't edit: This quiz is overdue.");
       return;
-    }
-
-    if (editedStatus === "PENDING") {
-      toast(
-        "This quiz has pending approval or already processed, you can't edit more than once."
-      );
+    } else if (editedStatus === "APPROVED") {
+      toast("Can't edit: Edited answers are already evaluated.");
+    } else if (editedStatus === "PENDING") {
+      toast("Can't edit: You can't edit more then once.");
     } else {
       navigate(`/dashboard/class/quiz/quiz-result-edit`);
     }
@@ -357,10 +354,14 @@ const StudentQuizResults = () => {
                     <p className="td1" style={{ marginLeft: "-30px" }}>
                       Edited Answer
                     </p>
-                    <p className="td1">Correct Answer</p>
+                    {dueDate && new Date(dueDate) < currentDate && (
+                      <p className="td1">Correct Answer</p>
+                    )}
+
                     <p />
                   </li>
                 </ul>
+
                 <ul className="tbody1">{renderRows()}</ul>
                 <div className="buttons-container">
                   {!studentResult && (

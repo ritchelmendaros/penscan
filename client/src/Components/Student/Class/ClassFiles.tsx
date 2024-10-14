@@ -193,15 +193,18 @@ const ClassFiles = () => {
                           onClick={(event) => {
                             if (isOverdue) {
                               event.stopPropagation();
-                              toast("This quiz is overdue. You can't edit it.");
+                              toast("Can't edit: This quiz is overdue.");
                             } else if (status === "NONE" && !isOverdue) {
                               handleEditQuiz(event, quiz);
                             } else if (status === "PENDING") {
                               event.stopPropagation();
-                              toast("This quiz is already edited.");
+                              toast("Can't edit: You can't edit more then once.");
+                            } else if (status === "APPROVED") {
+                              event.stopPropagation();
+                              toast("Can't edit: Edited answers are already evaluated.");
                             } else {
                               event.stopPropagation();
-                              toast("Upload your quiz first.");
+                              toast("Can't edit: Upload your quiz first.");
                             }
                           }}
                           disabled={isOverdue}

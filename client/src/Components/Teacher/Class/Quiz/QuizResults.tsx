@@ -23,8 +23,12 @@ const QuizResults = () => {
   >([]);
 
   const [studentAnswers, setStudentAnswers] = useState<{
-    [key: number]: string;
+    [key: number]: {
+      answer: string;
+      correct: boolean;
+    };
   }>({});
+
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [editedAnswers, setEditedAnswers] = useState<{
@@ -93,7 +97,7 @@ const QuizResults = () => {
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
-        setLogs(response.logs); 
+        setLogs(response.logs);
         setShowModal(true);
       } else {
         toast.error("Unexpected response format");
@@ -116,6 +120,10 @@ const QuizResults = () => {
       throw new Error("User ID is undefined");
     }
 
+    const answerToSubmit = editedAnswers[itemIndex]?.editeditem
+      ? editedAnswers[itemIndex].editeditem
+      : studentAnswers[itemIndex]?.answer;
+
     try {
       await approveQuizAnswer(
         studentResult.studentquizid,
@@ -123,7 +131,7 @@ const QuizResults = () => {
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
-        editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
+        answerToSubmit
       );
 
       setEditedAnswers((prev) => ({
@@ -156,6 +164,10 @@ const QuizResults = () => {
       throw new Error("User ID is undefined");
     }
 
+    const answerToSubmit = editedAnswers[itemIndex]?.editeditem
+      ? editedAnswers[itemIndex].editeditem
+      : studentAnswers[itemIndex]?.answer;
+
     try {
       await disapproveQuizAnswer(
         studentResult.studentquizid,
@@ -163,7 +175,7 @@ const QuizResults = () => {
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
-        editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
+        answerToSubmit
       );
 
       setEditedAnswers((prev) => ({
@@ -185,8 +197,14 @@ const QuizResults = () => {
   useEffect(() => {
     if (studentResult?.recognizedAnswers) {
       const answersMap = studentResult.recognizedAnswers.reduce(
-        (acc: { [key: number]: string }, answerObj) => {
-          acc[answerObj.itemnumber] = answerObj.answer;
+        (
+          acc: { [key: number]: { answer: string; correct: boolean } },
+          answerObj
+        ) => {
+          acc[answerObj.itemnumber] = {
+            answer: answerObj.answer,
+            correct: answerObj.correct,
+          };
           return acc;
         },
         {}
@@ -229,7 +247,6 @@ const QuizResults = () => {
     navigate("/dashboard/class/quiz");
   };
 
-
   const renderRows = () => {
     const totalItems = Math.max(
       answers.length,
@@ -249,7 +266,7 @@ const QuizResults = () => {
           : "";
 
       const isEditedDifferent =
-        editedAnswer !== "" && editedAnswer !== studentAnswer;
+        editedAnswer !== "" && editedAnswer !== studentAnswer.answer;
 
       let highlightClass = "";
       if (editedStatus === "NONE") {
@@ -264,7 +281,9 @@ const QuizResults = () => {
 
       rows.push(
         <tr key={i}>
-          <td>{i}</td>
+          <td>
+            {i} {studentAnswers[i - 1]?.correct ? "✔️" : "❌"}
+          </td>
           <td>
             {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
@@ -286,7 +305,7 @@ const QuizResults = () => {
                 </div>
               )}
           </td>
-          <td>{studentAnswer}</td>
+          <td>{studentAnswer.answer}</td>
           <td className={`td ${highlightClass}`}>{editedAnswer || ""}</td>
           <td>{correctAnswer}</td>
         </tr>

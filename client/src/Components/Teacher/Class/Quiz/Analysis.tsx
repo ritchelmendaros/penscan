@@ -33,7 +33,7 @@ const Analysis = () => {
             <div className="table">
               <ul className="thead">
                 <li className="th">
-                  <p>Student Name</p>
+                  <p style={{marginRight: "190px"}}>Name</p>
                   <p>Score</p>
                 </li>
               </ul>
@@ -42,10 +42,10 @@ const Analysis = () => {
                   .sort((a, b) => b.score - a.score)
                   .map((student, i) => (
                     <li className="tr" key={i}>
-                      <p className="td name">
+                      <p className="td name" >
                         {student.firstName} {student.lastName}
                       </p>
-                      <p className="td">{student.finalScore}</p>
+                      <p className="td" style={{marginLeft: "150px"}}>{student.finalScore}</p>
                     </li>
                   ))}
               </ul>
