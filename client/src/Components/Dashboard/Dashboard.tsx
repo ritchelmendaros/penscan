@@ -12,7 +12,7 @@ import {
 import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
 import { getDetailsByUsername } from '../../apiCalls/userApi';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
