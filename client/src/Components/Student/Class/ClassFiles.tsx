@@ -184,7 +184,18 @@ const ClassFiles = () => {
                       <div>
                         <button
                           className="view"
-                          onClick={(event) => handleViewQuiz(event, quiz)}
+                          onClick={(event) => {
+                            const dueDate = quiz.dueDateTimeRaw;
+                            const isOverdue =
+                              dueDate && new Date(dueDate) < new Date();
+
+                            if (!result && isOverdue) {
+                              event.stopPropagation();
+                              toast("No data and can't upload. This quiz is overdue.");
+                            } else {
+                              handleViewQuiz(event, quiz);
+                            }
+                          }}
                         >
                           View
                         </button>
@@ -198,10 +209,14 @@ const ClassFiles = () => {
                               handleEditQuiz(event, quiz);
                             } else if (status === "PENDING") {
                               event.stopPropagation();
-                              toast("Can't edit: You can't edit more then once.");
+                              toast(
+                                "Can't edit: You can't edit more then once."
+                              );
                             } else if (status === "APPROVED") {
                               event.stopPropagation();
-                              toast("Can't edit: Edited answers are already evaluated.");
+                              toast(
+                                "Can't edit: Edited answers are already evaluated."
+                              );
                             } else {
                               event.stopPropagation();
                               toast("Can't edit: Upload your quiz first.");
