@@ -24,6 +24,7 @@ const InputContainer: React.FC<InputContainerProps> = ({
         type={type}
         placeholder={placeholder}
         value={value}
+        maxLength={50}
         onChange={onChange}
         required
       />
