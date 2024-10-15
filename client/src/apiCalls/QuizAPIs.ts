@@ -175,3 +175,15 @@ export const editQuiz = async (
     }
   };
   
+  export const deleteQuiz = async (quizId: string) => {
+    try {
+      const response = await axiosInstance.delete(`/api/quiz/deletequiz`, {
+        params: { quizid: quizId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      throw error;
+    }
+  };
+  
