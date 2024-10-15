@@ -36,12 +36,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const handleEdit = (classId: string, classname: string) => {
     setEditingClassId(classId); 
     setEditClassName(classname); 
+    setActiveOptions(null);
     setIsModalOpen(true); 
   };
 
   const handleDeleteConfirmation = (classId: string) => {
     setClassToDelete(classId);
     setIsDeleteModalOpen(true); 
+    setActiveOptions(null);
   };
 
   const handleDelete = async () => {
@@ -56,6 +58,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
         toast.error("Failed to delete class."); 
       } finally {
         setIsDeleting(false); 
+        setActiveOptions(null);
       }
     }
   };
@@ -64,6 +67,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
     setIsModalOpen(false);
     setIsDeleteModalOpen(false); 
     setClassToDelete(null); 
+    setActiveOptions(null);
   };
 
   const handleSaveEdit = async () => {
@@ -77,6 +81,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
         toast.error("Failed to update class name.");
       } finally {
         setIsEditing(false); 
+        setActiveOptions(null);
       }
     }
   };  
@@ -165,7 +170,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
             <h2 style={{marginBottom: "10px"}}>Confirm Deletion</h2>
             <p><i>Are you sure you want to delete this class?</i></p>
             <div className="button-container">
-              {/* <button className="modal-buttonsubmit" onClick={handleDelete}>Yes, Delete</button> */}
               <button className="modal-buttonsubmit" onClick={handleDelete} disabled={isDeleting}>
                 {isDeleting ? <SyncLoader color="#fff" loading={isDeleting} size={7} /> : "Yes, Delete"}
               </button>

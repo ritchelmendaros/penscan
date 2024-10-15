@@ -3,7 +3,7 @@ import Thumbnail from "../../../Common/Thumbnail";
 import { useClass } from "../../../Context/ClassContext";
 import { useCurrUser } from "../../../Context/UserContext";
 import { Quiz } from "../../../Interface/Quiz";
-import { getAllQuizes, deleteQuiz } from "../../../../apiCalls/QuizAPIs";
+import { getAllQuizes } from "../../../../apiCalls/QuizAPIs";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../../Context/QuizContext";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,7 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { setLocalStorage } from "../../../../Utils/LocalStorage";
 import { SyncLoader } from "react-spinners";
 import noDataGif from "../../../../assets/nodata.gif";
-import { editQuiz } from "../../../../apiCalls/QuizAPIs";
+import { editQuiz, deleteQuiz } from "../../../../apiCalls/QuizAPIs";
+import ConfirmationModal from "../../../Modal/ConfirmationModal";
 
 const ClassFiles = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const ClassFiles = () => {
   const [loading, setLoading] = useState(true);
   const [activeOptions, setActiveOptions] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [quizIdToDelete, setQuizIdToDelete] = useState<string | null>(null);
   const [editQuizNameState, setEditQuizName] = useState("");
   const [editDueDateState, setEditDueDate] = useState("");
@@ -30,6 +31,7 @@ const ClassFiles = () => {
   const { clickedClass } = useClass();
   const { user } = useCurrUser();
   const { setSelectedQuiz } = useQuiz();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user?.userid && clickedClass?.classid) {
@@ -70,24 +72,30 @@ const ClassFiles = () => {
     setEditDueDate(dueDate);
     setEditAnswerKeyState(answerKey);
     setIsModalOpen(true);
+    setActiveOptions(null);
   };
 
   const handleDelete = (quizId: string) => {
     setQuizIdToDelete(quizId);
-    setIsConfirmDeleteModalOpen(true);
+    setActiveOptions(null);
   };
 
   const handleConfirmDelete = async () => {
-    if (quizIdToDelete) {
-      try {
-        await deleteQuiz(quizIdToDelete); 
-        toast.success("Quiz deleted successfully!");
-        setIsConfirmDeleteModalOpen(false);
-        const updatedQuizzes = quizzes.filter((quiz) => quiz.quizid !== quizIdToDelete);
-        setQuizzes(updatedQuizzes);
-      } catch (error) {
-        toast.error("Failed to delete quiz.");
+    setIsDeleting(true);
+    try {
+      if (quizIdToDelete) {
+        await deleteQuiz(quizIdToDelete);
+        setQuizzes((prevQuizzes) =>
+          prevQuizzes.filter((quiz) => quiz.quizid !== quizIdToDelete)
+        );
+      } else {
+        console.error("No quiz ID to delete.");
       }
+    } catch (error) {
+      console.error("Failed to delete quiz:", error);
+    } finally {
+      setIsDeleting(false);
+      setQuizIdToDelete(null);
     }
   };
 
@@ -97,7 +105,7 @@ const ClassFiles = () => {
 
   const handleSaveEdit = async () => {
     if (editingQuizId && editQuizNameState && editDueDateState) {
-      
+      setIsSaving(true); 
       try {
         await editQuiz(
           editingQuizId,
@@ -108,18 +116,21 @@ const ClassFiles = () => {
         toast.success("Quiz updated successfully!");
         setIsModalOpen(false);
         if (user?.userid && clickedClass?.classid) {
-          setLoading(true); 
+          setLoading(true);
           getAllQuizes(user.userid, clickedClass.classid)
             .then((quiz) => {
-              setQuizzes(quiz); 
+              setQuizzes(quiz);
               setLoading(false);
             })
             .catch(() => {
-              setLoading(false); 
+              setLoading(false);
             });
         }
       } catch (error) {
         toast.error("Failed to update quiz.");
+      } finally {
+        setIsSaving(false); 
+        setActiveOptions(null);
       }
     }
   };
@@ -150,7 +161,7 @@ const ClassFiles = () => {
                     <div className="options-menu">
                       <button
                         onClick={(event) => {
-                          event.stopPropagation(); 
+                          event.stopPropagation();
                           handleEdit(
                             quiz.quizid,
                             quiz.quizname,
@@ -161,7 +172,12 @@ const ClassFiles = () => {
                       >
                         Edit
                       </button>
-                      <button onClick={() => handleDelete(quiz.quizid)}>
+                      <button
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDelete(quiz.quizid);
+                        }}
+                      >
                         Delete
                       </button>
                     </div>
@@ -223,8 +239,12 @@ const ClassFiles = () => {
             </div>
 
             <div className="button-container">
-              <button className="modal-buttonsubmit" onClick={handleSaveEdit}>
-                Save
+              <button className="modal-buttonsubmit" onClick={handleSaveEdit} disabled={isSaving}>
+                {isSaving ? (
+                  <SyncLoader color="#fff" loading={isSaving} size={7} />
+                ) : (
+                  "Save"
+                )}
               </button>
               <button className="modal-button" onClick={handleModalClose}>
                 Cancel
@@ -234,22 +254,13 @@ const ClassFiles = () => {
         </div>
       )}
 
-{isConfirmDeleteModalOpen && (
-        <div className="confirm-delete-overlay">
-          <div className="confirm-delete-content">
-            <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this quiz?</p>
-            <div className="button-container">
-              <button className="modal-buttonsubmit" onClick={handleConfirmDelete}>
-                Yes, Delete
-              </button>
-              <button className="modal-button" onClick={() => setIsConfirmDeleteModalOpen(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={!!quizIdToDelete}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setQuizIdToDelete(null)}
+        message="Are you sure you want to delete this quiz?"
+        loading={isDeleting}
+      />
 
       <ToastContainer />
     </div>
