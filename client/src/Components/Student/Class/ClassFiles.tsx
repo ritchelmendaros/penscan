@@ -202,6 +202,9 @@ const ClassFiles = () => {
                         <button
                           className="edit"
                           onClick={(event) => {
+                            const dueDate = quiz.dueDateTimeRaw;
+                            const isOverdue =
+                              dueDate && new Date(dueDate) < new Date();
                             if (isOverdue) {
                               event.stopPropagation();
                               toast("Can't edit: This quiz is overdue.");
