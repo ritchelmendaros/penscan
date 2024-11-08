@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 import { useCurrUser } from "../../../Context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faFeed, faNotesMedical, faNoteSticky, faStickyNote } from "@fortawesome/free-solid-svg-icons";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -294,14 +294,18 @@ const QuizResults = () => {
                     onClick={() => handleApprove(i)}
                     className="btn btn-primary"
                   >
-                    Approve
+                    {/* Approve */}
+                    Mark as Check
                   </button>
                   <button
                     onClick={() => handleDisapprove(i)}
                     className="btn btn-danger"
                   >
-                    Disapprove
+                    {/* Disapprove */}
+                    {/* <i className="fas fa-comment-dots"></i> */}
+                    <FontAwesomeIcon icon={faNoteSticky} className="icon" />
                   </button>
+
                 </div>
               )}
           </td>
@@ -370,7 +374,7 @@ const QuizResults = () => {
                   <thead>
                     <tr>
                       <th>Item</th>
-                      <th>Approval</th>
+                      <th>Review</th>
                       <th>Scanned Answer</th>
                       <th>Edited Answer</th>
                       <th>Correct Answer</th>
