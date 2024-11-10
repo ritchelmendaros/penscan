@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 import { useCurrUser } from "../../../Context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faStickyNote } from "@fortawesome/free-solid-svg-icons";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -39,6 +39,7 @@ const QuizResults = () => {
       isapproved: boolean;
       isdisapproved: boolean;
       isedited: boolean;
+      feedback: string[];
     };
   }>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -83,10 +84,20 @@ const QuizResults = () => {
             isapproved: curr.isapproved,
             isdisapproved: curr.isdisapproved,
             isedited: curr.isedited,
+            feedback: curr.feedback,
           };
           return acc;
         },
-        {}
+        {} as {
+          [key: number]: {
+            itemnumber: number;
+            editeditem: string;
+            isapproved: boolean;
+            isdisapproved: boolean;
+            isedited: boolean;
+            feedback: string[];
+          };
+        }
       );
 
       setEditedAnswers(extractedEditedAnswers);
@@ -321,7 +332,7 @@ const QuizResults = () => {
                   </button>
                 </div>
               )}
-              {editedStatus !== "NONE" &&
+            {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
               !editedAnswerObj?.isdisapproved &&
               editedAnswerObj?.isedited && (
@@ -338,6 +349,15 @@ const QuizResults = () => {
           <td>{studentAnswer.answer}</td>
           <td className={`td ${highlightClass}`}>{editedAnswer || ""}</td>
           <td>{correctAnswer}</td>
+          <td>
+            {editedAnswers[i]?.feedback?.length > 0 && (
+              <FontAwesomeIcon
+                icon={faStickyNote}
+                className="notification-icon"
+                onClick={handleFetchLogs}
+              />
+            )}
+          </td>
         </tr>
       );
     }
@@ -434,6 +454,7 @@ const QuizResults = () => {
                       <th>Scanned Answer</th>
                       <th>Edited Answer</th>
                       <th>Correct Answer</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>{renderRows()}</tbody>
@@ -489,7 +510,7 @@ const QuizResults = () => {
                 Close
               </button>
               <button
-                onClick={() => {  
+                onClick={() => {
                   handleSaveFeedbackPerItem(currentItemIndex);
                 }}
               >
