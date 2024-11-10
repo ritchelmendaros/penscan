@@ -4,6 +4,7 @@ import { useQuiz } from "../../../Context/QuizContext";
 import { useEffect, useState } from "react";
 import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
+  addFeedbackToEditedAnswerPerItem,
   approveQuizAnswer,
   disapproveQuizAnswer,
   getAllActivityLogs,
@@ -48,9 +49,11 @@ const QuizResults = () => {
   const { user } = useCurrUser();
   const [studentQuizId, setStudentQuizId] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [showFeebackPerItemModal, setShowFeebackPerItemModal] = useState(false);
+  const [showFeedbackPerItemModal, setShowFeedbackPerItemModal] =
+    useState(false);
   const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
+  const [currentItemIndex, setCurrentItemIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -145,7 +148,8 @@ const QuizResults = () => {
         },
       }));
 
-      setShowFeebackPerItemModal(true);
+      setCurrentItemIndex(itemIndex);
+      setShowFeedbackPerItemModal(true);
       toast.success(`Answer for item ${itemIndex} approved`);
       setRefresh((prev) => prev + 1);
     } catch (error) {
@@ -190,8 +194,9 @@ const QuizResults = () => {
         },
       }));
 
-      setShowFeebackPerItemModal(true);
-      toast.success(showFeebackPerItemModal);
+      setCurrentItemIndex(itemIndex);
+      setShowFeedbackPerItemModal(true);
+      toast.success(showFeedbackPerItemModal);
       toast.success(`Answer for item ${itemIndex} disapproved`);
       setRefresh((prev) => prev + 1);
     } catch (error) {
@@ -345,13 +350,38 @@ const QuizResults = () => {
     return rows;
   };
 
-  const handleSaveFeedbackPerItem = () => {
-    console.log("Feedback saved:", feedback);
-    setShowModal(false);
+  const handleSaveFeedbackPerItem = async (itemIndex: number) => {
+    const feedbackForItem = feedbackperitem;
+
+    if (!feedbackForItem) {
+      toast.error("Feedback is empty for this item.");
+      return;
+    }
+    if (!studentResult?.studentquizid) {
+      toast.error("Studentquizid is empty for this item.");
+      return;
+    }
+
+    try {
+      const itemId = itemIndex;
+
+      const response = await addFeedbackToEditedAnswerPerItem(
+        studentResult?.studentquizid,
+        itemId,
+        feedbackForItem
+      );
+
+      console.log(`Feedback for Item ${itemIndex}:`, response);
+      setFeedbackPerItem("");
+      setShowFeedbackPerItemModal(false);
+      toast.success(`Feedback for Item ${itemIndex} saved.`);
+    } catch (error) {
+      toast.error("Error saving feedback.");
+    }
   };
 
   const toggleModal = () =>
-    setShowFeebackPerItemModal(!showFeebackPerItemModal);
+    setShowFeedbackPerItemModal(!showFeedbackPerItemModal);
 
   return (
     <div className="QuizResults Main MainContent">
@@ -451,7 +481,7 @@ const QuizResults = () => {
         </div>
       )}
 
-      {showFeebackPerItemModal && (
+      {showFeedbackPerItemModal && currentItemIndex !== null && (
         <div className="modal-container-feedback">
           <div className="modal-content-feedback">
             <h4>Include Feedback</h4>
@@ -460,15 +490,15 @@ const QuizResults = () => {
               value={feedbackperitem}
               onChange={(e) => setFeedbackPerItem(e.target.value)}
               className="feedback-input"
+              placeholder="Type your feedback here..."
             ></textarea>
             <div className="modal-buttons-feedback">
-              <button onClick={() => setShowFeebackPerItemModal(false)}>
+              <button onClick={() => setShowFeedbackPerItemModal(false)}>
                 Close
               </button>
               <button
                 onClick={() => {
-                  console.log("Feedback saved:", feedbackperitem);
-                  setShowFeebackPerItemModal(false);
+                  handleSaveFeedbackPerItem(currentItemIndex);
                 }}
               >
                 Save
