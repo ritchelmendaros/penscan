@@ -52,6 +52,9 @@ const QuizResults = () => {
   const [showModal, setShowModal] = useState(false);
   const [showFeedbackPerItemModal, setShowFeedbackPerItemModal] =
     useState(false);
+    const [showFeedbackPerItemModalDisplay, setShowFeedbackPerItemModalDisplay] =
+    useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
   const [currentItemIndex, setCurrentItemIndex] = useState<number | null>(null);
@@ -265,6 +268,19 @@ const QuizResults = () => {
     navigate("/dashboard/class/quiz");
   };
 
+  const handleHover = (itemIndex: number) => {
+    setHoveredItem(itemIndex);
+    setShowFeedbackPerItemModalDisplay(true);
+    setFeedbackPerItem(
+      editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
+    );
+  };
+
+  const handleMouseLeave = () => {
+    setShowFeedbackPerItemModalDisplay(false);
+    setHoveredItem(null);
+  };
+
   const renderRows = () => {
     const totalItems = Math.max(
       answers.length,
@@ -354,7 +370,8 @@ const QuizResults = () => {
               <FontAwesomeIcon
                 icon={faStickyNote}
                 className="notification-icon"
-                onClick={handleFetchLogs}
+                onMouseEnter={() => handleHover(i)} 
+                onMouseLeave={handleMouseLeave} 
               />
             )}
           </td>
@@ -517,6 +534,14 @@ const QuizResults = () => {
                 Save
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showFeedbackPerItemModalDisplay && (
+        <div className="feedback-modal show">
+          <div className="modal-content">
+          <p className="feedback-text">{feedbackperitem}</p>
           </div>
         </div>
       )}

@@ -175,13 +175,20 @@
       .td1 {
         padding: 4px 0;
       }
+
+      .notification-icon {
+        cursor: pointer;
+      }
+
+      .notification-icon:hover {
+        color: #3498db;
+      }
     }
   }
 
-  // Grid layout for quiz results
   .quiz-results-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     margin-top: 20px;
 
@@ -210,6 +217,64 @@
 
     .tr {
       display: contents; /* Each <li> fits into the grid */
+    }
+  }
+
+  .feedback-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:  rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease 0.2s;
+  }
+
+  .feedback-modal.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .feedback-text {
+    white-space: pre-wrap;  
+    word-wrap: break-word;  
+    line-height: 1.5; 
+  }
+
+  .modal-content {
+    background: #2e2d32;
+    padding: 20px;
+    border-radius: 8px;
+    width: 250px;
+    max-width: 90%;
+    color: #fff;
+
+    p {
+      font-size: 12px;
+      margin: 0;
+      font-style: italic;
+    }
+
+    button {
+      background-color: #416edf;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+
+      &:hover {
+        background-color: #3498db;
+      }
     }
   }
 }
