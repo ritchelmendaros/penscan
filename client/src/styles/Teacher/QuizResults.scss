@@ -85,18 +85,18 @@ $border-color: #333333;
           border-radius: 4px;
         }
 
-        th,
-        td {
-          padding: 10px;
-          text-align: left;
-          border-bottom: 1px solid $border-color;
-        }
-
         th {
           background-color: $primary-color;
           color: white;
           font-weight: bold;
           font-size: 1em;
+        }
+
+        th,
+        td {
+          padding: 10px;
+          text-align: left;
+          border-bottom: 1px solid $border-color;
         }
 
         tr:last-child td {
@@ -121,14 +121,14 @@ $border-color: #333333;
           font-weight: bold;
 
           &.btn-primary {
-            background-color: rgb(15, 179, 69);
+            background-color: #0B8457;
             color: white;
+            width: 125px;
           }
 
           &.btn-danger {
-            // background-color: #00a1ff;
-            // color: white;
-            background: none;
+            background-color: #b72d4b;
+            color: white;
 
             .icon {
               width: 20px;
@@ -305,7 +305,7 @@ $border-color: #333333;
         width: 100%;
         padding: 10px;
         margin-bottom: 15px;
-        border: 1px solid white;
+        border: 1px solid #DEE1EC;
         border-radius: 4px;
         background-color: #1e1e1e;
         color: #fff;
@@ -323,15 +323,15 @@ $border-color: #333333;
           color: #fff;
 
           &:first-child {
-            background-color: yellow;
+            background-color: #EAC100;
           }
 
           &:last-child {
-            background-color: blue;
+            background-color: $primary-color;
           }
 
           &:hover {
-            opacity: 0.9;
+            opacity: 0.8;
           }
         }
       }

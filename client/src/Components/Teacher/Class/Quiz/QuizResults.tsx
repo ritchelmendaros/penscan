@@ -304,16 +304,7 @@ const QuizResults = () => {
                     onClick={() => handleCheck(i)}
                     className="btn btn-primary"
                   >
-                    {/* Approve */}
-                    Mark Check
-                  </button>
-                  <button
-                    onClick={() => handleUncheck(i)}
-                    className="btn btn-danger"
-                  >
-                    {/* Disapprove */}
-                    {/* <i className="fas fa-comment-dots"></i> */}
-                    {/* <FontAwesomeIcon icon={faNoteSticky} className="icon" /> */}
+                    Mark Correct
                   </button>
                 </div>
               )}
@@ -324,18 +315,9 @@ const QuizResults = () => {
                 <div className="approval-buttons">
                   <button
                     onClick={() => handleUncheck(i)}
-                    className="btn btn-primary"
-                  >
-                    {/* Approve */}
-                    Mark UnCheck
-                  </button>
-                  <button
-                    onClick={() => handleUncheck(i)}
                     className="btn btn-danger"
                   >
-                    {/* Disapprove */}
-                    {/* <i className="fas fa-comment-dots"></i> */}
-                    {/* <FontAwesomeIcon icon={faNoteSticky} className="icon" /> */}
+                    Mark Incorrect
                   </button>
                 </div>
               )}
@@ -379,9 +361,6 @@ const QuizResults = () => {
       toast.error("Error saving feedback.");
     }
   };
-
-  const toggleModal = () =>
-    setShowFeedbackPerItemModal(!showFeedbackPerItemModal);
 
   return (
     <div className="QuizResults Main MainContent">
@@ -497,7 +476,7 @@ const QuizResults = () => {
                 Close
               </button>
               <button
-                onClick={() => {
+                onClick={() => {  
                   handleSaveFeedbackPerItem(currentItemIndex);
                 }}
               >
