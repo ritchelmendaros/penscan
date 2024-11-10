@@ -109,7 +109,7 @@ const AddQuiz = () => {
       <main>
         <div className="content">
           <div className="quiz-creation-form">
-            <h2>Create New Quiz</h2>
+            <h2>Create Quiz Answer Key</h2>
             <form onSubmit={handleAddQuiz}>
               <div className="input-group">
                 <label htmlFor="quiz-title">Quiz Title</label>

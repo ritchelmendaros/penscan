@@ -167,24 +167,26 @@
         padding: 10px 20px;
         border-radius: 5px;
         border: none;
-        background-color: #3498db;
+        width: 100px;
+        background-color: #1e97dd;
         color: white;
         cursor: pointer;
 
         &:hover {
-          background-color: #2980b9;
+          background-color: #0b81c5;
         }
       }
       .modal-buttonsubmit {
         padding: 10px 20px;
         border-radius: 5px;
         border: none;
-        background-color: #03578f;
+        width: 100px;
+        background-color: #436edc;
         color: white;
         cursor: pointer;
 
         &:hover {
-          background-color: #2980b9;
+          background-color: #134ad4;
         }
       }
     }

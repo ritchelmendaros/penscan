@@ -168,7 +168,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
         <div className="modal">
           <div className="modal-content">
             <h2 style={{marginBottom: "10px"}}>Confirm Deletion</h2>
-            <p><i>Are you sure you want to delete this class?</i></p>
+            <p>Are you sure you want to delete this class?</p>
             <div className="button-container">
               <button className="modal-buttonsubmit" onClick={handleDelete} disabled={isDeleting}>
                 {isDeleting ? <SyncLoader color="#fff" loading={isDeleting} size={7} /> : "Yes, Delete"}

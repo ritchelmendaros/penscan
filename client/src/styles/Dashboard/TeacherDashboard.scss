@@ -136,28 +136,28 @@
       gap: 30px;
       margin-top: 20px;
 
-      .modal-button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: none;
-        background-color: #3498db;
-        color: white;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #2980b9;
-        }
-      }
       .modal-buttonsubmit {
         padding: 10px 20px;
         border-radius: 5px;
         border: none;
-        background-color: #03578f;
+        background-color: #436edc;
         color: white;
         cursor: pointer;
 
         &:hover {
-          background-color: #2980b9;
+          background-color: #134ad4;
+        }
+      }
+      .modal-button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #1e97dd;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #0b81c5;
         }
       }
     }
