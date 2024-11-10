@@ -150,7 +150,6 @@ const QuizResults = () => {
 
       setCurrentItemIndex(itemIndex);
       setShowFeedbackPerItemModal(true);
-      toast.success(`Answer for item ${itemIndex} approved`);
       setRefresh((prev) => prev + 1);
     } catch (error) {
       toast.error(`Error approving item ${itemIndex}`);
@@ -196,8 +195,6 @@ const QuizResults = () => {
 
       setCurrentItemIndex(itemIndex);
       setShowFeedbackPerItemModal(true);
-      toast.success(showFeedbackPerItemModal);
-      toast.success(`Answer for item ${itemIndex} disapproved`);
       setRefresh((prev) => prev + 1);
     } catch (error) {
       toast.error(`Error disapproving item ${itemIndex}`);
@@ -383,7 +380,7 @@ const QuizResults = () => {
                 <i>{dueDate}</i>
               </h5>
               <div className="score-container">
-                <h3>Score: {selectedStudentResult?.score}</h3>
+                <h3>Score: {studentResult?.score}</h3>
                 <div className="additional-points">
                   <h3>
                     Bonus Points: {studentResult?.bonusscore}
