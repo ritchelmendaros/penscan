@@ -124,7 +124,7 @@ export const studentsaveStudentQuiz = async (
 export const approveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
       const response = await axiosInstance.put(
-        '/api/studentquiz/approve', 
+        '/api/studentquiz/markcheck', 
         null, 
         {
           params: {
@@ -146,7 +146,7 @@ export const approveQuizAnswer = async (studentQuizId: string, userId: string, s
 export const disapproveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
     const response = await axiosInstance.put(
-      '/api/studentquiz/disapprove', 
+      '/api/studentquiz/markuncheck', 
       null, 
       {
         params: {

@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 import { useCurrUser } from "../../../Context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faFeed, faNotesMedical, faNoteSticky, faStickyNote } from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -48,6 +48,8 @@ const QuizResults = () => {
   const { user } = useCurrUser();
   const [studentQuizId, setStudentQuizId] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showFeebackPerItemModal, setShowFeebackPerItemModal] = useState(false);
+  const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
@@ -107,7 +109,7 @@ const QuizResults = () => {
     }
   };
 
-  const handleApprove = async (itemIndex: number) => {
+  const handleCheck = async (itemIndex: number) => {
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -143,6 +145,7 @@ const QuizResults = () => {
         },
       }));
 
+      setShowFeebackPerItemModal(true);
       toast.success(`Answer for item ${itemIndex} approved`);
       setRefresh((prev) => prev + 1);
     } catch (error) {
@@ -150,7 +153,7 @@ const QuizResults = () => {
     }
   };
 
-  const handleDisapprove = async (itemIndex: number) => {
+  const handleUncheck = async (itemIndex: number) => {
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -187,6 +190,8 @@ const QuizResults = () => {
         },
       }));
 
+      setShowFeebackPerItemModal(true);
+      toast.success(showFeebackPerItemModal);
       toast.success(`Answer for item ${itemIndex} disapproved`);
       setRefresh((prev) => prev + 1);
     } catch (error) {
@@ -287,25 +292,46 @@ const QuizResults = () => {
           <td>
             {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
-              !editedAnswerObj?.isdisapproved &&
-              isEditedDifferent && (
+              editedAnswerObj?.isdisapproved &&
+              editedAnswerObj?.isedited && (
                 <div className="approval-buttons">
                   <button
-                    onClick={() => handleApprove(i)}
+                    onClick={() => handleCheck(i)}
                     className="btn btn-primary"
                   >
                     {/* Approve */}
-                    Mark as Check
+                    Mark Check
                   </button>
                   <button
-                    onClick={() => handleDisapprove(i)}
+                    onClick={() => handleUncheck(i)}
                     className="btn btn-danger"
                   >
                     {/* Disapprove */}
                     {/* <i className="fas fa-comment-dots"></i> */}
-                    <FontAwesomeIcon icon={faNoteSticky} className="icon" />
+                    {/* <FontAwesomeIcon icon={faNoteSticky} className="icon" /> */}
                   </button>
-
+                </div>
+              )}
+            {editedStatus !== "NONE" &&
+              editedAnswerObj?.isapproved &&
+              !editedAnswerObj?.isdisapproved &&
+              editedAnswerObj?.isedited && (
+                <div className="approval-buttons">
+                  <button
+                    onClick={() => handleUncheck(i)}
+                    className="btn btn-primary"
+                  >
+                    {/* Approve */}
+                    Mark UnCheck
+                  </button>
+                  <button
+                    onClick={() => handleUncheck(i)}
+                    className="btn btn-danger"
+                  >
+                    {/* Disapprove */}
+                    {/* <i className="fas fa-comment-dots"></i> */}
+                    {/* <FontAwesomeIcon icon={faNoteSticky} className="icon" /> */}
+                  </button>
                 </div>
               )}
           </td>
@@ -318,6 +344,14 @@ const QuizResults = () => {
 
     return rows;
   };
+
+  const handleSaveFeedbackPerItem = () => {
+    console.log("Feedback saved:", feedback);
+    setShowModal(false);
+  };
+
+  const toggleModal = () =>
+    setShowFeebackPerItemModal(!showFeebackPerItemModal);
 
   return (
     <div className="QuizResults Main MainContent">
@@ -413,6 +447,33 @@ const QuizResults = () => {
                 <li>No logs available</li>
               )}
             </ul>
+          </div>
+        </div>
+      )}
+
+      {showFeebackPerItemModal && (
+        <div className="modal-container-feedback">
+          <div className="modal-content-feedback">
+            <h4>Include Feedback</h4>
+            <textarea
+              id="feedbackInput"
+              value={feedbackperitem}
+              onChange={(e) => setFeedbackPerItem(e.target.value)}
+              className="feedback-input"
+            ></textarea>
+            <div className="modal-buttons-feedback">
+              <button onClick={() => setShowFeebackPerItemModal(false)}>
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  console.log("Feedback saved:", feedbackperitem);
+                  setShowFeebackPerItemModal(false);
+                }}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}
