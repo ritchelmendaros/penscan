@@ -198,7 +198,7 @@ const ClassFiles = () => {
             <h2>Edit Quiz</h2>
             <div>
               <label>
-                Quiz Name:
+                Quiz Name:q
                 <input
                   type="text"
                   value={editQuizNameState}

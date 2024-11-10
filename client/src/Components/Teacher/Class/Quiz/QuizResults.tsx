@@ -266,14 +266,17 @@ const QuizResults = () => {
       const correctAnswer = answers[i - 1]?.answer || "";
       const editedStatus = studentResult?.editedstatus;
 
-      const editedAnswerObj = editedAnswers[i] || null;
+      const editedAnswerObj = editedAnswers[i] || {
+        editeditem: "",
+        isedited: false,
+        isapproved: false,
+        isdisapproved: false,
+      };
+
       let editedAnswer =
         editedAnswerObj && editedAnswerObj.isedited
           ? editedAnswerObj.editeditem
           : "";
-
-      const isEditedDifferent =
-        editedAnswer !== "" && editedAnswer !== studentAnswer.answer;
 
       let highlightClass = "";
       if (editedStatus === "NONE") {
@@ -282,7 +285,7 @@ const QuizResults = () => {
         highlightClass = "highlight-approved";
       } else if (editedAnswerObj?.isdisapproved) {
         highlightClass = "highlight-disapproved";
-      } else if (isEditedDifferent) {
+      } else if (editedAnswerObj.isedited) {
         highlightClass = "highlight-edited";
       }
 
@@ -315,6 +318,19 @@ const QuizResults = () => {
                     className="btn btn-danger"
                   >
                     Mark Incorrect
+                  </button>
+                </div>
+              )}
+              {editedStatus !== "NONE" &&
+              !editedAnswerObj?.isapproved &&
+              !editedAnswerObj?.isdisapproved &&
+              editedAnswerObj?.isedited && (
+                <div className="approval-buttons">
+                  <button
+                    onClick={() => handleCheck(i)}
+                    className="btn btn-primary"
+                  >
+                    Mark Correct
                   </button>
                 </div>
               )}
