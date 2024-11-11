@@ -11,7 +11,7 @@
     margin-top: 30px;
 
     .table {
-      .th,
+      .th,s
       .tr,
       .td {
         padding: 0 !important;
@@ -25,6 +25,11 @@
       .tbody {
         max-height: 400px !important;
         overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none; 
+        }
       }
     }
   }
