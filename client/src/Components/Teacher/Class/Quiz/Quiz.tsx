@@ -131,7 +131,6 @@ const Quiz = () => {
       try {
         await deleteStudentQuiz(studentToDelete.userId, selectedQuiz.quizid);
         setRefreshScores(true);
-        navigate('/dashboard/class');
       } catch (error) {
         toast.error("Failed to delete the score.");
       } finally {
