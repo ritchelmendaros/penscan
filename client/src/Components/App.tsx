@@ -92,6 +92,7 @@ const App = () => {
                         </>
                     ) : userType === "Student" ? (
                         <>
+                            <Route path="/dashboard" element={<Dashboard />} />
                             <Route
                                 path="/classes"
                                 element={<ClassListPage />}
