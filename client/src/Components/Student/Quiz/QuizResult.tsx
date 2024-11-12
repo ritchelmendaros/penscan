@@ -16,7 +16,7 @@ import {
   getAllActivityLogs,
 } from "../../../apiCalls/studentQuizApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faStickyNote } from "@fortawesome/free-solid-svg-icons";
 
 interface Answer {
   itemnumber: number;
@@ -44,6 +44,10 @@ const StudentQuizResults = () => {
   const [showModal, setShowModal] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
   const [studentQuizId, setStudentQuizId] = useState("");
+  const [showFeedbackPerItemModalDisplay, setShowFeedbackPerItemModalDisplay] =
+    useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
   const currentDate = new Date();
 
   useEffect(() => {
@@ -84,6 +88,7 @@ const StudentQuizResults = () => {
             isapproved: curr.isapproved,
             isdisapproved: curr.isdisapproved,
             isedited: curr.isedited,
+            feedback: curr.feedback,
           };
           return acc;
         },
@@ -126,6 +131,19 @@ const StudentQuizResults = () => {
     }
   };
 
+  const handleHover = (itemIndex: number) => {
+    setHoveredItem(itemIndex);
+    setShowFeedbackPerItemModalDisplay(true);
+    setFeedbackPerItem(
+      editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
+    );
+  };
+
+  const handleMouseLeave = () => {
+    setShowFeedbackPerItemModalDisplay(false);
+    setHoveredItem(null);
+  };
+
   const renderRows = () => {
     const maxItemNumber = Math.max(
       ...correctAnswers.map((ans) => ans.itemnumber),
@@ -145,6 +163,7 @@ const StudentQuizResults = () => {
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
+        isedited: false,
         isapproved: false,
         isdisapproved: false,
       };
@@ -190,7 +209,16 @@ const StudentQuizResults = () => {
             {editedItem}
           </p>
           <p className="td1">{correctAnswer}</p>
-          <p className="td1"></p>
+          <p className="td1">
+            {editedAnswers[i]?.feedback?.length > 1 && (
+              <FontAwesomeIcon
+                icon={faStickyNote}
+                className="notification-icon"
+                onMouseEnter={() => handleHover(i)}
+                onMouseLeave={handleMouseLeave}
+              />
+            )}
+          </p>
         </li>
       );
     }
@@ -359,6 +387,7 @@ const StudentQuizResults = () => {
                     )}
 
                     <p />
+                    <p className="td1"></p>
                   </li>
                 </ul>
 
@@ -445,6 +474,17 @@ const StudentQuizResults = () => {
                 <li>No logs available</li>
               )}
             </ul>
+          </div>
+        </div>
+      )}
+
+      {showFeedbackPerItemModalDisplay && (
+        <div className="feedback-modal show">
+          <div className="modal-content">
+            <label>
+              <b>Feedback</b>
+            </label>
+            <p className="feedback-text">{feedbackperitem}</p>
           </div>
         </div>
       )}

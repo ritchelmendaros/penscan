@@ -52,7 +52,7 @@ const QuizResults = () => {
   const [showModal, setShowModal] = useState(false);
   const [showFeedbackPerItemModal, setShowFeedbackPerItemModal] =
     useState(false);
-    const [showFeedbackPerItemModalDisplay, setShowFeedbackPerItemModalDisplay] =
+  const [showFeedbackPerItemModalDisplay, setShowFeedbackPerItemModalDisplay] =
     useState(false);
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
@@ -397,16 +397,14 @@ const QuizResults = () => {
     try {
       const itemId = itemIndex;
 
-      const response = await addFeedbackToEditedAnswerPerItem(
+      await addFeedbackToEditedAnswerPerItem(
         studentResult?.studentquizid,
         itemId,
         feedbackForItem
       );
 
-      console.log(`Feedback for Item ${itemIndex}:`, response);
       setFeedbackPerItem("");
       setShowFeedbackPerItemModal(false);
-      toast.success(`Feedback for Item ${itemIndex} saved.`);
     } catch (error) {
       toast.error("Error saving feedback.");
     }
@@ -517,7 +515,6 @@ const QuizResults = () => {
             <h4>Include Feedback</h4>
             <textarea
               id="feedbackInput"
-              value={feedbackperitem}
               onChange={(e) => setFeedbackPerItem(e.target.value)}
               className="feedback-input"
               placeholder="Type your feedback here..."
@@ -541,6 +538,7 @@ const QuizResults = () => {
       {showFeedbackPerItemModalDisplay && (
         <div className="feedback-modal show">
           <div className="modal-content">
+          <label><b>Feedback</b></label>
           <p className="feedback-text">{feedbackperitem}</p>
           </div>
         </div>
