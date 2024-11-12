@@ -1,35 +1,36 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import '../styles/App.scss';
-import LandingPage from './LandingPage/LandingPage';
-import Login from './Authentication/Login';
-import Dashboard from './Dashboard/Dashboard';
-import CreateClass from './Teacher/CreateClass';
-import NotFoundPage from './NotFoundPage/NotFoundPage';
-import Class from './Teacher/Class/Class';
-import AddStudent from './Teacher/Class/ClassStudents/AddStudent';
-import AddQuiz from './Teacher/Class/ClassFiles/AddQuiz';
-import Signup from './Authentication/Signup';
-import { useCurrUser } from './Context/UserContext';
-import Quiz from './Teacher/Class/Quiz/Quiz';
-import QuizResults from './Teacher/Class/Quiz/QuizResults';
-import QuizResultEdit from './Teacher/Class/Quiz/QuizResultEdit';
-import Classes from './Student/Class/Classes';
-import StudentQuizResults from './Student/Quiz/QuizResult';
-import UserProfile from './UserProfile/UserProfile';
-import { useEffect } from 'react';
-import { getFromLocalStorage } from '../Utils/LocalStorage';
-import StudentQuizResultEdit from './Student/Quiz/QuizResultEdit';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "../styles/App.scss";
+import LandingPage from "./LandingPage/LandingPage";
+import Login from "./Authentication/Login";
+import ClassListPage from "./Dashboard/ClassListPage";
+import CreateClass from "./Teacher/CreateClass";
+import NotFoundPage from "./NotFoundPage/NotFoundPage";
+import Class from "./Teacher/Class/Class";
+import AddStudent from "./Teacher/Class/ClassStudents/AddStudent";
+import AddQuiz from "./Teacher/Class/ClassFiles/AddQuiz";
+import Signup from "./Authentication/Signup";
+import { useCurrUser } from "./Context/UserContext";
+import Quiz from "./Teacher/Class/Quiz/Quiz";
+import QuizResults from "./Teacher/Class/Quiz/QuizResults";
+import QuizResultEdit from "./Teacher/Class/Quiz/QuizResultEdit";
+import Classes from "./Student/Class/Classes";
+import StudentQuizResults from "./Student/Quiz/QuizResult";
+import UserProfile from "./UserProfile/UserProfile";
+import { useEffect } from "react";
+import { getFromLocalStorage } from "../Utils/LocalStorage";
+import StudentQuizResultEdit from "./Student/Quiz/QuizResultEdit";
+import Dashboard from "./Dashboard/Dashboard";
 
 const App = () => {
     const { userType, setUserType, setUser } = useCurrUser();
 
     useEffect(() => {
-        setUserType(getFromLocalStorage('userType'));
-        const fname = getFromLocalStorage('firstname');
-        const lname = getFromLocalStorage('lastname');
-        const utype = getFromLocalStorage('userType');
-        const uid = getFromLocalStorage('userid');
-        const uname = getFromLocalStorage('username');
+        setUserType(getFromLocalStorage("userType"));
+        const fname = getFromLocalStorage("firstname");
+        const lname = getFromLocalStorage("lastname");
+        const utype = getFromLocalStorage("userType");
+        const uid = getFromLocalStorage("userid");
+        const uname = getFromLocalStorage("username");
 
         setUser({
             firstname: fname,
@@ -42,66 +43,71 @@ const App = () => {
 
     return (
         <BrowserRouter>
-            <div className='App'>
+            <div className="App">
                 <Routes>
-                    <Route path='/' element={<LandingPage />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/sign-up' element={<Signup />} />
-                    {(userType === 'Teacher' || userType === 'Student') && (
-                        <Route path='/user-profile' element={<UserProfile />} />
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/sign-up" element={<Signup />} />
+                    {(userType === "Teacher" || userType === "Student") && (
+                        <Route path="/user-profile" element={<UserProfile />} />
                     )}
 
-                    {userType === 'Teacher' ? (
+                    {userType === "Teacher" ? (
                         <>
-                            <Route path='/dashboard' element={<Dashboard />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
 
                             <Route
-                                path='/dashboard/create-class'
+                                path="/classes"
+                                element={<ClassListPage />}
+                            />
+
+                            <Route
+                                path="/dashboard/create-class"
                                 element={<CreateClass />}
                             />
                             <Route
-                                path='/dashboard/class'
+                                path="/dashboard/class"
                                 element={<Class />}
                             />
                             <Route
-                                path='/dashboard/class/quiz'
+                                path="/dashboard/class/quiz"
                                 element={<Quiz />}
                             />
                             <Route
-                                path='/dashboard/class/quiz/quiz-result'
+                                path="/dashboard/class/quiz/quiz-result"
                                 element={<QuizResults />}
                             />
                             <Route
-                                path='/dashboard/class/quiz/quiz-result-edit'
+                                path="/dashboard/class/quiz/quiz-result-edit"
                                 element={<QuizResultEdit />}
                             />
                             <Route
-                                path='/dashboard/class/add-student'
+                                path="/dashboard/class/add-student"
                                 element={<AddStudent />}
                             />
                             <Route
-                                path='/dashboard/class/add-quiz'
+                                path="/dashboard/class/add-quiz"
                                 element={<AddQuiz />}
                             />
                         </>
-                    ) : userType === 'Student' ? (
+                    ) : userType === "Student" ? (
                         <>
-                            <Route path='/dashboard' element={<Dashboard />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
                             <Route
-                                path='/dashboard/class/:classid'
+                                path="/dashboard/class/:classid"
                                 element={<Classes />}
                             />
                             <Route
-                                path='/dashboard/class/quiz/quiz-result'
+                                path="/dashboard/class/quiz/quiz-result"
                                 element={<StudentQuizResults />}
                             />
                             <Route
-                                path='/dashboard/class/quiz/quiz-result-edit'
+                                path="/dashboard/class/quiz/quiz-result-edit"
                                 element={<StudentQuizResultEdit />}
                             />
                         </>
                     ) : null}
-                    <Route path='*' element={<NotFoundPage />} />
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

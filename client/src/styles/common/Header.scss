@@ -11,6 +11,19 @@
     right: 0;
     height: $header-height;
 
+    .link-container {
+        display: flex;
+        align-items: center;
+        ul.links {
+            display: flex;
+            margin-left: 30px;
+            li {
+                padding-left: 20px;
+                font-size: 0.9rem;
+            }
+        }
+    }
+
     .gradient {
         margin-left: 200px;
         margin-top: -200px;
