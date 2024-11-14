@@ -1,17 +1,14 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Users, Notebook } from "lucide-react";
+import { Users, Notebook, Activity } from "lucide-react";
 import Header from "../Common/Header";
 import Graph from "./Common/Graph";
 import DashboardCard from "./Common/DashboardCard";
-import { useState } from "react";
-import { Calendar } from "../ui/calendar";
 import {
   Select,
   SelectContent,
@@ -21,7 +18,6 @@ import {
 } from "../ui/select";
 
 const TeacherDashboardUI = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <div className="TeacherDashboard Main MainContent">
@@ -38,13 +34,19 @@ const TeacherDashboardUI = () => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <DashboardCard
                 title="Classes"
-                icon={Users}
+                icon={Activity}
                 value={6}
                 change={201}
               />
               <DashboardCard
                 title="Quizzes"
                 icon={Notebook}
+                value={573}
+                change={201}
+              />
+              <DashboardCard
+                title="Students"
+                icon={Users}
                 value={573}
                 change={201}
               />
