@@ -9,7 +9,7 @@ interface DashboardCardProps {
   change: number;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, value, change }) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, value }) => {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

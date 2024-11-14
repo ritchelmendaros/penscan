@@ -11,9 +11,11 @@ import Header from "../Common/Header";
 import Graph from "./Common/Graph";
 import DashboardCard from "./Common/DashboardCard";
 import { useState } from "react";
-
+import { Calendar } from "../ui/calendar";
 
 const TeacherDashboardUI = () => {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
   return (
     <div className="TeacherDashboard Main MainContent">
       <Header />
@@ -37,12 +39,6 @@ const TeacherDashboardUI = () => {
                 value={573}
                 change={201}
               />
-              {/* <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-              /> */}
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
@@ -55,10 +51,7 @@ const TeacherDashboardUI = () => {
               </Card>
               <Card className="col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
+                  <CardTitle>Review Requests</CardTitle>
                 </CardHeader>
                 <CardContent></CardContent>
               </Card>
