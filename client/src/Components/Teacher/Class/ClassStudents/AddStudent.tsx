@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface Student {
   userid: string;
+  username: string;
   firstname: string;
   lastname: string;
 }
@@ -56,8 +57,10 @@ const AddStudent: React.FC = () => {
   };
 
   const handleDropdownBlur = () => {
+
+    const username = studentName.split(" ").pop();
     const matchedStudent = allStudents.find(
-      (student) => `${student.firstname} ${student.lastname}` === studentName
+      (student) => `${student.username}` === username
     );
 
     if (matchedStudent) {
@@ -114,7 +117,7 @@ const AddStudent: React.FC = () => {
             {filteredStudents.map((student) => (
               <option
                 key={student.userid}
-                value={`${student.firstname} ${student.lastname}`}
+                value={`${student.firstname} ${student.lastname} - ${student.username}`}
               />
             ))}
           </datalist>
