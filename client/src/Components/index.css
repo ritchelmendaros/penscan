@@ -4,6 +4,11 @@
 
 @layer base {
   :root {
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
+}
+
+html body[data-scroll-locked] {
+  overflow: visible !important;
+  margin-right: 0 !important;
 }

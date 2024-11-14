@@ -12,13 +12,22 @@ import Graph from "./Common/Graph";
 import DashboardCard from "./Common/DashboardCard";
 import { useState } from "react";
 import { Calendar } from "../ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const TeacherDashboardUI = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <div className="TeacherDashboard Main MainContent">
-      <Header />
+      <div className="w-[100vw]">
+        <Header />
+      </div>
       <main>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
@@ -42,8 +51,26 @@ const TeacherDashboardUI = () => {
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                <CardHeader className="flex items-center gap-2 space-y-0 py-5 sm:flex-row">
+                  <div className="grid flex-1 gap-1 text-center sm:text-left">
+                    <CardTitle>Quiz Results</CardTitle>
+                  </div>
+                  <Select>
+                    <SelectTrigger
+                      className="w-[160px] rounded-lg sm:ml-auto"
+                      aria-label="Select a value"
+                    >
+                      <SelectValue placeholder="Last 3 months" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="90d" className="rounded-lg">
+                        Quiz 1
+                      </SelectItem>
+                      <SelectItem value="30d" className="rounded-lg">
+                        Quiz 2
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Graph />
