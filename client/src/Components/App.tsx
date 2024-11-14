@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 import { getFromLocalStorage } from '../Utils/LocalStorage';
 import StudentQuizResultEdit from './Student/Quiz/QuizResultEdit';
 import TeacherDashboardUI from './Dashboard/TeacherDashboardUI';
+import './index.css'
 
 const App = () => {
     const { userType, setUserType, setUser } = useCurrUser();
