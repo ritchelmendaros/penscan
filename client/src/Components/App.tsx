@@ -19,6 +19,7 @@ import UserProfile from './UserProfile/UserProfile';
 import { useEffect } from 'react';
 import { getFromLocalStorage } from '../Utils/LocalStorage';
 import StudentQuizResultEdit from './Student/Quiz/QuizResultEdit';
+import TeacherDashboardUI from './Dashboard/TeacherDashboardUI';
 
 const App = () => {
     const { userType, setUserType, setUser } = useCurrUser();
@@ -102,6 +103,7 @@ const App = () => {
                         </>
                     ) : null}
                     <Route path='*' element={<NotFoundPage />} />
+                    <Route path='/dashboard/teacher' element={<TeacherDashboardUI />} />
                 </Routes>
             </div>
         </BrowserRouter>
