@@ -28,6 +28,7 @@ const TeacherDashboardUI = () => {
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
               <DashboardCard
                 title="Classes"
                 icon={Activity}
@@ -74,12 +75,22 @@ const TeacherDashboardUI = () => {
                   <Graph />
                 </CardContent>
               </Card>
+
               <Card className="col-span-3">
                 <CardHeader>
                   <CardTitle>Activity Log</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Log />
+                </CardContent>
+              </Card>
+
+              <Card className="col-span-3">
+                <CardHeader className="flex items-center gap-2 space-y-0 py-5 sm:flex-row">
+                  <CardTitle>No. of students per classes</CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <PieChartUI />
                 </CardContent>
               </Card>
             </div>
