@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Header from "../Common/Header";
-import TeacherDashboard from "./TeacherDashboard";
 import robot from "../../assets/robot.svg";
 import Gradients from "../Common/Gradients";
 import StudentDashboard from "./StudentDashboard";
