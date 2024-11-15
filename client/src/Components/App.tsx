@@ -78,6 +78,10 @@ const App = () => {
                   element={<AddStudent />}
                 />
                 <Route path="/dashboard/class/add-quiz" element={<AddQuiz />} />
+                <Route
+                  path="/dashboard/teacher"
+                  element={<TeacherDashboardUI />}
+                />
               </>
             ) : userType === "Student" ? (
               <>
@@ -94,7 +98,6 @@ const App = () => {
               </>
             ) : null}
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/dashboard/teacher" element={<TeacherDashboardUI />} />
           </Routes>
         </div>
       </BrowserRouter>
