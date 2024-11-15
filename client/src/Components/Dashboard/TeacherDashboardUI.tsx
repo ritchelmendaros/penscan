@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Users, Notebook, Activity } from "lucide-react";
 import Header from "../Common/Header";
-import Graph from "./Common/Graph";
+import Graph from "./Component/Graph";
 import DashboardCard from "./Common/DashboardCard";
 import {
   Select,
@@ -11,8 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import PieChartUI from "./Common/PieChartUI";
-import Log from "./Common/Log";
+import PieChartUI from "./Component/PieChartUI";
+import Log from "./Component/Log";
+import CalendarUI from "./Component/CalendarUI";
 
 const TeacherDashboardUI = () => {
   return (
@@ -21,14 +22,13 @@ const TeacherDashboardUI = () => {
         <Header />
       </div>
       <main>
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs defaultValue="overview" className="space-y-4 pb-10">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="classes">Classes</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-
               <DashboardCard
                 title="Classes"
                 icon={Activity}
@@ -42,8 +42,8 @@ const TeacherDashboardUI = () => {
                 change={201}
               />
               <DashboardCard
-                title="Students"
-                icon={Users}
+                title="Quizzes"
+                icon={Notebook}
                 value={573}
                 change={201}
               />
@@ -85,13 +85,17 @@ const TeacherDashboardUI = () => {
                 </CardContent>
               </Card>
 
-              <Card className="col-span-3">
+              <Card className="col-span-5">
                 <CardHeader className="flex items-center gap-2 space-y-0 py-5 sm:flex-row">
                   <CardTitle>No. of students per classes</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <PieChartUI />
                 </CardContent>
+              </Card>
+
+              <Card className="col-span-2">
+                <CalendarUI />
               </Card>
             </div>
           </TabsContent>
