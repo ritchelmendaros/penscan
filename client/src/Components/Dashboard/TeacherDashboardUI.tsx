@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Notebook, Activity } from "lucide-react";
+import { Users, Notebook, Activity } from "lucide-react";
 import Header from "../Common/Header";
 import Graph from "./Component/Graph";
 import DashboardCard from "./Common/DashboardCard";
@@ -28,7 +28,7 @@ const TeacherDashboardUI = () => {
             <Link to="/dashboard/teacher" className="hover:text-gray-500">
               Overview
             </Link>
-            <Link to="/dashboard" className="hover:text-gray-500">
+            <Link to="/dashboard/teacher/classes" className="hover:text-gray-500">
               Classes
             </Link>
           </div>
@@ -47,8 +47,8 @@ const TeacherDashboardUI = () => {
                 change={201}
               />
               <DashboardCard
-                title="Quizzes"
-                icon={Notebook}
+                title="Students"
+                icon={Users}
                 value={573}
                 change={201}
               />

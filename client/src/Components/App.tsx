@@ -22,6 +22,7 @@ import StudentQuizResultEdit from "./Student/Quiz/QuizResultEdit";
 import TeacherDashboardUI from "./Dashboard/TeacherDashboardUI";
 import { ThemeProvider } from "./theme-provider";
 import "./index.css";
+import TeacherClasses from "./Dashboard/TeacherClasses";
 
 const App = () => {
   const { userType, setUserType, setUser } = useCurrUser();
@@ -81,6 +82,10 @@ const App = () => {
                 <Route
                   path="/dashboard/teacher"
                   element={<TeacherDashboardUI />}
+                />
+                <Route
+                  path="/dashboard/teacher/classes"
+                  element={<TeacherClasses />}
                 />
               </>
             ) : userType === "Student" ? (
