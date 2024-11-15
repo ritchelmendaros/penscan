@@ -47,7 +47,11 @@ const Login = () => {
           .catch((error) => {
             toast.error("Failed to get user details:", error);
           });
-        navigate("/dashboard");
+          if (userType == "Teacher") {
+            navigate("/dashboard/teacher");
+          } else {
+            navigate("/dashboard")
+          }
       } else {
         toast.error("Unknown user type");
       }

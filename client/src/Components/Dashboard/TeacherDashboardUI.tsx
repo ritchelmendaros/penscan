@@ -14,7 +14,6 @@ import {
 import PieChartUI from "./Component/PieChartUI";
 import Log from "./Component/Log";
 import CalendarUI from "./Component/CalendarUI";
-import Dashboard from "./Dashboard";
 import { Link } from "react-router-dom";
 
 const TeacherDashboardUI = () => {
@@ -26,7 +25,7 @@ const TeacherDashboardUI = () => {
       <main>
         <Tabs defaultValue="overview" className="space-y-4 pb-10">
           <div className="flex space-x-3">
-            <Link to="/dashboard" className="hover:text-gray-500">
+            <Link to="/dashboard/teacher" className="hover:text-gray-500">
               Overview
             </Link>
             <Link to="/dashboard" className="hover:text-gray-500">
