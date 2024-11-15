@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Users, Notebook, Activity } from "lucide-react";
+import { Notebook, Activity } from "lucide-react";
 import Header from "../Common/Header";
 import Graph from "./Component/Graph";
 import DashboardCard from "./Common/DashboardCard";
@@ -14,6 +14,8 @@ import {
 import PieChartUI from "./Component/PieChartUI";
 import Log from "./Component/Log";
 import CalendarUI from "./Component/CalendarUI";
+import Dashboard from "./Dashboard";
+import { Link } from "react-router-dom";
 
 const TeacherDashboardUI = () => {
   return (
@@ -23,10 +25,14 @@ const TeacherDashboardUI = () => {
       </div>
       <main>
         <Tabs defaultValue="overview" className="space-y-4 pb-10">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="classes">Classes</TabsTrigger>
-          </TabsList>
+          <div className="flex space-x-3">
+            <Link to="/dashboard" className="hover:text-gray-500">
+              Overview
+            </Link>
+            <Link to="/dashboard" className="hover:text-gray-500">
+              Classes
+            </Link>
+          </div>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <DashboardCard
