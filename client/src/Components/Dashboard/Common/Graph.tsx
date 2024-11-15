@@ -29,10 +29,6 @@ const chartConfig = {
 
 const Graph = () => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Quiz Results</CardTitle>
-      </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart data={chartData}>
@@ -69,7 +65,6 @@ const Graph = () => {
           </BarChart>
         </ChartContainer>
       </CardContent>
-    </Card>
   );
 };
 

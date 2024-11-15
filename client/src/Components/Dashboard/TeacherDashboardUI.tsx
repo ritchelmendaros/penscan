@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Users, Notebook, Activity } from "lucide-react";
 import Header from "../Common/Header";
@@ -18,7 +13,6 @@ import {
 } from "../ui/select";
 
 const TeacherDashboardUI = () => {
-
   return (
     <div className="TeacherDashboard Main MainContent">
       <div className="w-[100vw]">
@@ -62,7 +56,7 @@ const TeacherDashboardUI = () => {
                       className="w-[160px] rounded-lg sm:ml-auto"
                       aria-label="Select a value"
                     >
-                      <SelectValue placeholder="Last 3 months" />
+                      <SelectValue placeholder="Quiz 1" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
                       <SelectItem value="90d" className="rounded-lg">
