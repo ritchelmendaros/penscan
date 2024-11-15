@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import PieChartUI from "./Common/PieChartUI";
+import Log from "./Common/Log";
 
 const TeacherDashboardUI = () => {
   return (
@@ -74,9 +76,11 @@ const TeacherDashboardUI = () => {
               </Card>
               <Card className="col-span-3">
                 <CardHeader>
-                  <CardTitle>Review Requests</CardTitle>
+                  <CardTitle>Activity Log</CardTitle>
                 </CardHeader>
-                <CardContent></CardContent>
+                <CardContent>
+                  <Log />
+                </CardContent>
               </Card>
             </div>
           </TabsContent>
