@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Header from '../Common/Header';
-import TeacherDashboard from './TeacherDashboard';
+import TeacherDashboardUI from "./TeacherDashboardUI";
 import robot from '../../assets/robot.svg';
 import Gradients from '../Common/Gradients';
 import StudentDashboard from './StudentDashboard';
@@ -79,21 +79,23 @@ const Dashboard = () => {
     }, [user, userType]);
 
     return (
-        <div className='Dashboard Main MainContent'>
+        <>
+      {userType === "Teacher" ? (
+        <TeacherDashboardUI />
+      ) : userType === "Student" ? (
+        <>
+          <div className="Dashboard Main MainContent">
             <Header />
             <main>
-                {userType === 'Teacher' ? (
-                    <TeacherDashboard classes={classes} fetchClasses={fetchClasses} />
-                ) : userType === 'Student' ? (
-                    <StudentDashboard classes={classes} loading={loading} />
-                ) : null}
+              <StudentDashboard classes={classes} loading={loading} />
             </main>
-
-            <img src={robot} alt='' className='robot' />
-
+            <img src={robot} alt="" className="robot" />
             <Gradients />
             <ToastContainer />
-        </div>
+          </div>
+        </>
+      ) : null}
+    </>
     );
 };
 
