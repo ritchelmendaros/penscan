@@ -140,3 +140,17 @@ export const getTotalStudentsPerClass = async (
   }
 };
 
+export const getActivityLogsByTeacher = async (teacherId: string) => {
+  try {
+    const response = await axiosInstance.get("/api/classes/getallactivitylogs", {
+      params: { teacherId },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching activity logs:", error);
+    throw error;
+  }
+};
+
+

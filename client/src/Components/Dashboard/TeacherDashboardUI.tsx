@@ -18,15 +18,11 @@ import CalendarUI from "./Component/CalendarUI";
 import { Link } from "react-router-dom";
 import {
   getTotalClassesByTeacher,
-  getTotalStudentsPerClass,
 } from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
 
 const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);
-  const [studentsData, setStudentsData] = useState<
-    { className: string; students: number }[]
-  >([]);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
 
@@ -44,28 +40,7 @@ const TeacherDashboardUI = () => {
       }
     };
 
-    const fetchTotalStudents = async () => {
-      if (!teacherId) {
-        console.warn("teacherID is undefined; skipping fetch.");
-        return;
-      }
-      try {
-        const studentsCountResponse = await getTotalStudentsPerClass(teacherId);
-
-        const formattedData = studentsCountResponse.map(
-          (item: { className: string; studentCount: number }) => ({
-            className: item.className,
-            students: item.studentCount,
-          })
-        );
-        setStudentsData(formattedData);
-      } catch (error) {
-        console.error("Error fetching total students:", error);
-      }
-    };
-
     fetchTotalClasses();
-    fetchTotalStudents();
   }, [teacherId]);
 
   return (
@@ -140,7 +115,7 @@ const TeacherDashboardUI = () => {
                   <CardTitle>Activity Log</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Log />
+                {teacherId && <Log teacherId={teacherId} />}
                 </CardContent>
               </Card>
 
