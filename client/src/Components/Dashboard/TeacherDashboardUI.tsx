@@ -20,6 +20,7 @@ import {
   getTotalClassesByTeacher,
   getTotalQuizzes,
   getTotalStudents,
+  getQuizResultsPerClass,
 } from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
 
@@ -27,6 +28,9 @@ const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);
   const [totalQuizzes, setTotalQuizzes] = useState<number>(0);
   const [totalStudents, setTotalStudents] = useState<number>(0);
+  const [classesData, setClassesData] = useState<any[]>([]);
+  const [selectedClass, setSelectedClass] = useState<any>(null);
+  const [quizResults, setQuizResults] = useState<any[]>([]);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
 
@@ -71,6 +75,30 @@ const TeacherDashboardUI = () => {
       }
     };
 
+    const fetchQuizResults = async () => {
+      if (!teacherId) {
+        console.warn("teacherID is undefined; skipping fetch.");
+        return;
+      }
+      try {
+        const results = await getQuizResultsPerClass(teacherId);
+        setQuizResults(results);
+        const processedData = results.map((item: any) => ({
+          className: item.className,
+          quizzes: item.quizzes.map((quiz: any) => ({
+            quizName: quiz.quizName,
+            totalScore: quiz.totalItems,
+            highScorerCount: quiz.highScorersCount,
+            lowScorerCount: quiz.lowScorersCount,
+          })),
+        }));
+        setClassesData(processedData);
+      } catch (error) {
+        console.error("Error fetching quiz results:", error);
+      }
+    };
+
+    fetchQuizResults();
     fetchTotalClasses();
     fetchTotalQuizzes();
     fetchTotalStudents();
@@ -121,25 +149,37 @@ const TeacherDashboardUI = () => {
                   <div className="grid flex-1 gap-1 text-center sm:text-left">
                     <CardTitle>Quiz Results</CardTitle>
                   </div>
-                  <Select>
+                  <Select onValueChange={(value) => setSelectedClass(value)}>
                     <SelectTrigger
                       className="w-[160px] rounded-lg sm:ml-auto"
                       aria-label="Select a value"
                     >
-                      <SelectValue placeholder="Quiz 1" />
+                      <SelectValue placeholder="All" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      <SelectItem value="90d" className="rounded-lg">
-                        Quiz 1
+                      {/* Default 'All' option */}
+                      <SelectItem value="All" className="rounded-lg">
+                        All
                       </SelectItem>
-                      <SelectItem value="30d" className="rounded-lg">
-                        Quiz 2
-                      </SelectItem>
+
+                      {/* Dynamic class options */}
+                      {classesData.map((classData, index) => (
+                        <SelectItem
+                          key={index}
+                          value={classData.className}
+                          className="rounded-lg"
+                        >
+                          {classData.className}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <Graph />
+                  <Graph
+                    classesData={classesData}
+                    selectedClass={selectedClass}
+                  />
                 </CardContent>
               </Card>
 

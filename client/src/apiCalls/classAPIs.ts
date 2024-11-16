@@ -21,7 +21,7 @@ export const getAllClasses: (
 interface PostCreateClassResponse {
   errMsg?: string;
   msg?: string;
-  data?: any; // Adjust type based on the expected response data
+  data?: any; 
 }
 
 export const postCreateClass = async (
@@ -185,4 +185,22 @@ export const getTotalStudents = async (
     throw error;
   }
 };
+
+export const getQuizResultsPerClass = async (
+  teacherId: string
+): Promise<any> => {
+  try {
+    const response = await axiosInstance.get<any>(
+      "/api/classes/getquizresultperclass",
+      {
+        params: { teacherId },
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching quiz results per class:", error);
+    throw error;
+  }
+};
+
 
