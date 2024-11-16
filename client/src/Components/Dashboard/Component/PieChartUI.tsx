@@ -1,44 +1,65 @@
-import { Pie, PieChart } from "recharts";
-
+import { Pie, PieChart, Legend } from "recharts";
+import { useEffect, useState } from "react";
 import { CardContent } from "../../ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
 } from "../../ui/chart";
-const chartData = [
-  { quiz: "quiz1", students: 275, fill: "var(--color-quiz1)" },
-  { quiz: "quiz2", students: 200, fill: "var(--color-quiz2)" },
-  { quiz: "quiz3", students: 187, fill: "var(--color-quiz3)" },
-  { quiz: "quiz4", students: 173, fill: "var(--color-quiz4)" },
-];
+import { getTotalStudentsPerClass } from "../../../apiCalls/classAPIs";
 
-const chartConfig = {
-  students: {
-    label: "Students",
-  },
-  quiz1: {
-    label: "Quiz 1",
-    color: "hsl(var(--chart-1))",
-  },
-  quiz2: {
-    label: "Quiz 2",
-    color: "hsl(var(--chart-2))",
-  },
-  quiz3: {
-    label: "Quiz 3",
-    color: "hsl(var(--chart-3))",
-  },
-  quiz4: {
-    label: "Quiz 4",
-    color: "hsl(var(--chart-4))",
-  },
-} satisfies ChartConfig;
+interface PieChartUIProps {
+  teacherId: string;
+}
 
-const PieChartUI = () => {
+const PieChartUI = ({ teacherId }: PieChartUIProps) => {
+  const [studentsData, setStudentsData] = useState<
+    { className: string; students: number }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchTotalStudents = async () => {
+      if (!teacherId) {
+        console.warn("teacherID is undefined; skipping fetch.");
+        return;
+      }
+      try {
+        const studentsCountResponse = await getTotalStudentsPerClass(teacherId);
+        const formattedData = studentsCountResponse.map(
+          (item: { className: string; studentCount: number }) => ({
+            className: item.className,
+            students: item.studentCount,
+          })
+        );
+        setStudentsData(formattedData);
+      } catch (error) {
+        console.error("Error fetching total students:", error);
+      }
+    };
+
+    fetchTotalStudents();
+  }, [teacherId]);
+
+  const generateColor = (index: number) => {
+    const hue = (index * 45) % 360;
+    const saturation = 60;
+    const lightness = 60 + (index % 5) * 5;
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  };
+
+  const chartData = studentsData.map((item, index) => ({
+    className: item.className,
+    students: item.students,
+    fill: generateColor(index),
+  }));
+
+  const chartConfig = {
+    students: {
+      label: "Students",
+    },
+  } satisfies ChartConfig;
+
   return (
     <div className="flex flex-col">
       <CardContent className="flex-1 pb-0">
@@ -48,12 +69,15 @@ const PieChartUI = () => {
         >
           <PieChart>
             <ChartTooltip
-              content={<ChartTooltipContent nameKey="students" hideLabel />}
+              content={<ChartTooltipContent nameKey="className" />}
             />
-            <Pie data={chartData} dataKey="students"></Pie>
-            <ChartLegend
-              content={<ChartLegendContent nameKey="quiz" />}
-              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+            <Pie data={chartData} dataKey="students" nameKey="className"></Pie>
+            <Legend
+              payload={chartData.map((item) => ({
+                value: item.className,
+                type: "square",
+                color: item.fill,
+              }))}
             />
           </PieChart>
         </ChartContainer>

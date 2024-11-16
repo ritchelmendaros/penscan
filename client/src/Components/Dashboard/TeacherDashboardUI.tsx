@@ -16,11 +16,17 @@ import PieChartUI from "./Component/PieChartUI";
 import Log from "./Component/Log";
 import CalendarUI from "./Component/CalendarUI";
 import { Link } from "react-router-dom";
-import { getTotalClassesByTeacher } from "../../apiCalls/classAPIs";
+import {
+  getTotalClassesByTeacher,
+  getTotalStudentsPerClass,
+} from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
 
 const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);
+  const [studentsData, setStudentsData] = useState<
+    { className: string; students: number }[]
+  >([]);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
 
@@ -38,7 +44,28 @@ const TeacherDashboardUI = () => {
       }
     };
 
+    const fetchTotalStudents = async () => {
+      if (!teacherId) {
+        console.warn("teacherID is undefined; skipping fetch.");
+        return;
+      }
+      try {
+        const studentsCountResponse = await getTotalStudentsPerClass(teacherId);
+
+        const formattedData = studentsCountResponse.map(
+          (item: { className: string; studentCount: number }) => ({
+            className: item.className,
+            students: item.studentCount,
+          })
+        );
+        setStudentsData(formattedData);
+      } catch (error) {
+        console.error("Error fetching total students:", error);
+      }
+    };
+
     fetchTotalClasses();
+    fetchTotalStudents();
   }, [teacherId]);
 
   return (
@@ -52,7 +79,10 @@ const TeacherDashboardUI = () => {
             <Link to="/dashboard/teacher" className="hover:text-gray-500">
               Overview
             </Link>
-            <Link to="/dashboard/teacher/classes" className="hover:text-gray-500">
+            <Link
+              to="/dashboard/teacher/classes"
+              className="hover:text-gray-500"
+            >
               Classes
             </Link>
           </div>
@@ -119,7 +149,7 @@ const TeacherDashboardUI = () => {
                   <CardTitle>No. of students per classes</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <PieChartUI />
+                  {teacherId && <PieChartUI teacherId={teacherId} />}
                 </CardContent>
               </Card>
 

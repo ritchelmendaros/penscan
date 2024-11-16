@@ -122,3 +122,21 @@ export const getTotalClassesByTeacher = async (
     throw error;
   }
 };
+
+export const getTotalStudentsPerClass = async (
+  teacherId: string
+): Promise<{ className: string; studentCount: number }[]> => {
+  try {
+    const response = await axiosInstance.get<
+      { className: string; studentCount: number }[]
+    >("/api/classes/total/studentperclass", {
+      params: { teacherId },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total students per class:", error);
+    throw error;
+  }
+};
+
