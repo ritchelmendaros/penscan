@@ -105,3 +105,20 @@ export const deleteClass = async (classId: string) => {
     throw error;
   }
 };
+
+export const getTotalClassesByTeacher = async (
+  teacherId: string
+): Promise<number> => {
+  try {
+    const response = await axiosInstance.get<number>(
+      "/api/classes/total",
+      {
+        params: { teacherId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total classes by teacher:", error);
+    throw error;
+  }
+};

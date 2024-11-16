@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsContent } from "../ui/tabs";
 import { Users, Notebook, Activity } from "lucide-react";
 import Header from "../Common/Header";
 import Graph from "./Component/Graph";
@@ -15,8 +16,31 @@ import PieChartUI from "./Component/PieChartUI";
 import Log from "./Component/Log";
 import CalendarUI from "./Component/CalendarUI";
 import { Link } from "react-router-dom";
+import { getTotalClassesByTeacher } from "../../apiCalls/classAPIs";
+import { useCurrUser } from "../Context/UserContext";
 
 const TeacherDashboardUI = () => {
+  const [totalClasses, setTotalClasses] = useState<number>(0);
+  const { user } = useCurrUser();
+  const teacherId = user?.userid;
+
+  useEffect(() => {
+    const fetchTotalClasses = async () => {
+      if (!teacherId) {
+        console.warn("teacherID is undefined; skipping fetch.");
+        return;
+      }
+      try {
+        const total = await getTotalClassesByTeacher(teacherId);
+        setTotalClasses(total);
+      } catch (error) {
+        console.error("Error fetching total classes:", error);
+      }
+    };
+
+    fetchTotalClasses();
+  }, [teacherId]);
+
   return (
     <div className="TeacherDashboard Main MainContent">
       <div className="w-[100vw]">
@@ -37,7 +61,7 @@ const TeacherDashboardUI = () => {
               <DashboardCard
                 title="Classes"
                 icon={Activity}
-                value={6}
+                value={totalClasses}
                 change={201}
               />
               <DashboardCard
