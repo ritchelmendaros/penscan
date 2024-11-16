@@ -18,11 +18,15 @@ import CalendarUI from "./Component/CalendarUI";
 import { Link } from "react-router-dom";
 import {
   getTotalClassesByTeacher,
+  getTotalQuizzes,
+  getTotalStudents,
 } from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
 
 const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);
+  const [totalQuizzes, setTotalQuizzes] = useState<number>(0);
+  const [totalStudents, setTotalStudents] = useState<number>(0);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
 
@@ -40,7 +44,36 @@ const TeacherDashboardUI = () => {
       }
     };
 
+    const fetchTotalQuizzes = async () => {
+      if (!teacherId) {
+        console.warn("teacherID is undefined; skipping fetch.");
+        return;
+      }
+      try {
+        const total = await getTotalQuizzes(teacherId);
+        setTotalQuizzes(total);
+      } catch (error) {
+        console.error("Error fetching total quizzes:", error);
+      }
+    };
+
+    const fetchTotalStudents = async () => {
+      if (!teacherId) {
+        console.warn("teacherID is undefined; skipping fetch.");
+        return;
+      }
+      try {
+        const total = await getTotalStudents(teacherId);
+
+        setTotalStudents(total);
+      } catch (error) {
+        console.error("Error fetching total students:", error);
+      }
+    };
+
     fetchTotalClasses();
+    fetchTotalQuizzes();
+    fetchTotalStudents();
   }, [teacherId]);
 
   return (
@@ -72,13 +105,13 @@ const TeacherDashboardUI = () => {
               <DashboardCard
                 title="Quizzes"
                 icon={Notebook}
-                value={573}
+                value={totalQuizzes}
                 change={201}
               />
               <DashboardCard
                 title="Students"
                 icon={Users}
-                value={573}
+                value={totalStudents}
                 change={201}
               />
             </div>
@@ -115,7 +148,7 @@ const TeacherDashboardUI = () => {
                   <CardTitle>Activity Log</CardTitle>
                 </CardHeader>
                 <CardContent>
-                {teacherId && <Log teacherId={teacherId} />}
+                  {teacherId && <Log teacherId={teacherId} />}
                 </CardContent>
               </Card>
 

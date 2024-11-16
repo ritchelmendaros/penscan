@@ -153,4 +153,36 @@ export const getActivityLogsByTeacher = async (teacherId: string) => {
   }
 };
 
+export const getTotalQuizzes = async (
+  teacherId: string
+): Promise<number> => {
+  try {
+    const response = await axiosInstance.get<number>(
+      "/api/classes/total/quiz",
+      {
+        params: { teacherId },
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching total quizzes:", error);
+    throw error; 
+  }
+};
+
+export const getTotalStudents = async (
+  teacherId: string
+): Promise<number> => {
+  try {
+    const response = await axiosInstance.get<number>(
+      "/api/classes/total/students", {
+      params: { teacherId },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total students:", error);
+    throw error;
+  }
+};
 
