@@ -7,11 +7,12 @@ interface DashboardCardProps {
   icon: LucideIcon;
   value: number;
   change: number;
+  onClick?: () => void;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, value }) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ title, icon: Icon, value, onClick }) => {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm" onClick={onClick}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground" />

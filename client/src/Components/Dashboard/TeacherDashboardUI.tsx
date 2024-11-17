@@ -15,7 +15,7 @@ import {
 import PieChartUI from "./Component/PieChartUI";
 import Log from "./Component/Log";
 import CalendarUI from "./Component/CalendarUI";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getTotalClassesByTeacher,
   getTotalQuizzes,
@@ -34,6 +34,7 @@ const TeacherDashboardUI = () => {
   const [quizResults, setQuizResults] = useState<any[]>([]);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTotalClasses = async () => {
@@ -105,6 +106,10 @@ const TeacherDashboardUI = () => {
     fetchTotalStudents();
   }, [teacherId]);
 
+  const handleClassesClick = () => {
+    navigate("/dashboard/teacher/classes"); 
+  };
+
   return (
     <div className="twp TeacherDashboard Main MainContent">
       <div className="w-[100vw]">
@@ -130,6 +135,7 @@ const TeacherDashboardUI = () => {
                 icon={Activity}
                 value={totalClasses}
                 change={201}
+                onClick={handleClassesClick}
               />
               <DashboardCard
                 title="Quizzes"
