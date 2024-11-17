@@ -105,7 +105,7 @@ const TeacherDashboardUI = () => {
   }, [teacherId]);
 
   return (
-    <div className="TeacherDashboard Main MainContent">
+    <div className="twp TeacherDashboard Main MainContent">
       <div className="w-[100vw]">
         <Header />
       </div>
