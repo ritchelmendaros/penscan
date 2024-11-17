@@ -279,11 +279,19 @@ const StudentQuizResults = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
+      const validFileTypes = ['image/jpeg', 'image/png'];
+      if (validFileTypes.includes(file.type)) {
+        setSelectedFile(file);
+        toast.success("File selected successfully.");
+      } else {
+        setSelectedFile(null);
+        toast.error("Invalid file type. Please upload a JPG or PNG image.");
+      }
     } else {
       setSelectedFile(null);
     }
   };
+  
 
   const handleUpload = async () => {
     if (selectedFile && selectedQuiz) {
