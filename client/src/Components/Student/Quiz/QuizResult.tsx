@@ -282,7 +282,6 @@ const StudentQuizResults = () => {
       const validFileTypes = ['image/jpeg', 'image/png'];
       if (validFileTypes.includes(file.type)) {
         setSelectedFile(file);
-        toast.success("File selected successfully.");
       } else {
         setSelectedFile(null);
         toast.error("Invalid file type. Please upload a JPG or PNG image.");
