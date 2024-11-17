@@ -37,9 +37,9 @@ const Graph = ({
   );
 
   const chartConfig = {
-    lowest: { label: "Lowest", color: "#6ce5e8" },
-    highest: { label: "Highest", color: "#41b8d5" },
-    total: { label: "Total", color: "#5680e9" },
+    lowest: { label: "No. of Lowest Scorer", color: "#6ce5e8" },
+    highest: { label: "No. of Highest Scorer", color: "#41b8d5" },
+    total: { label: "Total Score", color: "#5680e9" },
   };
   return (
     <CardContent>
