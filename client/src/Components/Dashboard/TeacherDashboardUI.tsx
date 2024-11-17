@@ -23,6 +23,7 @@ import {
   getQuizResultsPerClass,
 } from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
+import "@/Components/index.css"
 
 const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);
@@ -105,7 +106,7 @@ const TeacherDashboardUI = () => {
   }, [teacherId]);
 
   return (
-    <div className="TeacherDashboard Main MainContent">
+    <div className="twp TeacherDashboard Main MainContent">
       <div className="w-[100vw]">
         <Header />
       </div>
