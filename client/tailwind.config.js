@@ -71,9 +71,7 @@ export default {
   plugins: [
     require("tailwindcss-animate"),
     scopedPreflightStyles({
-      isolationStrategy: isolateInsideOfContainer(".twp", {
-        except: ".no-twp", 
-      }),
+      isolationStrategy: isolateInsideOfContainer(".twp"),
     }),
   ],
 };

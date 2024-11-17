@@ -23,6 +23,7 @@ import {
   getQuizResultsPerClass,
 } from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
+import "@/Components/index.css"
 
 const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);

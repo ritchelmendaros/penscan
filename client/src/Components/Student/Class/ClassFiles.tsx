@@ -139,7 +139,7 @@ const ClassFiles = () => {
   const displayedQuizzes = new Set();
 
   return (
-    <div className="Classes">
+    <div className="no-twp Classes">
       {loading ? (
         <div className="loader">
           <SyncLoader color="#416edf" />
