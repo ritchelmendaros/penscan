@@ -29,7 +29,7 @@ const TeacherDashboardUI = () => {
   const [totalQuizzes, setTotalQuizzes] = useState<number>(0);
   const [totalStudents, setTotalStudents] = useState<number>(0);
   const [classesData, setClassesData] = useState<any[]>([]);
-  const [selectedClass, setSelectedClass] = useState<any>(null);
+  const [selectedClass, setSelectedClass] = useState<any>("All");
   const [quizResults, setQuizResults] = useState<any[]>([]);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
