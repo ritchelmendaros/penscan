@@ -120,20 +120,14 @@ const Search = () => {
       setUserTyping(false);
     }, 500);
   };
+
   return (
-    //       <datalist id="students">
-    //         {filteredStudents.map((student) => (
-    //           <option
-    //             key={student.userid}
-    //             value={`${student.firstname} ${student.lastname} - ${student.username}`}
-    //           />
-    //         ))}
-    //       </datalist>
     <div className="h-screen">
       <div className="flex justify-center items-center h-full">
         <div className="h-[300px]">
+          <h2 className="mb-5">Add Student</h2>
           <Command
-            className=" rounded-lg border shadow-md md:min-w-[450px]"
+            className=" rounded-lg border shadow-md md:min-w-[700px]"
             onValueChange={handleValueChange}
           >
             <CommandInput placeholder="Enter a student name" />
@@ -154,7 +148,7 @@ const Search = () => {
                           student.lastname.slice(1)}
                       </span>
                       <span className="text-xs text-slate-400">
-                        {student.username}
+                        @{student.username}
                       </span>
                     </CommandItem>
                   ))}
