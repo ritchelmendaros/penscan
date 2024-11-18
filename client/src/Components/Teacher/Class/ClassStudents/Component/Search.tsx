@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { useClass } from "@/Components/Context/ClassContext";
+import { useClass } from "../../../../Context/ClassContext";
 import { fetchAllStudents } from "@/apiCalls/userApi";
 import { addStudentToClass } from "@/apiCalls/studentApi";
 import { Button } from "@/Components/ui/button";
+import BtnWithRobot from "../../../../Common/BtnWithRobot";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import {
   Command,
@@ -29,8 +30,8 @@ const AddStudentV2 = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(false);
   const { clickedClass } = useClass();
-  const navigate = useNavigate();
   const classId = clickedClass?.classid;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -46,40 +47,33 @@ const AddStudentV2 = () => {
     fetchStudents();
   }, []);
 
-  const handleValueChange = (value: string) => {
+  const handleInputchange = (value: string) => {
     setStudentName(value);
-    if (value) {
-      setFilteredStudents(
-        allStudents.filter((student) =>
-          `${student.firstname} ${student.lastname}`
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredStudents(allStudents);
-    }
-  };
-
-  const handleSelectStudent = (student: Student) => {
-    setSelectedStudent(student);
-    setStudentName(`${student.firstname} ${student.lastname}`);
+    setFilteredStudents(
+      allStudents.filter((student) =>
+        `${student.firstname} ${student.lastname}`
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      )
+    );
   };
 
   const handleAddStudent = async () => {
-    console.log(classId)
     if (selectedStudent) {
       if (!classId) {
         toast.error("Class ID is missing. Please try again.");
         return;
       }
-      setLoading(true);
+      setLoading(true); 
       try {
-        await addStudentToClass(selectedStudent.userid, classId);
-        toast.dark("Student added successfully!");
-        setTimeout(() => {
-          navigate(`/dashboard/class`);
-        }, 2000);
+        await addStudentToClass(
+          selectedStudent.userid,
+          classId
+        );
+        toast.dark("Student added successfully!"); 
+            setTimeout(() => {
+                navigate(`/dashboard/class`); 
+            }, 500);
       } catch (error) {
         setLoading(false);
         toast.error("Error adding student");
@@ -87,6 +81,11 @@ const AddStudentV2 = () => {
     } else {
       toast.error("Please select a student before adding.");
     }
+  };
+
+  const handleSelectStudent = (student: Student) => {
+    setSelectedStudent(student);
+    setStudentName(`${student.firstname} ${student.lastname}`);
   };
 
   return (
@@ -99,7 +98,7 @@ const AddStudentV2 = () => {
             <CommandInput
               placeholder="Search for a student..."
               value={studentName}
-              onValueChange={handleValueChange}
+              onValueChange={handleInputchange}
             />
             <CommandList>
               <CommandEmpty>No students found.</CommandEmpty>
@@ -126,13 +125,7 @@ const AddStudentV2 = () => {
         </div>
 
         <div className="flex justify-end">
-          <Button
-            onClick={handleAddStudent}
-            disabled={loading || !selectedStudent}
-            className="w-full sm:w-auto"
-          >
-            {loading ? "Adding..." : "Add Student"}
-          </Button>
+          <BtnWithRobot name={"Add"} onClick={handleAddStudent} loading={loading}/>{" "}
         </div>
 
         <ToastContainer />
