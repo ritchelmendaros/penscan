@@ -250,7 +250,6 @@ export const addFeedbackToEditedAnswerPerItem = async (studentQuizId: string, it
         },
       }
     );
-    toast.success("Feedback added successfully!");
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
