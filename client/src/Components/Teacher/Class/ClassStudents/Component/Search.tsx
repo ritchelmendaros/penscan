@@ -1,3 +1,11 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { useClass } from "@/Components/Context/ClassContext";
+import { fetchAllStudents } from "@/apiCalls/userApi";
+import { addStudentToClass } from "@/apiCalls/studentApi";
+import { Button } from "@/Components/ui/button";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 import {
   Command,
   CommandEmpty,
@@ -6,14 +14,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/Components/ui/command";
-
-import { useState, useEffect, useRef } from "react";
-import { fetchAllStudents } from "@/apiCalls/userApi";
-import { addStudentToClass } from "@/apiCalls/studentApi";
-import { useClass } from "@/Components/Context/ClassContext";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { ScrollArea } from "@/Components/ui/scroll-area";
 
 interface Student {
   userid: string;
@@ -27,13 +27,10 @@ const AddStudentV2 = () => {
   const [allStudents, setAllStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const { clickedClass } = useClass();
-  const classId = clickedClass?.classid;
-  const [userTyping, setUserTyping] = useState<string>("");
-  const typingTimerRef = useRef<NodeJS.Timeout>();
   const navigate = useNavigate();
+  const classId = clickedClass?.classid;
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -49,36 +46,28 @@ const AddStudentV2 = () => {
     fetchStudents();
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleValueChange = (value: string) => {
     setStudentName(value);
-    setShowDropdown(true);
-    setFilteredStudents(
-      allStudents.filter((student) =>
-        `${student.firstname} ${student.lastname}`
-          .toLowerCase()
-          .includes(value.toLowerCase())
-      )
-    );
+    if (value) {
+      setFilteredStudents(
+        allStudents.filter((student) =>
+          `${student.firstname} ${student.lastname}`
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredStudents(allStudents);
+    }
   };
 
-  const handleDropdownBlur = () => {
-    const username = studentName.split(" ").pop();
-    const matchedStudent = allStudents.find(
-      (student) => `${student.username}` === username
-    );
-
-    if (matchedStudent) {
-      setSelectedStudent(matchedStudent);
-    } else {
-      setSelectedStudent(null);
-    }
-
-    setShowDropdown(false);
-    console.log(showDropdown);
+  const handleSelectStudent = (student: Student) => {
+    setSelectedStudent(student);
+    setStudentName(`${student.firstname} ${student.lastname}`);
   };
 
   const handleAddStudent = async () => {
+    console.log(classId)
     if (selectedStudent) {
       if (!classId) {
         toast.error("Class ID is missing. Please try again.");
@@ -90,7 +79,7 @@ const AddStudentV2 = () => {
         toast.dark("Student added successfully!");
         setTimeout(() => {
           navigate(`/dashboard/class`);
-        }, 500);
+        }, 2000);
       } catch (error) {
         setLoading(false);
         toast.error("Error adding student");
@@ -100,44 +89,32 @@ const AddStudentV2 = () => {
     }
   };
 
-  const handleValueChange = (e: any): void => {
-    setStudentName(e);
-  };
-
   return (
-    <div className="h-screen">
-      <div className="flex justify-center items-center h-full">
-        <div className="h-[300px]">
-          <h2 className="mb-5">Add Student</h2>
+    <div className="flex h-screen items-center justify-center">
+      <div className="w-full max-w-2xl space-y-6 p-4">
+        <h2 className="text-2xl font-bold">Add Student</h2>
 
-          <Command
-            className=" rounded-lg border shadow-md md:min-w-[700px]"
-            value={studentName}
-            onValueChange={handleValueChange}
-          >
+        <div className="relative">
+          <Command className="rounded-lg border shadow-md">
             <CommandInput
-              placeholder={userTyping ? studentName : "Enter a student name"}
+              placeholder="Search for a student..."
+              value={studentName}
+              onValueChange={handleValueChange}
             />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-
-              <CommandGroup heading="Suggestions">
-                <ScrollArea
-                  className={`${
-                    filteredStudents.length > 4 && userTyping === ""
-                      ? "h-[100px]"
-                      : ""
-                  }`}
-                >
+              <CommandEmpty>No students found.</CommandEmpty>
+              <CommandGroup heading="Students">
+                <ScrollArea className="h-72">
                   {filteredStudents.map((student) => (
-                    <CommandItem key={student.username}>
-                      <span>
-                        {student.firstname.charAt(0).toUpperCase() +
-                          student.firstname.slice(1)}{" "}
-                        {student.lastname.charAt(0).toUpperCase() +
-                          student.lastname.slice(1)}
+                    <CommandItem
+                      key={student.userid}
+                      onSelect={() => handleSelectStudent(student)}
+                      className="flex items-center justify-between p-2"
+                    >
+                      <span className="flex-1">
+                        {student.firstname} {student.lastname}
                       </span>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-sm text-slate-400">
                         @{student.username}
                       </span>
                     </CommandItem>
@@ -147,6 +124,18 @@ const AddStudentV2 = () => {
             </CommandList>
           </Command>
         </div>
+
+        <div className="flex justify-end">
+          <Button
+            onClick={handleAddStudent}
+            disabled={loading || !selectedStudent}
+            className="w-full sm:w-auto"
+          >
+            {loading ? "Adding..." : "Add Student"}
+          </Button>
+        </div>
+
+        <ToastContainer />
       </div>
     </div>
   );

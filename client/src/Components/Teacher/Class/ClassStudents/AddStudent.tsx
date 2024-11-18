@@ -13,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface Student {
   userid: string;
-  username: string;
   firstname: string;
   lastname: string;
 }
@@ -57,10 +56,8 @@ const AddStudent: React.FC = () => {
   };
 
   const handleDropdownBlur = () => {
-
-    const username = studentName.split(" ").pop();
     const matchedStudent = allStudents.find(
-      (student) => `${student.username}` === username
+      (student) => `${student.firstname} ${student.lastname}` === studentName
     );
 
     if (matchedStudent) {
@@ -88,7 +85,7 @@ const AddStudent: React.FC = () => {
         toast.dark("Student added successfully!"); 
             setTimeout(() => {
                 navigate(`/dashboard/class`); 
-            }, 500);
+            }, 2000);
       } catch (error) {
         setLoading(false);
         toast.error("Error adding student");
@@ -104,7 +101,6 @@ const AddStudent: React.FC = () => {
       <main>
         <div className="content">
           <h2>Add Student</h2>
-          <div>{studentName}</div>
           <DropdownContainer
             icon={faPlus}
             type="text"
@@ -118,7 +114,7 @@ const AddStudent: React.FC = () => {
             {filteredStudents.map((student) => (
               <option
                 key={student.userid}
-                value={`${student.firstname} ${student.lastname} - ${student.username}`}
+                value={`${student.firstname} ${student.lastname}`}
               />
             ))}
           </datalist>
