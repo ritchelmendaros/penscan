@@ -22,6 +22,7 @@ import StudentQuizResultEdit from "./Student/Quiz/QuizResultEdit";
 import TeacherDashboardUI from "./Dashboard/TeacherDashboardUI";
 import { ThemeProvider } from "./theme-provider";
 import TeacherClasses from "./Dashboard/TeacherClasses";
+import AddStudentV2 from "./Teacher/Class/ClassStudents/Component/Search";
 
 const App = () => {
   const { userType, setUserType, setUser } = useCurrUser();
@@ -86,6 +87,7 @@ const App = () => {
                   path="/dashboard/teacher/classes"
                   element={<TeacherClasses />}
                 />
+                <Route path="/search" element={<AddStudentV2 />} />
               </>
             ) : userType === "Student" ? (
               <>

@@ -1,13 +1,4 @@
 import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
-
-import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -31,7 +22,7 @@ interface Student {
   lastname: string;
 }
 
-const Search = () => {
+const AddStudentV2 = () => {
   const [studentName, setStudentName] = useState("");
   const [allStudents, setAllStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
@@ -40,7 +31,7 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const { clickedClass } = useClass();
   const classId = clickedClass?.classid;
-  const [userTyping, setUserTyping] = useState<boolean>(false);
+  const [userTyping, setUserTyping] = useState<string>("");
   const typingTimerRef = useRef<NodeJS.Timeout>();
   const navigate = useNavigate();
 
@@ -109,16 +100,8 @@ const Search = () => {
     }
   };
 
-  const handleValueChange = (value: string): void => {
-    setUserTyping(true);
-
-    if (typingTimerRef.current) {
-      clearTimeout(typingTimerRef.current);
-    }
-
-    typingTimerRef.current = setTimeout(() => {
-      setUserTyping(false);
-    }, 500);
+  const handleValueChange = (e: any): void => {
+    setStudentName(e);
   };
 
   return (
@@ -126,17 +109,24 @@ const Search = () => {
       <div className="flex justify-center items-center h-full">
         <div className="h-[300px]">
           <h2 className="mb-5">Add Student</h2>
+
           <Command
             className=" rounded-lg border shadow-md md:min-w-[700px]"
+            value={studentName}
             onValueChange={handleValueChange}
           >
-            <CommandInput placeholder="Enter a student name" />
+            <CommandInput
+              placeholder={userTyping ? studentName : "Enter a student name"}
+            />
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
+
               <CommandGroup heading="Suggestions">
                 <ScrollArea
                   className={`${
-                    filteredStudents.length > 4 && userTyping ? "h-[100px]" : ""
+                    filteredStudents.length > 4 && userTyping === ""
+                      ? "h-[100px]"
+                      : ""
                   }`}
                 >
                   {filteredStudents.map((student) => (
@@ -162,4 +152,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default AddStudentV2;
