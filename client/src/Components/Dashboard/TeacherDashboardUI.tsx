@@ -31,7 +31,6 @@ const TeacherDashboardUI = () => {
   const [totalStudents, setTotalStudents] = useState<number>(0);
   const [classesData, setClassesData] = useState<any[]>([]);
   const [selectedClass, setSelectedClass] = useState<any>("All");
-  const [quizResults, setQuizResults] = useState<any[]>([]);
   const { user } = useCurrUser();
   const teacherId = user?.userid;
   const navigate = useNavigate();
@@ -84,7 +83,6 @@ const TeacherDashboardUI = () => {
       }
       try {
         const results = await getQuizResultsPerClass(teacherId);
-        setQuizResults(results);
         const processedData = results.map((item: any) => ({
           className: item.className,
           quizzes: item.quizzes.map((quiz: any) => ({

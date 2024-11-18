@@ -41,6 +41,7 @@ const TeacherClasses = () => {
     } catch (error) {
       toast.error("Failed to fetch classes");
     } finally {
+      console.log(loading)
       setLoading(false);
     }
   };

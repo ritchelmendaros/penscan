@@ -270,6 +270,7 @@ const QuizResults = () => {
 
   const handleHover = (itemIndex: number) => {
     setHoveredItem(itemIndex);
+    console.log(hoveredItem)
     setShowFeedbackPerItemModalDisplay(true);
     setFeedbackPerItem(
       editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
