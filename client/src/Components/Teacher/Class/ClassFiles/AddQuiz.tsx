@@ -89,7 +89,7 @@ const AddQuiz = () => {
 
     setIsLoading(true);
     try {
-      await addQuiz(classId, quizName, userId, answerArray, dueDate);
+      await addQuiz(classId, quizName, userId, answerArray, dueDate, numItems);
       navigate(`/dashboard/class`);
     } catch (error) {
       toast.error("Error adding quiz. Please try again.");
