@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import { CardContent } from "../../ui/card";
 import {
   ChartContainer,
@@ -10,8 +10,9 @@ import {
 
 interface QuizData {
   quizName: string;
-  lowScorerCount: number;
-  highScorerCount: number;
+  passCount: number;
+  failCount: number;
+  nearPerfectCount: number;
   totalScore: number;
 }
 
@@ -30,21 +31,29 @@ const Graph = ({
   const chartData = filteredData.flatMap((classData) =>
     classData.quizzes.map((quiz: QuizData) => ({
       quiz: quiz.quizName,
-      lowest: quiz.lowScorerCount,
-      highest: quiz.highScorerCount,
+      fail: quiz.failCount,
+      pass: quiz.passCount,
+      nearperfect: quiz.nearPerfectCount,
       total: quiz.totalScore,
     }))
   );
 
   const chartConfig = {
-    lowest: { label: "No. of Lowest Scorer", color: "#6ce5e8" },
-    highest: { label: "No. of Highest Scorer", color: "#41b8d5" },
-    total: { label: "Total Score", color: "#5680e9" },
+    fail: { label: "Fail", color: "#d65c5c" },
+    pass: { label: "Pass", color: "#5c7ad6" },
+    nearperfect: { label: "Near Perfect", color: "#6BCB77" },
   };
   return (
     <CardContent>
       <ChartContainer config={chartConfig}>
         <BarChart data={chartData}>
+        <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            allowDecimals={false}
+            tick={{ fontSize: 12, fill: "#888" }} 
+          />
           <XAxis
             dataKey="quiz"
             tickLine={false}
@@ -52,21 +61,21 @@ const Graph = ({
             axisLine={false}
           />
           <Bar
-            dataKey="lowest"
+            dataKey="fail"
             stackId="a"
-            fill="var(--color-lowest)"
+            fill="var(--color-fail)"
             radius={[0, 0, 4, 4]}
           />
           <Bar
-            dataKey="highest"
+            dataKey="pass"
             stackId="a"
-            fill="var(--color-highest)"
+            fill="var(--color-pass)"
             radius={[0, 0, 0, 0]}
           />
           <Bar
-            dataKey="total"
+            dataKey="nearperfect"
             stackId="a"
-            fill="var(--color-total)"
+            fill="var(--color-nearperfect)"
             radius={[4, 4, 0, 0]}
           />
           <Tooltip

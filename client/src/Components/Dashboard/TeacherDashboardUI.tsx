@@ -83,16 +83,26 @@ const TeacherDashboardUI = () => {
       }
       try {
         const results = await getQuizResultsPerClass(teacherId);
-        const processedData = results.map((item: any) => ({
-          className: item.className,
-          quizzes: item.quizzes.map((quiz: any) => ({
-            quizName: quiz.quizName,
-            totalScore: quiz.totalItems,
-            highScorerCount: quiz.highScorersCount,
-            lowScorerCount: quiz.lowScorersCount,
-          })),
-        }));
-        setClassesData(processedData);
+        const processedData = Object.keys(results).map((key) => {
+          if (Array.isArray(results[key]) && results[key].length > 0) {
+            return {
+              className: key,
+              quizzes: results[key].map((quiz: any) => ({
+                quizName: quiz.quizName,
+                totalScore: quiz.totalItems,
+                passCount: quiz.passCount,
+                failCount: quiz.failCount,
+                nearPerfectCount: quiz.nearPerfectCount,
+              })),
+            };
+          }
+          return {
+            className: key, 
+            quizzes: [], 
+          };
+        });
+        const sortedClasses = processedData.sort((a, b) => a.className.localeCompare(b.className));
+        setClassesData(sortedClasses);
       } catch (error) {
         console.error("Error fetching quiz results:", error);
       }
@@ -162,7 +172,6 @@ const TeacherDashboardUI = () => {
                       <SelectValue placeholder="All" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      {/* Default 'All' option */}
                       <SelectItem value="All" className="rounded-lg">
                         All
                       </SelectItem>
