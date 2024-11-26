@@ -33,6 +33,7 @@ const Class = () => {
                 classname: getFromLocalStorage('classname'),
                 studentid: getArrayFromLocalStorage('studentid'),
                 teacherid: getFromLocalStorage('teacherid'),
+                isactive: 1,
             });
         }
     });

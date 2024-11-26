@@ -3,8 +3,6 @@ import { CardContent } from "../../ui/card";
 import {
   ChartContainer,
   ChartTooltipContent,
-  ChartLegendContent,
-  ChartLegend,
 } from "../../ui/chart";
 
 
