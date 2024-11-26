@@ -218,3 +218,20 @@ export const deactivateClass = async (
     return "An error occurred while deactivating the class.";
   }
 };
+
+export const activateClass = async (
+  classId: string
+): Promise<any> => {
+  try {
+    const response = await axiosInstance.put("/api/classes/activate", null, {
+      params: { classId },
+    });
+
+    if (response.status === 200) {
+      return "Class activated.";
+    }
+  } catch (error) {
+    console.error("Error activating class:", error);
+    return "An error occurred while activating the class.";
+  }
+};

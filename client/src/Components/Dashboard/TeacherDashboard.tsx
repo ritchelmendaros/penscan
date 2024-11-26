@@ -6,7 +6,7 @@ import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
 import noDataGif from "../../assets/nodata.gif";
 import { ToastContainer, toast } from "react-toastify";
-import { editClassName, deleteClass, deactivateClass } from "../../apiCalls/classAPIs";
+import { editClassName, deleteClass, deactivateClass, activateClass } from "../../apiCalls/classAPIs";
 
 interface TeacherDashboardProps {
   classes: ClassInterface[];
@@ -28,6 +28,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const [isDeactivating, setIsDeactivating] = useState(false);
   const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false);
   const [classToDeactivate, setClassToDeactivate] = useState<string | null>(null);
+  const [isActivating, setIsActivating] = useState(false);
+  const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const [classToActivate, setClassToActivate] = useState<string | null>(null);
   
 
   useEffect(() => {
@@ -70,6 +73,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
     setActiveOptions(null);
   };
 
+  const handleActivateConfirmation = (classId: string) => {
+    setClassToActivate(classId); 
+    setIsActivateModalOpen(true); 
+    setActiveOptions(null);
+  };
+
   const handleDeactivate = async () => {
     if (classToDeactivate) {  
       try {
@@ -78,9 +87,24 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
         setIsDeactivating(false);  
         setIsDeactivateModalOpen(false);  
         await fetchClasses();  
-        toast.success("Class deactivated successfully.");
       } catch (error) {
         toast.error("Failed to deactivate class.");
+      } finally {
+        setActiveOptions(null); 
+      }
+    }
+  };
+
+  const handleActivate = async () => {
+    if (classToActivate) {  
+      try {
+        setIsActivating(true);  
+        await activateClass(classToActivate);  
+        setIsActivating(false);  
+        setIsActivateModalOpen(false);  
+        await fetchClasses();  
+      } catch (error) {
+        toast.error("Failed to activate class.");
       } finally {
         setActiveOptions(null); 
       }
@@ -180,9 +204,16 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
                         >
                           Edit
                         </button>
-                        <button onClick={() => handleDeactivateConfirmation(item.classid)}>
-                          Deactivate
-                        </button>
+                        {activeTab === "active" && (
+                          <button onClick={() => handleDeactivateConfirmation(item.classid)}>
+                            Deactivate
+                          </button>
+                        )}
+                        {activeTab === "inactive" && (
+                          <button onClick={() => handleActivateConfirmation(item.classid)}>
+                            Activate
+                          </button>
+                        )}
                         <button onClick={() => handleDeleteConfirmation(item.classid)}>
                           Delete
                         </button>
@@ -245,6 +276,21 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
             <div className="button-container">
               <button className="modal-buttonsubmit" onClick={handleDeactivate} disabled={isDeactivating}>
                 {isDeactivating ? <SyncLoader color="#fff" loading={isDeactivating} size={7} /> : "Yes, Deactivate"}
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+            </div>
+          </div>
+          <div className="modal-overlay" onClick={handleModalClose} />
+        </div>
+      )}
+      {isActivateModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Confirm Activation</h2>
+            <p>Are you sure you want to activate this class?</p>
+            <div className="button-container">
+              <button className="modal-buttonsubmit" onClick={handleActivate} disabled={isActivating}>
+                {isActivating ? <SyncLoader color="#fff" loading={isActivating} size={7} /> : "Yes, Activate"}
               </button>
               <button className="modal-button" onClick={handleModalClose}>Cancel</button>
             </div>
