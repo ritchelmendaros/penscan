@@ -274,6 +274,8 @@ const ChartLegendContent = React.forwardRef<
     ref
   ) => {
     const { config } = useChart()
+    console.log("Legend Payload:", payload);
+
 
     if (!payload?.length) {
       return null
