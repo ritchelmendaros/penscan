@@ -24,6 +24,39 @@
       }
     }
 
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-top: 20px;
+    
+      .tab {
+        padding: 10px 20px;
+        background-color: #3f4045;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        width: 120px;
+        text-align: center;
+    
+        &:first-child {
+          border-radius: 5px 0 0 5px;
+        }
+    
+        &:last-child {
+          border-radius: 0 5px 5px 0;
+        }
+    
+        &.active {
+          background-color: #436edc;
+          color: white;
+        }
+    
+        &:hover {
+          background-color: #616266;
+        }
+      }
+    }    
+
     .classes {
       display: grid;
       gap: 20px;

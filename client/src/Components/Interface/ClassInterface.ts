@@ -3,7 +3,8 @@ interface ClassInterface {
     classname: string;
     teacherid: string;
     classCode: string;
-    studentid: string[]; // Assuming `studentid` should be an array of strings
+    studentid: string[]; 
+    isactive: number;
 }
 
 export type { ClassInterface };

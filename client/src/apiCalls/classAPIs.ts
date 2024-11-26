@@ -21,7 +21,7 @@ export const getAllClasses: (
 interface PostCreateClassResponse {
   errMsg?: string;
   msg?: string;
-  data?: any; 
+  data?: any;
 }
 
 export const postCreateClass = async (
@@ -42,6 +42,7 @@ export const postCreateClass = async (
       await axiosInstance.post("/api/classes/add", {
         classname: className,
         teacherid: teacherID,
+        isactive: 1,
       });
     }
   } catch (error) {
@@ -90,7 +91,7 @@ export const editClassName = async (classId: string, classname: string) => {
     return response.data;
   } catch (error) {
     console.error("Error updating class name:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -110,12 +111,9 @@ export const getTotalClassesByTeacher = async (
   teacherId: string
 ): Promise<number> => {
   try {
-    const response = await axiosInstance.get<number>(
-      "/api/classes/total",
-      {
-        params: { teacherId },
-      }
-    );
+    const response = await axiosInstance.get<number>("/api/classes/total", {
+      params: { teacherId },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching total classes by teacher:", error);
@@ -142,9 +140,12 @@ export const getTotalStudentsPerClass = async (
 
 export const getActivityLogsByTeacher = async (teacherId: string) => {
   try {
-    const response = await axiosInstance.get("/api/classes/getallactivitylogs", {
-      params: { teacherId },
-    });
+    const response = await axiosInstance.get(
+      "/api/classes/getallactivitylogs",
+      {
+        params: { teacherId },
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -153,9 +154,7 @@ export const getActivityLogsByTeacher = async (teacherId: string) => {
   }
 };
 
-export const getTotalQuizzes = async (
-  teacherId: string
-): Promise<number> => {
+export const getTotalQuizzes = async (teacherId: string): Promise<number> => {
   try {
     const response = await axiosInstance.get<number>(
       "/api/classes/total/quiz",
@@ -163,21 +162,21 @@ export const getTotalQuizzes = async (
         params: { teacherId },
       }
     );
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error fetching total quizzes:", error);
-    throw error; 
+    throw error;
   }
 };
 
-export const getTotalStudents = async (
-  teacherId: string
-): Promise<number> => {
+export const getTotalStudents = async (teacherId: string): Promise<number> => {
   try {
     const response = await axiosInstance.get<number>(
-      "/api/classes/total/students", {
-      params: { teacherId },
-    });
+      "/api/classes/total/students",
+      {
+        params: { teacherId },
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -196,11 +195,26 @@ export const getQuizResultsPerClass = async (
         params: { teacherId },
       }
     );
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error fetching quiz results per class:", error);
     throw error;
   }
 };
 
+export const deactivateClass = async (
+  classId: string
+): Promise<any> => {
+  try {
+    const response = await axiosInstance.put("/api/classes/deactivate", null, {
+      params: { classId },
+    });
 
+    if (response.status === 200) {
+      return "Class deactivated.";
+    }
+  } catch (error) {
+    console.error("Error deactivating class:", error);
+    return "An error occurred while deactivating the class.";
+  }
+};

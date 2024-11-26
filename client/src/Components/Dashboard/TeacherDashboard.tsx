@@ -6,7 +6,7 @@ import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
 import noDataGif from "../../assets/nodata.gif";
 import { ToastContainer, toast } from "react-toastify";
-import { editClassName, deleteClass } from "../../apiCalls/classAPIs";
+import { editClassName, deleteClass, deactivateClass } from "../../apiCalls/classAPIs";
 
 interface TeacherDashboardProps {
   classes: ClassInterface[];
@@ -23,11 +23,29 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const [classToDelete, setClassToDelete] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false); 
   const [isDeleting, setIsDeleting] = useState(false);
+  const [filteredClasses, setFilteredClasses] = useState<ClassInterface[]>(classes);
+  const [activeTab, setActiveTab] = useState("active");
+  const [isDeactivating, setIsDeactivating] = useState(false);
+  const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false);
+  const [classToDeactivate, setClassToDeactivate] = useState<string | null>(null);
   
 
   useEffect(() => {
     setLoading(false);
   }, [classes]);
+
+  useEffect(() => {
+    const filterClasses = (status: string) => {
+      if (status === "active") {
+        setFilteredClasses(classes.filter((item) => item.isactive));
+      } else if (status === "inactive") {
+        setFilteredClasses(classes.filter((item) => !item.isactive));
+      } else {
+        setFilteredClasses(classes);
+      }
+    };
+    filterClasses(activeTab);
+  }, [classes, activeTab]);  
 
   const handleOptionsToggle = (index: number) => {
     setActiveOptions(activeOptions === index ? null : index);
@@ -45,6 +63,30 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
     setIsDeleteModalOpen(true); 
     setActiveOptions(null);
   };
+
+  const handleDeactivateConfirmation = (classId: string) => {
+    setClassToDeactivate(classId); 
+    setIsDeactivateModalOpen(true); 
+    setActiveOptions(null);
+  };
+
+  const handleDeactivate = async () => {
+    if (classToDeactivate) {  
+      try {
+        setIsDeactivating(true);  
+        await deactivateClass(classToDeactivate);  
+        setIsDeactivating(false);  
+        setIsDeactivateModalOpen(false);  
+        await fetchClasses();  
+        toast.success("Class deactivated successfully.");
+      } catch (error) {
+        toast.error("Failed to deactivate class.");
+      } finally {
+        setActiveOptions(null); 
+      }
+    }
+  };
+  
 
   const handleDelete = async () => {
     if (classToDelete) {
@@ -66,7 +108,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const handleModalClose = () => {
     setIsModalOpen(false);
     setIsDeleteModalOpen(false); 
-    setClassToDelete(null); 
+    setClassToDelete(null);
+    setIsDeactivateModalOpen(false);
+    setClassToDeactivate(null); 
     setActiveOptions(null);
   };
 
@@ -92,6 +136,17 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
         <h2>Classes</h2>
         <Link to="/dashboard/create-class">Create class</Link>
       </div>
+      <div className="tabs">
+        <button className={`tab ${activeTab === "active" ? "active" : ""}`} onClick={() => setActiveTab("active")}>
+          Active
+        </button>
+        <button className={`tab ${activeTab === "inactive" ? "active" : ""}`} onClick={() => setActiveTab("inactive")}>
+          Inactive
+        </button>
+        <button className={`tab ${activeTab === "all" ? "active" : ""}`} onClick={() => setActiveTab("all")}>
+          All
+        </button>
+      </div>
 
       <div>
         {loading ? (
@@ -100,8 +155,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
           </div>
         ) : (
           <ul className="classes">
-            {classes.length > 0 ? (
-              classes.map((item, i) => (
+            {filteredClasses.length > 0 ? (
+              filteredClasses.map((item, i) => (
                 <li key={i}>
                   <Link to="/dashboard/class" onClick={() => setClass(item)}>
                     <Thumbnail name={item.classname} />
@@ -124,6 +179,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
                           }
                         >
                           Edit
+                        </button>
+                        <button onClick={() => handleDeactivateConfirmation(item.classid)}>
+                          Deactivate
                         </button>
                         <button onClick={() => handleDeleteConfirmation(item.classid)}>
                           Delete
@@ -172,6 +230,21 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
             <div className="button-container">
               <button className="modal-buttonsubmit" onClick={handleDelete} disabled={isDeleting}>
                 {isDeleting ? <SyncLoader color="#fff" loading={isDeleting} size={7} /> : "Yes, Delete"}
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+            </div>
+          </div>
+          <div className="modal-overlay" onClick={handleModalClose} />
+        </div>
+      )}
+      {isDeactivateModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Confirm Deactivation</h2>
+            <p>Are you sure you want to deactivate this class?</p>
+            <div className="button-container">
+              <button className="modal-buttonsubmit" onClick={handleDeactivate} disabled={isDeactivating}>
+                {isDeactivating ? <SyncLoader color="#fff" loading={isDeactivating} size={7} /> : "Yes, Deactivate"}
               </button>
               <button className="modal-button" onClick={handleModalClose}>Cancel</button>
             </div>
