@@ -6,7 +6,7 @@ import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
 import { joinClass } from "@/apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -25,13 +25,11 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => {
     setIsModalOpen(false);
     setClassCode("");
-    setErrorMessage("");
   };
 
   const handleJoinClass = async () => {
