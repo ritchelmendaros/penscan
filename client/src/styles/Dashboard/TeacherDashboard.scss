@@ -37,6 +37,7 @@
         transition: background-color 0.3s;
         width: 120px;
         text-align: center;
+        border-right: 1px solid #616266;
     
         &:first-child {
           border-radius: 5px 0 0 5px;
@@ -44,6 +45,7 @@
     
         &:last-child {
           border-radius: 0 5px 5px 0;
+          border-right: none;
         }
     
         &.active {

@@ -235,3 +235,30 @@ export const activateClass = async (
     return "An error occurred while activating the class.";
   }
 };
+
+export const joinClass = async (userId: string, classCode: string) => {
+  try {
+    const response = await axiosInstance.post("/api/classes/join", null, {
+      params: { userId, classCode },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error joining class:", error.response?.data || error.message);
+    throw new Error(error.response?.data || "Failed to join class.");
+  }
+};
+
+export const getClassCodeByClassId: (classId: string) => Promise<string> = async (classId) => {
+  try {
+    const response = await axiosInstance.get<string>(
+      "/api/classes/getclasscodebyid", 
+      {
+        params: { classid: classId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching class code:", error);
+    throw error;
+  }
+};

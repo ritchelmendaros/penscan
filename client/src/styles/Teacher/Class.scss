@@ -6,6 +6,10 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 30px;
+        
+        .class-code {
+            margin-top: 20px; 
+          }
 
         div {
             button:first-child {

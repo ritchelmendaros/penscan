@@ -16,6 +16,18 @@
                 }
             }
         }
+        .add-btn {
+            border-radius: 5px;
+            font-weight: bold;
+            padding-right: 15px;
+            padding-left: 15px;
+
+            &:hover {
+                padding-right: 30px;
+                padding-left: 30px;
+                transition: 0.3s;
+            }
+        }
     }
     
 }
