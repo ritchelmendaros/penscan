@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { CardContent } from "../../ui/card";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChartContainer, ChartTooltipContent } from "../../ui/chart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
