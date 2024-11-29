@@ -1,10 +1,9 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import { CardContent } from "../../ui/card";
-import {
-  ChartContainer,
-  ChartTooltipContent,
-} from "../../ui/chart";
-
+import React, { useState } from "react";
+import { ChartContainer, ChartTooltipContent } from "../../ui/chart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 interface QuizData {
   quizName: string;
@@ -14,6 +13,8 @@ interface QuizData {
   totalScore: number;
 }
 
+const ITEMS_PER_PAGE = 7;
+
 const Graph = ({
   classesData,
   selectedClass,
@@ -21,6 +22,8 @@ const Graph = ({
   classesData: any[];
   selectedClass: string;
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const filteredData =
     selectedClass === "All"
       ? classesData
@@ -29,12 +32,14 @@ const Graph = ({
   const chartData = filteredData.flatMap((classData) =>
     classData.quizzes.map((quiz: QuizData) => {
       const total =
-        quiz.failCount + quiz.passCount + quiz.nearPerfectCount || 1; 
+        quiz.failCount + quiz.passCount + quiz.nearPerfectCount || 1;
       return {
         quiz: quiz.quizName,
-        failPercentage: (quiz.failCount / total) * 100, 
-        passPercentage: (quiz.passCount / total) * 100,
-        nearperfectPercentage: (quiz.nearPerfectCount / total) * 100,
+        failPercentage: parseFloat(((quiz.failCount / total) * 100).toFixed(2)),
+        passPercentage: parseFloat(((quiz.passCount / total) * 100).toFixed(2)),
+        nearperfectPercentage: parseFloat(
+          ((quiz.nearPerfectCount / total) * 100).toFixed(2)
+        ),
         failCount: quiz.failCount,
         passCount: quiz.passCount,
         nearperfectCount: quiz.nearPerfectCount,
@@ -42,21 +47,36 @@ const Graph = ({
     })
   );
 
+  const totalPages = Math.ceil(chartData.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentData = chartData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   const chartConfig = {
     fail: { label: "Fail", color: "#d65c5c" },
     pass: { label: "Pass", color: "#5c7ad6" },
     nearperfect: { label: "Near Perfect", color: "#6BCB77" },
   };
-  
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <CardContent>
       <ChartContainer config={chartConfig}>
-        <BarChart data={chartData}>
+        <BarChart data={currentData}>
           <YAxis
             allowDecimals={false}
             tick={{ fontSize: 12, fill: "#888" }}
-            domain={[0, 100]} 
+            domain={[0, 100]}
             label={{
               value: "Percentage (%)",
               angle: -90,
@@ -93,10 +113,10 @@ const Graph = ({
             name="Near Perfect"
           />
           <Tooltip
-              content={<ChartTooltipContent />}
-              cursor={false}
-              defaultIndex={1}
-            />
+            content={<ChartTooltipContent />}
+            cursor={false}
+            defaultIndex={1}
+          />
           <Legend
             verticalAlign="bottom"
             align="center"
@@ -108,6 +128,35 @@ const Graph = ({
           />
         </BarChart>
       </ChartContainer>
+      <div style={{ textAlign: "center", marginTop: "10px" }}>
+      <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          style={{
+            marginRight: "10px",
+            background: "none",
+            border: "none",
+            cursor: currentPage === 1 ? "not-allowed" : "pointer",
+          }}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size="lg" />
+        </button>
+        <span style={{fontSize:"12PX"}}>
+          {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          style={{
+            marginLeft: "10px",
+            background: "none",
+            border: "none",
+            cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+          }}
+        >
+          <FontAwesomeIcon icon={faChevronRight} size="lg" />
+        </button>
+      </div>
     </CardContent>
   );
 };
