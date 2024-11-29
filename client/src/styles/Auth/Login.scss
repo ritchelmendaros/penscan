@@ -80,4 +80,20 @@
         left: 50%; /* Center horizontally */
         transform: translateX(-50%) rotate(45deg); /* Center and rotate */
     }
+    
+    @media (max-width: 480px) { // Mobile screens
+        .form-container {
+            form {
+                min-width: 100%;
+                margin-right: 10% !important;
+                margin-left: 10% !important;
+                .input-container {
+                    width: 80%;
+                    .icon {
+                        margin-left: 20px;
+                    }
+                }
+            }
+        }
+    }
 }
