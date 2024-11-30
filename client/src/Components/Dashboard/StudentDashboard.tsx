@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect  } from "react";
+import { Link } from "react-router-dom";
 import Thumbnail from "../Common/Thumbnail";
 import { ClassInterface } from "../Interface/ClassInterface";
 import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
-import { joinClass } from "@/apiCalls/classAPIs";
+import { getUserClassesByUserId, joinClass } from "@/apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { getDetailsByUsername } from "@/apiCalls/userApi";
 
 interface StudentDashboardProps {
   classes: ClassInterface[];
@@ -21,15 +21,35 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
 }) => {
   const { setClass } = useClass();
   const { user } = useCurrUser();
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [updatedClasses, setUpdatedClasses] = useState<ClassInterface[]>(classes); 
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => {
     setIsModalOpen(false);
     setClassCode("");
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchClasses();
+    }
+  }, [user]);
+
+  const fetchClasses = async () => {
+    setIsLoading(true);
+    try {
+      if (user) {
+        const userDetails = await getDetailsByUsername(user.username);
+        const userClasses = await getUserClassesByUserId(userDetails.userid);
+        setUpdatedClasses(userClasses);
+      }
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleJoinClass = async () => {
@@ -44,8 +64,9 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
       if (user?.userid) {
         await joinClass(user?.userid, classCode);
         setIsModalOpen(false);
-        setClassCode("")
+        setClassCode("");
         toast.success("Successfully joined the class!");
+        fetchClasses();
       } else {
         toast.error("No student ID available.");
       }
@@ -60,7 +81,9 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
     <div className="StudentDashboard MainContent">
       <div className="title-container">
         <h2>Classes</h2>
-        <button className="add-btn" onClick={handleModalOpen}>Join Class</button>
+        <button className="add-btn" onClick={handleModalOpen}>
+          Join Class
+        </button>
       </div>
 
       <div>
@@ -70,8 +93,8 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
           </div>
         ) : (
           <ul className="classes">
-            {classes.length > 0 ? (
-              classes.map((item, i) => (
+            {updatedClasses.length > 0 ? (
+              updatedClasses.map((item, i) => (
                 <Link to={`/dashboard/class/${item.classid}`} key={i}>
                   <li onClick={() => setClass(item)}>
                     <Thumbnail name={item.classname} />
