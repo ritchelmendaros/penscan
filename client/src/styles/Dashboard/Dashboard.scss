@@ -32,6 +32,22 @@
     .g1 {
         top: -120px !important;
     }
+
+    @media (max-width: 480px) { // Small screens
+        .classes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .robot {
+            bottom: 30px;
+            right: 10px;
+            height: 120px;
+        }
+        .modal-content {
+            margin: 30px;
+        }
+    }
 }
 
 

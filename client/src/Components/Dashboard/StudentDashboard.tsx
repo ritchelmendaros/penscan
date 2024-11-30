@@ -110,7 +110,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Join Class by Class Code</h2>
+            <h2>Join Class</h2>
             <input
               type="text"
               value={classCode}

@@ -80,8 +80,11 @@
             }
             form {
                 padding-left: 0;
+                h1 {
+                    margin-bottom: 30px;
+                }
                 .InputContainer {
-                    width: 90%;
+                    width: 100%;
                 }
                 button {
                     margin-top: 5%;

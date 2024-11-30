@@ -81,6 +81,23 @@ input::placeholder {
     opacity: 1;
 }
 
+@media (max-width: 480px) { // Mobile screens
+    main,
+    header {
+        padding: 10px;
+        
+    }
+    .Main {
+        min-width: 90%;
+        padding: 10px;
+    }
+
+    .container { 
+        width: 10%;
+        margin: 0 auto;
+    }
+}
+
 @import './Student/Student.scss';
 @import './Dashboard/Dashboard.scss';
 @import './Teacher/Teacher.scss';
