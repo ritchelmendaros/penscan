@@ -24,19 +24,24 @@ const Class = () => {
       setLocalStorage("classname", clickedClass.classname);
       saveArrayToLocalStorage("studentid", clickedClass.studentid);
       setLocalStorage("teacherid", clickedClass.teacherid);
-    }
-
-    if (!clickedClass) {
+    } else {
+      const classCode = getFromLocalStorage("classCode") || "";
+      const classid = getFromLocalStorage("classid");
+      const classname = getFromLocalStorage("classname");
+      const studentid = getArrayFromLocalStorage("studentid");
+      const teacherid = getFromLocalStorage("teacherid");
+  
       setClass({
-        classCode: "",
-        classid: getFromLocalStorage("classid"),
-        classname: getFromLocalStorage("classname"),
-        studentid: getArrayFromLocalStorage("studentid"),
-        teacherid: getFromLocalStorage("teacherid"),
+        classCode,
+        classid,
+        classname,
+        studentid,
+        teacherid,
         isactive: 1,
       });
     }
-  });
+  }, [clickedClass, setClass]);
+  
 
   return (
     <div className="Class Main MainContent">
