@@ -160,6 +160,14 @@ const ClassFiles = () => {
           <SyncLoader color="#416edf" />
         </div>
       ) : (
+        <div>
+          {isSmallScreen && quizzes.length === 0 ? (
+          <div className="no-data-row">
+            <div className="no-data-content">
+              <p className="empty-state">No quizzes in this class yet.</p>
+            </div>
+          </div>
+        ) : (
         <div className="table">
           <div className="thead">
             <div className="tr">
@@ -344,6 +352,8 @@ const ClassFiles = () => {
             )}
           </div>
         </div>
+        )}
+      </div>
       )}
       <ToastContainer />
     </div>

@@ -105,7 +105,6 @@
         .no-data-content {
           text-align: center;
           padding: 70px;
-
           p {
             color: white;
             font-size: 18px;
@@ -121,6 +120,7 @@
     color: #d1d1d1;
     font-size: 1.5rem;
   }
+
   @media (max-width: 480px) { // Mobile screens
     .td-status{
       padding: 5px;
