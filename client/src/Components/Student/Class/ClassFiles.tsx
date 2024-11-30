@@ -21,6 +21,21 @@ const ClassFiles = () => {
   const { clickedClass } = useClass();
   const { user } = useCurrUser();
   const { setSelectedQuiz } = useQuiz();
+  //for responsive
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 480);
+    };
+
+    handleResize(); // Check on initial load
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -150,8 +165,8 @@ const ClassFiles = () => {
             <div className="tr">
               <p className="td">Quiz Name</p>
               <p className="td">Score</p>
-              <p className="td">Status</p>
-              <p className="td">Due Date</p>
+              <p className="td-status">Status</p>
+              <p className="td-duedate">Due Date</p>
               <p className="td" style={{ marginLeft: "30px" }}>
                 Action
               </p>
@@ -169,9 +184,22 @@ const ClassFiles = () => {
                 const result = quizResults.find(
                   (r) => r.quizid === quiz.quizId
                 );
-                const status = result
-                  ? result.editedstatus
-                  : "Not Yet Uploaded";
+                let status = result ? result.editedstatus : "NONE";
+
+                // Adjust status display for small screens
+                if (isSmallScreen) {
+                  status =
+                    status === "NONE"
+                      ? "No Upload"
+                      : status === "APPROVED"
+                      ? "Apprd"
+                      : status === "PENDING"
+                      ? "Pendg"
+                      : status;
+                } else {
+                  status = status === "NONE" ? "Not Yet Uploaded" : status;
+                }
+
                 const score = result ? result.finalscore : "N/A";
                 const isOverdue = isQuizOverdue(quiz.dueDateTime);
                 return (
@@ -180,10 +208,27 @@ const ClassFiles = () => {
                     <p className="td">{score}</p>
                     <p className="td">{status === "NONE" ? "" : status}</p>
                     <p className="td">{quiz.dueDateTime}</p>
-                    <p className="td">
-                      <div>
+                    <p
+                      className={`td ${
+                        isSmallScreen ? "small-screen-menu" : "large-screen-buttons"
+                      }`}
+                    >
+                      {isSmallScreen ? (
+                        <>
                         <button
-                          className="view"
+                            className="meatballs-button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenDropdown((prev) =>
+                                prev === quiz.quizId ? null : quiz.quizId
+                              );
+                            }}
+                          >
+                            &#8942; {/* Vertical meatballs icon */}
+                        </button>
+                        {openDropdown === quiz.quizId && (
+                        <div className="dropdown-menu">
+                        <button
                           onClick={(event) => {
                             const dueDate = quiz.dueDateTimeRaw;
                             const isOverdue =
@@ -200,7 +245,6 @@ const ClassFiles = () => {
                           View
                         </button>
                         <button
-                          className="edit"
                           onClick={(event) => {
                             const dueDate = quiz.dueDateTimeRaw;
                             const isOverdue =
@@ -230,6 +274,61 @@ const ClassFiles = () => {
                           Edit
                         </button>
                       </div>
+                    )}
+                    </>
+                  ) : (
+                    <>
+                      <button
+                            className="view"
+                            onClick={(event) => {
+                              const dueDate = quiz.dueDateTimeRaw;
+                              const isOverdue =
+                                dueDate && new Date(dueDate) < new Date();
+
+                              if (!result && isOverdue) {
+                                event.stopPropagation();
+                                toast(
+                                  "No data and can't upload. This quiz is overdue."
+                                );
+                              } else {
+                                handleViewQuiz(event, quiz);
+                              }
+                            }}
+                          >
+                            View
+                          </button>
+                          <button
+                            className="edit"
+                            onClick={(event) => {
+                              const dueDate = quiz.dueDateTimeRaw;
+                              const isOverdue =
+                                dueDate && new Date(dueDate) < new Date();
+                              if (isOverdue) {
+                                event.stopPropagation();
+                                toast("Can't edit: This quiz is overdue.");
+                              } else if (status === "NONE" && !isOverdue) {
+                                handleEditQuiz(event, quiz);
+                              } else if (status === "PENDING") {
+                                event.stopPropagation();
+                                toast(
+                                  "Can't edit: You can't edit more than once."
+                                );
+                              } else if (status === "APPROVED") {
+                                event.stopPropagation();
+                                toast(
+                                  "Can't edit: Edited answers are already evaluated."
+                                );
+                              } else {
+                                event.stopPropagation();
+                                toast("Can't edit: Upload your quiz first.");
+                              }
+                            }}
+                            disabled={isOverdue}
+                          >
+                            Edit
+                          </button>
+                        </>
+                      )}
                     </p>
                   </div>
                 );

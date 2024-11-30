@@ -4,4 +4,10 @@
     bottom: 30px;
     width: 170px;
     cursor: pointer;
+
+    @media (max-width: 480px) { // Small screens
+        bottom: 30px;
+        right: 0px;
+        height: 100px;
+    }
 }
