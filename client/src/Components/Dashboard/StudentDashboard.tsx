@@ -44,7 +44,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
       if (user?.userid) {
         await joinClass(user?.userid, classCode);
         setIsModalOpen(false);
-        navigate("/dashboard");
+        setClassCode("")
         toast.success("Successfully joined the class!");
       } else {
         toast.error("No student ID available.");
