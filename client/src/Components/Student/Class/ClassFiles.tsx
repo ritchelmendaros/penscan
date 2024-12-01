@@ -36,7 +36,6 @@ const ClassFiles = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   useEffect(() => {
     const fetchQuizData = async () => {
       if (clickedClass?.classid) {
@@ -162,198 +161,218 @@ const ClassFiles = () => {
       ) : (
         <div>
           {isSmallScreen && quizzes.length === 0 ? (
-          <div className="no-data-row">
-            <div className="no-data-content">
-              <p className="empty-state">No quizzes in this class yet.</p>
+            <div className="no-data-row">
+              <div className="no-data-content">
+                <p className="empty-state">No quizzes in this class yet.</p>
+              </div>
             </div>
-          </div>
-        ) : (
-        <div className="table">
-          <div className="thead">
-            <div className="tr">
-              <p className="td">Quiz Name</p>
-              <p className="td">Score</p>
-              <p className="td-status">Status</p>
-              <p className="td-duedate">Due Date</p>
-              <p className="td" style={{ marginLeft: "30px" }}>
-                Action
-              </p>
-            </div>
-          </div>
-          <div className="tbody">
-            {quizzes.length > 0 ? (
-              quizzes.map((quiz, i) => {
-                if (displayedQuizzes.has(quiz.quizId)) {
-                  return null;
-                }
-
-                displayedQuizzes.add(quiz.quizId);
-
-                const result = quizResults.find(
-                  (r) => r.quizid === quiz.quizId
-                );
-                let status = result ? result.editedstatus : "NONE";
-
-                // Adjust status display for small screens
-                if (isSmallScreen) {
-                  status =
-                    status === "NONE"
-                      ? "No Upload"
-                      : status === "APPROVED"
-                      ? "Apprd"
-                      : status === "PENDING"
-                      ? "Pendg"
-                      : status;
-                } else {
-                  status = status === "NONE" ? "Not Yet Uploaded" : status;
-                }
-
-                const score = result ? result.finalscore : "N/A";
-                const isOverdue = isQuizOverdue(quiz.dueDateTime);
-                return (
-                  <div className="tr" onClick={() => handleClick(quiz)} key={i}>
-                    <p className="td">{quiz.quizName}</p>
-                    <p className="td">{score}</p>
-                    <p className="td">{status === "NONE" ? "" : status}</p>
-                    <p className="td">{quiz.dueDateTime}</p>
-                    <p
-                      className={`td ${
-                        isSmallScreen ? "small-screen-menu" : "large-screen-buttons"
-                      }`}
-                    >
-                      {isSmallScreen ? (
-                        <>
-                        <button
-                            className="meatballs-button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpenDropdown((prev) =>
-                                prev === quiz.quizId ? null : quiz.quizId
-                              );
-                            }}
-                          >
-                            &#8942; {/* Vertical meatballs icon */}
-                        </button>
-                        {openDropdown === quiz.quizId && (
-                        <div className="dropdown-menu">
-                        <button
-                          onClick={(event) => {
-                            const dueDate = quiz.dueDateTimeRaw;
-                            const isOverdue =
-                              dueDate && new Date(dueDate) < new Date();
-
-                            if (!result && isOverdue) {
-                              event.stopPropagation();
-                              toast("No data and can't upload. This quiz is overdue.");
-                            } else {
-                              handleViewQuiz(event, quiz);
-                            }
-                          }}
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={(event) => {
-                            const dueDate = quiz.dueDateTimeRaw;
-                            const isOverdue =
-                              dueDate && new Date(dueDate) < new Date();
-                            if (isOverdue) {
-                              event.stopPropagation();
-                              toast("Can't edit: This quiz is overdue.");
-                            } else if (status === "NONE" && !isOverdue) {
-                              handleEditQuiz(event, quiz);
-                            } else if (status === "PENDING") {
-                              event.stopPropagation();
-                              toast(
-                                "Can't edit: You can't edit more then once."
-                              );
-                            } else if (status === "APPROVED") {
-                              event.stopPropagation();
-                              toast(
-                                "Can't edit: Edited answers are already evaluated."
-                              );
-                            } else {
-                              event.stopPropagation();
-                              toast("Can't edit: Upload your quiz first.");
-                            }
-                          }}
-                          disabled={isOverdue}
-                        >
-                          Edit
-                        </button>
-                      </div>
-                    )}
-                    </>
-                  ) : (
-                    <>
-                      <button
-                            className="view"
-                            onClick={(event) => {
-                              const dueDate = quiz.dueDateTimeRaw;
-                              const isOverdue =
-                                dueDate && new Date(dueDate) < new Date();
-
-                              if (!result && isOverdue) {
-                                event.stopPropagation();
-                                toast(
-                                  "No data and can't upload. This quiz is overdue."
-                                );
-                              } else {
-                                handleViewQuiz(event, quiz);
-                              }
-                            }}
-                          >
-                            View
-                          </button>
-                          <button
-                            className="edit"
-                            onClick={(event) => {
-                              const dueDate = quiz.dueDateTimeRaw;
-                              const isOverdue =
-                                dueDate && new Date(dueDate) < new Date();
-                              if (isOverdue) {
-                                event.stopPropagation();
-                                toast("Can't edit: This quiz is overdue.");
-                              } else if (status === "NONE" && !isOverdue) {
-                                handleEditQuiz(event, quiz);
-                              } else if (status === "PENDING") {
-                                event.stopPropagation();
-                                toast(
-                                  "Can't edit: You can't edit more than once."
-                                );
-                              } else if (status === "APPROVED") {
-                                event.stopPropagation();
-                                toast(
-                                  "Can't edit: Edited answers are already evaluated."
-                                );
-                              } else {
-                                event.stopPropagation();
-                                toast("Can't edit: Upload your quiz first.");
-                              }
-                            }}
-                            disabled={isOverdue}
-                          >
-                            Edit
-                          </button>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="no-data-row">
-                <div className="no-data-content">
-                  <p className="empty-state">
-                    There are no quizzes in this class yet.
+          ) : (
+            <div className="table">
+              <div className="thead">
+                <div className="tr">
+                  <p className="td">Quiz Name</p>
+                  <p className="td">Score</p>
+                  <p className="td-status">Status</p>
+                  <p className="td-duedate">Due Date</p>
+                  <p className="td" style={{ marginLeft: "30px" }}>
+                    Action
                   </p>
                 </div>
               </div>
-            )}
-          </div>
+              <div className="tbody">
+                {quizzes.length > 0 ? (
+                  quizzes.map((quiz, i) => {
+                    if (displayedQuizzes.has(quiz.quizId)) {
+                      return null;
+                    }
+
+                    displayedQuizzes.add(quiz.quizId);
+
+                    const result = quizResults.find(
+                      (r) => r.quizid === quiz.quizId
+                    );
+                    let status = result
+                      ? result.editedstatus
+                      : "Not Yet Uploaded";
+
+                    // Adjust status display for small screens
+                    if (isSmallScreen) {
+                      status =
+                        status === "NONE"
+                          ? "No Upload"
+                          : status === "APPROVED"
+                          ? "Apprd"
+                          : status === "PENDING"
+                          ? "Pendg"
+                          : status;
+                    } else {
+                    }
+
+                    const score = result ? result.finalscore : "N/A";
+                    const isOverdue = isQuizOverdue(quiz.dueDateTime);
+                    return (
+                      <div
+                        className="tr"
+                        onClick={() => handleClick(quiz)}
+                        key={i}
+                      >
+                        <p className="td">{quiz.quizName}</p>
+                        <p className="td">{score}</p>
+                        <p className="td">{status}</p>
+                        <p className="td">{quiz.dueDateTime}</p>
+                        <p
+                          className={`td ${
+                            isSmallScreen
+                              ? "small-screen-menu"
+                              : "large-screen-buttons"
+                          }`}
+                        >
+                          {isSmallScreen ? (
+                            <>
+                              <button
+                                className="meatballs-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOpenDropdown((prev) =>
+                                    prev === quiz.quizId ? null : quiz.quizId
+                                  );
+                                }}
+                              >
+                                &#8942; {/* Vertical meatballs icon */}
+                              </button>
+                              {openDropdown === quiz.quizId && (
+                                <div className="dropdown-menu">
+                                  <button
+                                    onClick={(event) => {
+                                      const dueDate = quiz.dueDateTimeRaw;
+                                      const isOverdue =
+                                        dueDate &&
+                                        new Date(dueDate) < new Date();
+
+                                      if (!result && isOverdue) {
+                                        event.stopPropagation();
+                                        toast(
+                                          "No data and can't upload. This quiz is overdue."
+                                        );
+                                      } else {
+                                        handleViewQuiz(event, quiz);
+                                      }
+                                    }}
+                                  >
+                                    View
+                                  </button>
+                                  <button
+                                    onClick={(event) => {
+                                      const dueDate = quiz.dueDateTimeRaw;
+                                      const isOverdue =
+                                        dueDate &&
+                                        new Date(dueDate) < new Date();
+                                      if (isOverdue) {
+                                        event.stopPropagation();
+                                        toast(
+                                          "Can't edit: This quiz is overdue."
+                                        );
+                                      } else if (
+                                        status === "NONE" &&
+                                        !isOverdue
+                                      ) {
+                                        handleEditQuiz(event, quiz);
+                                      } else if (status === "PENDING") {
+                                        event.stopPropagation();
+                                        toast(
+                                          "Can't edit: You can't edit more then once."
+                                        );
+                                      } else if (status === "APPROVED") {
+                                        event.stopPropagation();
+                                        toast(
+                                          "Can't edit: Edited answers are already evaluated."
+                                        );
+                                      } else {
+                                        event.stopPropagation();
+                                        toast(
+                                          "Can't edit: Upload your quiz first."
+                                        );
+                                      }
+                                    }}
+                                    disabled={isOverdue}
+                                  >
+                                    Edit
+                                  </button>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                className="view"
+                                onClick={(event) => {
+                                  const dueDate = quiz.dueDateTimeRaw;
+                                  const isOverdue =
+                                    dueDate && new Date(dueDate) < new Date();
+
+                                  if (!result && isOverdue) {
+                                    event.stopPropagation();
+                                    toast(
+                                      "No data and can't upload. This quiz is overdue."
+                                    );
+                                  } else {
+                                    handleViewQuiz(event, quiz);
+                                  }
+                                }}
+                              >
+                                View
+                              </button>
+                              <button
+                                className="edit"
+                                onClick={(event) => {
+                                  const dueDate = quiz.dueDateTimeRaw;
+                                  const isOverdue =
+                                    dueDate && new Date(dueDate) < new Date();
+                                  if (isOverdue) {
+                                    event.stopPropagation();
+                                    toast("Can't edit: This quiz is overdue.");
+                                  } else if (status === "NONE" && !isOverdue) {
+                                    handleEditQuiz(event, quiz);
+                                  } else if (status === "PENDING") {
+                                    event.stopPropagation();
+                                    toast(
+                                      "Can't edit: You can't edit more than once."
+                                    );
+                                  } else if (status === "APPROVED") {
+                                    event.stopPropagation();
+                                    toast(
+                                      "Can't edit: Edited answers are already evaluated."
+                                    );
+                                  } else {
+                                    event.stopPropagation();
+                                    toast(
+                                      "Can't edit: Upload your quiz first."
+                                    );
+                                  }
+                                }}
+                                disabled={isOverdue}
+                              >
+                                Edit
+                              </button>
+                            </>
+                          )}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="no-data-row">
+                    <div className="no-data-content">
+                      <p className="empty-state">
+                        There are no quizzes in this class yet.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
-        )}
-      </div>
       )}
       <ToastContainer />
     </div>
