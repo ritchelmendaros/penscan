@@ -1,12 +1,12 @@
 // @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     // font-family: 'Inter', sans-serif;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 // dimensions
@@ -30,7 +30,7 @@ $grey-placeholder: #e1e1e1;
 .Main {
     min-width: 100vw;
     min-height: 100vh;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .gradient {
@@ -81,36 +81,36 @@ input::placeholder {
     opacity: 1;
 }
 
-@media (max-width: 480px) { // Mobile screens
+@media (max-width: 750px) {
+    // Mobile screens
     main,
     header {
         padding: 10px;
-        
     }
     .Main {
         min-width: 90%;
         padding: 10px;
     }
 
-    .container { 
+    .container {
         width: 10%;
         margin: 0 auto;
     }
 }
 
-@import './Student/Student.scss';
-@import './Dashboard/Dashboard.scss';
-@import './Teacher/Teacher.scss';
+@import "./Student/Student.scss";
+@import "./Dashboard/Dashboard.scss";
+@import "./Teacher/Teacher.scss";
 
 // common
-@import './common/Common.scss';
+@import "./common/Common.scss";
 
 // auth styles
-@import './Auth/Login.scss';
-@import './Auth/Signup.scss';
+@import "./Auth/Login.scss";
+@import "./Auth/Signup.scss";
 
-@import './NotFound.scss';
-@import './UserProfile/UserProfile.scss';
+@import "./NotFound.scss";
+@import "./UserProfile/UserProfile.scss";
 
 //modal
-@import './Modal/ConfirmationModal.scss';
+@import "./Modal/ConfirmationModal.scss";
