@@ -391,7 +391,26 @@ const QuizResults = () => {
               )}
           </td>
           <td>{studentAnswer.answer}</td>
-          <td className={`td ${highlightClass}`}>{editedAnswer || ""}</td>
+          <td className={`td ${highlightClass}`}>
+            {isEditing && editedAnswerObj.isedited === false ? (
+              <input
+                type="text"
+                className="input-box"
+                value={editedAnswer || ""}
+                onChange={(e) =>
+                  setEditedAnswers((prev) => ({
+                    ...prev,
+                    [i]: {
+                      ...prev[i],
+                      editeditem: e.target.value,
+                    },
+                  }))
+                }
+              />
+            ) : (
+              editedAnswer || ""
+            )}
+          </td>
           <td>{correctAnswer}</td>
           <td>
             {editedAnswers[i]?.feedback?.length > 0 && (
@@ -462,7 +481,16 @@ const QuizResults = () => {
                 <h3>Score: {studentResult?.score}</h3>
                 <div className="additional-points">
                   <h3>
-                    Bonus Points: {studentResult?.bonusscore}
+                    Bonus Points: {" "}
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        value={studentResult?.bonusscore}
+                        className="bonus-input"
+                      />
+                    ) : (
+                      studentResult?.bonusscore
+                    )}
                     <FontAwesomeIcon
                       icon={faBell}
                       className="notification-icon"
@@ -479,11 +507,23 @@ const QuizResults = () => {
                   src={`data:image/png;base64,${studentResult?.base64Image}`}
                   alt="Student's quiz"
                 />
-                {feedback === "No feedback given" ? (
+                {isEditing ? (
+                  <div className="feedback-container">
+                    <textarea
+                      value={feedback || ""}
+                      className="feedback-input"
+                    />
+                  </div>
+                ) : feedback === "No feedback given" ? (
                   <p className="no-feedback">{feedback}</p>
                 ) : (
                   <div className="feedback-container">
-                    <p className="no-feedback">{feedback}</p>
+                    <p
+                      className="feedback"
+                      style={{ fontStyle: "italic", fontSize: "13px" }}
+                    >
+                      {feedback}
+                    </p>
                   </div>
                 )}
               </div>
