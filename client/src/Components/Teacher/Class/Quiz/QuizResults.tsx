@@ -59,6 +59,7 @@ const QuizResults = () => {
   const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
   const [currentItemIndex, setCurrentItemIndex] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -102,7 +103,6 @@ const QuizResults = () => {
             isedited: boolean;
             feedback: string[];
             editedby: string;
-
           };
         }
       );
@@ -272,6 +272,14 @@ const QuizResults = () => {
     navigate("/dashboard/class/quiz");
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setIsEditing(false);
+  };
+
   const handleHover = (itemIndex: number) => {
     setHoveredItem(itemIndex);
     console.log(hoveredItem);
@@ -284,6 +292,10 @@ const QuizResults = () => {
   const handleMouseLeave = () => {
     setShowFeedbackPerItemModalDisplay(false);
     setHoveredItem(null);
+  };
+
+  const handleToggleCorrect = (index: number) => {
+    toast("OK");
   };
 
   const renderRows = () => {
@@ -325,10 +337,17 @@ const QuizResults = () => {
       rows.push(
         <tr key={i}>
           <td>
-            {i} {studentAnswers[i]?.correct ? "✔️" : "❌"} 
+            {i}{" "}
+            <input
+              type="checkbox"
+              className="custom-checkbox"
+              checked={!!studentAnswers[i]?.correct}
+              onChange={() => handleToggleCorrect(i)}
+            />
           </td>
+
           <td>
-            {editedStatus !== "NONE" &&
+            {/* {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
               editedAnswerObj?.isdisapproved &&
               editedAnswerObj?.isedited &&
@@ -341,8 +360,8 @@ const QuizResults = () => {
                     Mark Correct
                   </button>
                 </div>
-              )}
-            {editedStatus !== "NONE" &&
+              )} */}
+            {/* {editedStatus !== "NONE" &&
               editedAnswerObj?.isapproved &&
               !editedAnswerObj?.isdisapproved &&
               editedAnswerObj?.isedited &&
@@ -355,7 +374,7 @@ const QuizResults = () => {
                     Mark Incorrect
                   </button>
                 </div>
-              )}
+              )} */}
             {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
               !editedAnswerObj?.isdisapproved &&
@@ -366,7 +385,7 @@ const QuizResults = () => {
                     onClick={() => handleCheck(i)}
                     className="btn btn-primary"
                   >
-                    Mark Correct
+                    Accept Edit
                   </button>
                 </div>
               )}
@@ -485,6 +504,15 @@ const QuizResults = () => {
                 </table>
               </div>
               <div className="viewcenter-button">
+                {isEditing ? (
+                  <button className="viewedit" onClick={() => handleSaveEdit()}>
+                    Save
+                  </button>
+                ) : (
+                  <button className="viewedit" onClick={() => handleEdit()}>
+                    Edit
+                  </button>
+                )}
                 <button className="viewclose" onClick={handleClose}>
                   Close
                 </button>
