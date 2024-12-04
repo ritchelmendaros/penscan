@@ -4,6 +4,7 @@ import Thumbnail from "../Common/Thumbnail";
 import { ClassInterface } from "../Interface/ClassInterface";
 import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
+import BackBtn from "../Common/BackBtn";
 import noDataGif from "../../assets/nodata.gif";
 import { ToastContainer, toast } from "react-toastify";
 import { editClassName, deleteClass, deactivateClass, activateClass } from "../../apiCalls/classAPIs";
@@ -156,6 +157,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
 
   return (
     <div className="TeacherDashboard MainContent">
+      <div className="back-btn">
+        <BackBtn />
+      </div>
       <div className="title-container">
         <h2>Classes</h2>
         <Link to="/dashboard/create-class">Create class</Link>

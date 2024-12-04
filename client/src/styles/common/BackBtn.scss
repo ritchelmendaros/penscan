@@ -1,0 +1,12 @@
+.back-button{
+  position: absolute;
+    max-height: 20px;
+    left: 7%;
+    margin-right: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

@@ -73,10 +73,10 @@
         .container {
             grid-template-columns: 1fr;
             .img-container {
+                margin-top: 20px;
                 img {
                     display: none;
                 }
-                margin-top: 20px;
             }
             form {
                 padding-left: 0;

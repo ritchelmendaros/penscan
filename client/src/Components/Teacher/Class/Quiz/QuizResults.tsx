@@ -19,6 +19,7 @@ import { SyncLoader } from "react-spinners";
 import { useCurrUser } from "../../../Context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faStickyNote } from "@fortawesome/free-solid-svg-icons";
+import BackBtn from "../../../Common/BackBtn";
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -587,6 +588,7 @@ const QuizResults = () => {
   return (
     <div className="QuizResults Main MainContent">
       <Header />
+      <BackBtn />
       <main>
         {loading ? (
           <div className="loader-container">

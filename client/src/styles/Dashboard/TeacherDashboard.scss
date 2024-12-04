@@ -7,6 +7,9 @@
 
 .Dashboard {
   .TeacherDashboard {
+    .back-btn{
+      margin-left: -16.3%;
+    }
     .title-container {
       display: flex;
       justify-content: space-between;
@@ -16,6 +19,7 @@
         padding: 10px 30px;
         border-radius: 10px;
         font-weight: bold;
+        margin-left: auto;
 
         &:hover {
           padding: 10px 40px;
