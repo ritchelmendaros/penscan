@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import BackBtn from "../../Common/BackBtn";
 
 interface Answer {
   itemnumber: number;
@@ -318,6 +319,7 @@ const StudentQuizResultEdit = () => {
   return (
     <div className="QuizResults Main MainContent">
       <Header />
+      <BackBtn />
       <main>
         {loading ? (
           <div className="loader-container">
