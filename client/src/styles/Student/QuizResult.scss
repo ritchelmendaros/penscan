@@ -122,6 +122,22 @@
             display: flex !important;
             justify-content: space-between;
         }
+
+        .table1 {
+            .th1 {
+                display: grid;
+                grid-template-columns: 5px 0fr 1fr 1fr 0fr 0fr 0fr !important;
+
+                .td1 {
+                    text-overflow: ellipsis;
+                }
+            }
+            .tr1 {
+                display: grid;
+                grid-template-columns: 5px 0.1fr 0.5fr 1fr 0fr 0.1fr 0.1fr !important;
+                text-align: left;
+            }
+        }
     }
 
     .main-results {
