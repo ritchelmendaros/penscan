@@ -9,4 +9,8 @@
   &:hover {
     opacity: 0.8;
   }
+  @media (max-width: 480px) { // Small screens
+    position: relative;
+    margin-left: -5%;
+  }
 }

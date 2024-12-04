@@ -17,7 +17,11 @@ const Classes = () => {
 
   return (
     <div className="Class Main MainContent">
-      <BackBtn />
+      <BackBtn
+        dynamicRoutes={{
+          "/dashboard/class": "/dashboard",
+        }}
+      />
       <Header />
       <main>
         <div className="btn-container">

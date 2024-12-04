@@ -319,7 +319,12 @@ const StudentQuizResultEdit = () => {
   return (
     <div className="QuizResults Main MainContent">
       <Header />
-      <BackBtn />
+      <BackBtn
+        dynamicRoutes={{
+          "/dashboard/class/quiz/quiz-result-edit": () =>
+            `/dashboard/class/${clickedClass?.classid}`,
+        }}
+      />
       <main>
         {loading ? (
           <div className="loader-container">
