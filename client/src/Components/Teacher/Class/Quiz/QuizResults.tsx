@@ -451,23 +451,23 @@ const QuizResults = () => {
       //     : "";
 
       let highlightClass = "";
-      // if (editedStatus === "NONE") {
-      //   highlightClass = "";
-      // } else if ((editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") && !studentAnswer.correct) {
-      //   highlightClass = "highlight-disapproved";
-      // } else if ((editedAnswerObj?.isapproved) && (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher")) {
-      //   highlightClass = "highlight-approved";
-      // } else if (editedAnswerObj?.isdisapproved && !studentAnswer.correct) {
-      //   highlightClass = "highlight-disapproved";
-      // } else if (editedAnswerObj?.isapproved && !studentAnswer.correct) {
-      //   highlightClass = "highlight-disapproved";
-      // } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") {
-      //   highlightClass = "highlight-approved";
-      // } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!studentAnswer.correct || studentAnswer.correct)) {
-      //   highlightClass = "highlight-edited";
-      // } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student") {
-      //   highlightClass = "highlight-approved";
-      // }
+      if (editedStatus === "NONE") {
+        highlightClass = "";
+      } else if ((editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") && !studentAnswer.correct) {
+        highlightClass = "highlight-disapproved";
+      } else if ((editedAnswerObj?.isapproved) && (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher")) {
+        highlightClass = "highlight-approved";
+      } else if (editedAnswerObj?.isdisapproved && !studentAnswer.correct) {
+        highlightClass = "highlight-disapproved";
+      } else if (editedAnswerObj?.isapproved && !studentAnswer.correct) {
+        highlightClass = "highlight-disapproved";
+      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") {
+        highlightClass = "highlight-approved";
+      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!studentAnswer.correct || studentAnswer.correct)) {
+        highlightClass = "highlight-edited";
+      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student") {
+        highlightClass = "highlight-approved";
+      }
 
       rows.push(
         <tr key={i}>
