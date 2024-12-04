@@ -40,6 +40,7 @@ const QuizResults = () => {
       isdisapproved: boolean;
       isedited: boolean;
       feedback: string[];
+      editedby: string;
     };
   }>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -88,6 +89,7 @@ const QuizResults = () => {
             isdisapproved: curr.isdisapproved,
             isedited: curr.isedited,
             feedback: curr.feedback,
+            editedby: curr.editedby,
           };
           return acc;
         },
@@ -99,6 +101,8 @@ const QuizResults = () => {
             isdisapproved: boolean;
             isedited: boolean;
             feedback: string[];
+            editedby: string;
+
           };
         }
       );
@@ -270,7 +274,7 @@ const QuizResults = () => {
 
   const handleHover = (itemIndex: number) => {
     setHoveredItem(itemIndex);
-    console.log(hoveredItem)
+    console.log(hoveredItem);
     setShowFeedbackPerItemModalDisplay(true);
     setFeedbackPerItem(
       editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
@@ -299,6 +303,7 @@ const QuizResults = () => {
         isedited: false,
         isapproved: false,
         isdisapproved: false,
+        editedby: "",
       };
 
       let editedAnswer =
@@ -320,13 +325,14 @@ const QuizResults = () => {
       rows.push(
         <tr key={i}>
           <td>
-            {i} {studentAnswers[i]?.correct ? "✔️" : "❌"}
+            {i} {studentAnswers[i]?.correct ? "✔️" : "❌"} 
           </td>
           <td>
             {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
               editedAnswerObj?.isdisapproved &&
-              editedAnswerObj?.isedited && (
+              editedAnswerObj?.isedited &&
+              editedAnswerObj?.editedby === "student" && (
                 <div className="approval-buttons">
                   <button
                     onClick={() => handleCheck(i)}
@@ -339,7 +345,8 @@ const QuizResults = () => {
             {editedStatus !== "NONE" &&
               editedAnswerObj?.isapproved &&
               !editedAnswerObj?.isdisapproved &&
-              editedAnswerObj?.isedited && (
+              editedAnswerObj?.isedited &&
+              editedAnswerObj?.editedby === "student" && (
                 <div className="approval-buttons">
                   <button
                     onClick={() => handleUncheck(i)}
@@ -352,7 +359,8 @@ const QuizResults = () => {
             {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
               !editedAnswerObj?.isdisapproved &&
-              editedAnswerObj?.isedited && (
+              editedAnswerObj?.isedited &&
+              editedAnswerObj?.editedby === "student" && (
                 <div className="approval-buttons">
                   <button
                     onClick={() => handleCheck(i)}
@@ -371,8 +379,8 @@ const QuizResults = () => {
               <FontAwesomeIcon
                 icon={faStickyNote}
                 className="notification-icon"
-                onMouseEnter={() => handleHover(i)} 
-                onMouseLeave={handleMouseLeave} 
+                onMouseEnter={() => handleHover(i)}
+                onMouseLeave={handleMouseLeave}
               />
             )}
           </td>
@@ -539,8 +547,10 @@ const QuizResults = () => {
       {showFeedbackPerItemModalDisplay && (
         <div className="feedback-modal show">
           <div className="modal-content">
-          <label><b>Feedback</b></label>
-          <p className="feedback-text">{feedbackperitem}</p>
+            <label>
+              <b>Feedback</b>
+            </label>
+            <p className="feedback-text">{feedbackperitem}</p>
           </div>
         </div>
       )}

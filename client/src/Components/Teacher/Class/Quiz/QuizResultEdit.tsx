@@ -199,7 +199,7 @@ const QuizResultEdit = () => {
           return studentAnswer.answer !== editedAnswer;
         })
       ) {
-        setEditedStatus("PENDING");
+        setEditedStatus("NONE");
       }
 
       if (!user?.userid) {
