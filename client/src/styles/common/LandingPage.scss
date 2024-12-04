@@ -55,52 +55,66 @@
     }
 }
 
-
-@media (max-width: 480px) { // Mobile screens
+@media (max-width: 480px) {
+    // Mobile screens
     .LandingPage {
         main {
-            flex-direction: row;
-            align-items: center; 
-            justify-content: center;
-
-            div {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                margin-left: 20px;
-                h1 {
-                    font-size: 2rem;
-                }
-
-                a {
-                    margin-top: 15px;
-                    padding: 6px 15px;
-                    font-size: 0.9rem;
-                    text-align: center;
-                }
-            }
-
-            img {
-                flex: 1;
-                height: 150px; 
-                margin-left: 10px;
-            }
+            display: flex;
+            flex-direction: column;
         }
 
         header {
-            margin-top: 25%;       
+            display: flex;
+            justify-content: center;
+            padding-top: 110px;
             .logo-container {
-                flex-direction: column;
-                align-items: center;
-
                 img {
-                    height: 50px;
+                    height: 100px;
+                }
+                h2 {
+                    font-size: 3rem;
+                }
+            }
+        }
+
+        main {
+            padding: 0 !important;
+            .title-container {
+                order: 2;
+                width: 100%;
+                .btn {
+                    display: flex;
+                    justify-content: center;
+                    a {
+                        background-color: none !important;
+                        width: 300px;
+                        text-align: center;
+                        padding-top: -50px !important;
+                    }
                 }
 
-                h2 {
-                    font-size: 1.2rem;
+                .description {
+                    display: flex;
+                    justify-content: center;
+                    h1 {
+                        font-size: 1rem;
+                        // font-weight: 100;
+                    }
+                    h1:nth-child(2) {
+                        padding: 0 10px;
+                    }
                 }
+            }
+
+            .title-container::before {
+                display: flex;
+                justify-content: center;
+                content: "Thank you for being part of PenScan!";
+            }
+
+            img {
+                order: 1;
+                height: 300px;
             }
         }
     }
