@@ -6,8 +6,10 @@ import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
   addFeedbackToEditedAnswerPerItem,
   approveQuizAnswer,
+  checkQuizAnswer,
   disapproveQuizAnswer,
   getAllActivityLogs,
+  saveStudentQuiz,
 } from "../../../../apiCalls/studentQuizApi";
 import { StudentImageResult } from "../../../Interface/Quiz";
 import { ToastContainer, toast } from "react-toastify";
@@ -60,6 +62,11 @@ const QuizResults = () => {
   const [logs, setLogs] = useState<string[]>([]);
   const [currentItemIndex, setCurrentItemIndex] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingAnswer] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editedStatus, setEditedStatus] = useState<string>("");
+  const [bonusScore, setBonusScore] = useState(0);
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -68,6 +75,7 @@ const QuizResults = () => {
           setStudentResult(result);
           setFeedback(result.comment || "No feedback given");
           setStudentQuizId(result.studentquizid);
+          setBonusScore(result.bonusscore || 0);
           setLoading(false);
         })
         .catch((error) => {
@@ -130,7 +138,7 @@ const QuizResults = () => {
     }
   };
 
-  const handleCheck = async (itemIndex: number) => {
+  const handleApprove = async (itemIndex: number) => {
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -149,6 +157,50 @@ const QuizResults = () => {
 
     try {
       await approveQuizAnswer(
+        studentResult.studentquizid,
+        user.userid,
+        selectedStudentResult.userId,
+        selectedQuiz.quizid,
+        itemIndex,
+        answerToSubmit
+      );
+
+      setEditedAnswers((prev) => ({
+        ...prev,
+        [itemIndex]: {
+          ...prev[itemIndex],
+          isapproved: true,
+          isdisapproved: false,
+        },
+      }));
+
+      setCurrentItemIndex(itemIndex);
+      setShowFeedbackPerItemModal(true);
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      toast.error(`Error approving item ${itemIndex}`);
+    }
+  };
+
+  const handleCheck = async (itemIndex: number) => {
+    if (
+      !studentResult ||
+      !selectedStudentResult?.userId ||
+      !selectedQuiz?.quizid
+    ) {
+      return;
+    }
+
+    if (!user?.userid) {
+      throw new Error("User ID is undefined");
+    }
+
+    const answerToSubmit = editedAnswers[itemIndex]?.editeditem
+      ? editedAnswers[itemIndex].editeditem
+      : studentAnswers[itemIndex]?.answer;
+
+    try {
+      await checkQuizAnswer(
         studentResult.studentquizid,
         user.userid,
         selectedStudentResult.userId,
@@ -218,6 +270,71 @@ const QuizResults = () => {
       toast.error(`Error disapproving item ${itemIndex}`);
     }
   };
+  const handleBonusScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const score = parseInt(e.target.value);
+    setBonusScore(score);
+  };
+
+  const handleSaveClick = () => {
+    if (isEditingAnswer) {
+      setIsModalOpen(true);
+    } else {
+      confirmSave();
+    }
+  };
+
+  const confirmSave = async () => {
+    setIsModalOpen(false);
+    isModalOpen
+    try {
+      setIsSaving(true);
+      if (
+        editedStatus !== "PENDING" &&
+        Object.keys(editedAnswers).some((key) => {
+          const studentAnswer = studentAnswers[parseInt(key)];
+          const editedAnswer = editedAnswers[parseInt(key)].editeditem;
+
+          return studentAnswer.answer !== editedAnswer;
+        })
+      ) {
+        setEditedStatus("NONE");
+      }
+
+      if (!user?.userid) {
+        throw new Error("User ID is undefined");
+      }
+
+      if (feedback === null) {
+        toast.error("Feedback cannot be null");
+        return;
+      }
+
+      if (studentQuizId) {
+        const formattedAnswers = Object.keys(editedAnswers)
+          .map((key) => {
+            const answer = editedAnswers[parseInt(key)];
+            return `${key}. ${answer.editeditem}`;
+          })
+          .join("\n");
+        await saveStudentQuiz(
+          studentQuizId,
+          user.userid,
+          formattedAnswers,
+          feedback,
+          bonusScore,
+          editedStatus
+        );
+        toast.success("Successfully saved changes!");
+        navigate("/dashboard/class/quiz");
+      } else {
+        toast.error("Quiz ID is required.");
+      }
+    } catch (error) {
+      toast.error("Error saving changes");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   useEffect(() => {
     if (studentResult?.recognizedAnswers) {
@@ -276,10 +393,6 @@ const QuizResults = () => {
     setIsEditing(true);
   };
 
-  const handleSaveEdit = () => {
-    setIsEditing(false);
-  };
-
   const handleHover = (itemIndex: number) => {
     setHoveredItem(itemIndex);
     console.log(hoveredItem);
@@ -295,7 +408,21 @@ const QuizResults = () => {
   };
 
   const handleToggleCorrect = (index: number) => {
-    toast("OK");
+    const isCorrect = studentAnswers[index]?.correct; 
+    if (isCorrect) {
+      handleUncheck(index);
+    } else {
+      handleCheck(index);
+    }
+  };
+
+  const handleStudentAnswerChange = (index: number, value: string) => {
+    const updatedAnswers = {
+      ...editedAnswers,
+      [index]: { ...editedAnswers[index], editeditem: value, isedited: false },
+    };
+    setEditedAnswers(updatedAnswers);
+    setEditedStatus("PENDING");
   };
 
   const renderRows = () => {
@@ -318,21 +445,29 @@ const QuizResults = () => {
         editedby: "",
       };
 
-      let editedAnswer =
-        editedAnswerObj && editedAnswerObj.isedited
-          ? editedAnswerObj.editeditem
-          : "";
+      // let editedAnswer =
+      //   editedAnswerObj && editedAnswerObj.isedited
+      //     ? editedAnswerObj.editeditem
+      //     : "";
 
       let highlightClass = "";
-      if (editedStatus === "NONE") {
-        highlightClass = "";
-      } else if (editedAnswerObj?.isapproved) {
-        highlightClass = "highlight-approved";
-      } else if (editedAnswerObj?.isdisapproved) {
-        highlightClass = "highlight-disapproved";
-      } else if (editedAnswerObj.isedited) {
-        highlightClass = "highlight-edited";
-      }
+      // if (editedStatus === "NONE") {
+      //   highlightClass = "";
+      // } else if ((editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") && !studentAnswer.correct) {
+      //   highlightClass = "highlight-disapproved";
+      // } else if ((editedAnswerObj?.isapproved) && (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher")) {
+      //   highlightClass = "highlight-approved";
+      // } else if (editedAnswerObj?.isdisapproved && !studentAnswer.correct) {
+      //   highlightClass = "highlight-disapproved";
+      // } else if (editedAnswerObj?.isapproved && !studentAnswer.correct) {
+      //   highlightClass = "highlight-disapproved";
+      // } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") {
+      //   highlightClass = "highlight-approved";
+      // } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!studentAnswer.correct || studentAnswer.correct)) {
+      //   highlightClass = "highlight-edited";
+      // } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student") {
+      //   highlightClass = "highlight-approved";
+      // }
 
       rows.push(
         <tr key={i}>
@@ -382,7 +517,7 @@ const QuizResults = () => {
               editedAnswerObj?.editedby === "student" && (
                 <div className="approval-buttons">
                   <button
-                    onClick={() => handleCheck(i)}
+                    onClick={() => handleApprove(i)}
                     className="btn btn-primary"
                   >
                     Accept Edit
@@ -395,20 +530,12 @@ const QuizResults = () => {
             {isEditing && editedAnswerObj.isedited === false ? (
               <input
                 type="text"
+                value={editedAnswerObj?.editeditem}
                 className="input-box"
-                value={editedAnswer || ""}
-                onChange={(e) =>
-                  setEditedAnswers((prev) => ({
-                    ...prev,
-                    [i]: {
-                      ...prev[i],
-                      editeditem: e.target.value,
-                    },
-                  }))
-                }
+                onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
               />
             ) : (
-              editedAnswer || ""
+              editedAnswerObj?.editeditem
             )}
           </td>
           <td>{correctAnswer}</td>
@@ -481,15 +608,16 @@ const QuizResults = () => {
                 <h3>Score: {studentResult?.score}</h3>
                 <div className="additional-points">
                   <h3>
-                    Bonus Points: {" "}
+                    Bonus Points:{" "}
                     {isEditing ? (
                       <input
                         type="number"
-                        value={studentResult?.bonusscore}
+                        value={bonusScore}
                         className="bonus-input"
+                        onChange={handleBonusScoreChange}
                       />
                     ) : (
-                      studentResult?.bonusscore
+                      bonusScore
                     )}
                     <FontAwesomeIcon
                       icon={faBell}
@@ -512,6 +640,8 @@ const QuizResults = () => {
                     <textarea
                       value={feedback || ""}
                       className="feedback-input"
+                      onChange={(e) => setFeedback(e.target.value)}
+                      rows={4}
                     />
                   </div>
                 ) : feedback === "No feedback given" ? (
@@ -545,9 +675,13 @@ const QuizResults = () => {
               </div>
               <div className="viewcenter-button">
                 {isEditing ? (
-                  <button className="viewedit" onClick={() => handleSaveEdit()}>
-                    Save
-                  </button>
+                  <button
+                  className="viewedit"
+                  onClick={handleSaveClick}
+                  disabled={isSaving}
+                >
+                  Save
+                </button>
                 ) : (
                   <button className="viewedit" onClick={() => handleEdit()}>
                     Edit

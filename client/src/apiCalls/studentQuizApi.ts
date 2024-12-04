@@ -124,6 +124,28 @@ export const studentsaveStudentQuiz = async (
 export const approveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
       const response = await axiosInstance.put(
+        '/api/studentquiz/approve', 
+        null, 
+        {
+          params: {
+              studentQuizId,
+              userId,
+              editedItem,  
+              studentId,
+              quizId,
+              itemId,
+          }
+        });
+      return response.data;
+  } catch (error) {
+      console.error('Error approving answer:', error);
+      throw error;
+  }
+};
+
+export const checkQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
+  try {
+      const response = await axiosInstance.put(
         '/api/studentquiz/markcheck', 
         null, 
         {

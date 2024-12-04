@@ -72,10 +72,10 @@ const Quiz = () => {
     navigate(`/dashboard/class/quiz/quiz-result`);
   };
 
-  const handleEditStudentScore = (student: StudentQuiz) => {
-    setSelectedStudentResult(student);
-    navigate(`/dashboard/class/quiz/quiz-result-edit`);
-  };
+  // const handleEditStudentScore = (student: StudentQuiz) => {
+  //   setSelectedStudentResult(student);
+  //   navigate(`/dashboard/class/quiz/quiz-result-edit`);
+  // };
 
   const handleDownloadExcel = () => {
     const data = studentsWithScores.map((student) => ({
@@ -250,14 +250,15 @@ const Quiz = () => {
                       >
                         View
                       </button>
-                      <button
+                      {/* <button
                         className="edit"
                         onClick={() => handleEditStudentScore(student)}
                       >
                         Edit
-                      </button>
+                      </button> */}
                       <button
                         className="delete"
+                        style={{marginLeft: "50px"}}
                         onClick={() => handleDeleteStudentScore(student)}
                       >
                         <FontAwesomeIcon
