@@ -464,11 +464,11 @@ const QuizResults = () => {
         highlightClass = "highlight-disapproved";
       } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") {
         highlightClass = "highlight-approved";
-      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!studentAnswer.correct || studentAnswer.correct)) {
-        highlightClass = "highlight-approved";
+      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!editedAnswerObj.isdisapproved && !editedAnswerObj.isapproved)) {
+        highlightClass = "highlight-edited";
       } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student") {
         highlightClass = "highlight-approved";
-      }
+      } 
 
       rows.push(
         <tr key={i}>
