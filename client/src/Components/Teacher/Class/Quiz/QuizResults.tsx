@@ -222,7 +222,7 @@ const QuizResults = () => {
       setShowFeedbackPerItemModal(true);
       setRefresh((prev) => prev + 1);
     } catch (error) {
-      toast.error(`Error approving item ${itemIndex}`);
+      toast.error(`Error marking check for item ${itemIndex}`);
     }
   };
 
@@ -267,7 +267,7 @@ const QuizResults = () => {
       setShowFeedbackPerItemModal(true);
       setRefresh((prev) => prev + 1);
     } catch (error) {
-      toast.error(`Error disapproving item ${itemIndex}`);
+      toast.error(`Error marking uncheck for item ${itemIndex}`);
     }
   };
   const handleBonusScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -464,7 +464,7 @@ const QuizResults = () => {
       } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") {
         highlightClass = "highlight-approved";
       } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!studentAnswer.correct || studentAnswer.correct)) {
-        highlightClass = "highlight-edited";
+        highlightClass = "highlight-approved";
       } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student") {
         highlightClass = "highlight-approved";
       }
