@@ -16,6 +16,7 @@ import { useClass } from "../../../Context/ClassContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ConfirmationModal from "../../../Modal/ConfirmationModal";
+import BackBtn from "../../../Common/BackBtn";
 
 const AddQuiz = () => {
   const [quizName, setQuizName] = useState("");
@@ -105,6 +106,7 @@ const AddQuiz = () => {
 
   return (
     <div className="AddQuiz Main MainContent">
+      <BackBtn />
       <Header />
       <main>
         <div className="content">

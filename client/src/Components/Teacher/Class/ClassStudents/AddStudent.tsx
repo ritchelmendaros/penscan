@@ -9,8 +9,8 @@ import { addStudentToClass } from "../../../../apiCalls/studentApi";
 import { useClass } from "../../../Context/ClassContext";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify'; 
+import BackBtn from "../../../Common/BackBtn";
 import 'react-toastify/dist/ReactToastify.css';
-
 interface Student {
   userid: string;
   username: string;
@@ -101,6 +101,9 @@ const AddStudent: React.FC = () => {
   return (
     <div className="AddStudent Main MainContent">
       <Header />
+      <div className="back-btn">
+        <BackBtn />
+      </div>
       <main>
         <div className="content">
           <h2>Add Student</h2>

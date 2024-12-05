@@ -19,6 +19,7 @@ import noDataGif from "../../../../assets/nodata.gif";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ConfirmationModal from "../../../Modal/ConfirmationModal";
+import BackBtn from "../../../Common/BackBtn";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -166,7 +167,7 @@ const Quiz = () => {
   return (
     <div className="Quiz Main MainContent">
       <Header />
-
+      <BackBtn />
       <main>
         <div className="btn-container">
           <div>

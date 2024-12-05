@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ClassFiles from "./ClassFiles/ClassFiles";
 import ClassStudents from "./ClassStudents/ClassStudents";
 import SmilingRobot from "../../Common/SmilingRobot";
+import BackBtn from "../../Common/BackBtn";
 import { useClass } from "../../Context/ClassContext";
 import {
   getArrayFromLocalStorage,
@@ -45,6 +46,7 @@ const Class = () => {
 
   return (
     <div className="Class Main MainContent">
+      <BackBtn />
       <Header />
       <main>
         <div className="btn-container">
