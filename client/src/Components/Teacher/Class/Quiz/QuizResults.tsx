@@ -207,7 +207,7 @@ const QuizResults = () => {
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
-        answerToSubmit
+        answerToSubmit || ""
       );
 
       setEditedAnswers((prev) => ({
@@ -252,7 +252,7 @@ const QuizResults = () => {
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
-        answerToSubmit
+        answerToSubmit || ""
       );
 
       setEditedAnswers((prev) => ({
