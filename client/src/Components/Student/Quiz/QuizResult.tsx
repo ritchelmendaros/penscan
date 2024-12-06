@@ -309,7 +309,6 @@ const StudentQuizResults = () => {
         setIsModalOpen(false);
         navigate(`/dashboard/class/${clickedClass?.classid}`);
       } catch (error) {
-        toast.error("Error: " + error);
         setSelectedFile(null);
         setIsModalOpen(false);
       } finally {
