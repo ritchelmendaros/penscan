@@ -3,7 +3,6 @@ import { useQuiz } from "../../../Context/QuizContext";
 import { getQuizAnalysis } from "../../../../apiCalls/QuizAPIs";
 import { ItemAnalysisInterface } from "../../../Interface/Quiz";
 import { SyncLoader } from "react-spinners";
-import noDataGif from "../../../../assets/nodata.gif";
 
 const Analysis = () => {
   const { selectedQuiz, studentScoreResults } = useQuiz();
