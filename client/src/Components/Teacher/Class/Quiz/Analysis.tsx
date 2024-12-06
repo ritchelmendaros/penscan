@@ -69,9 +69,9 @@ const Analysis = () => {
                 <th>Item</th>
                 <th>Correct</th>
                 <th>Incorrect</th>
-                <th>P</th>
+                <th>P (Difficulty)</th>
                 <th>Difficulty</th>
-                <th>D</th>
+                <th>D (Discrimination)</th>
                 <th>Discrimination</th>
                 <th>Suggested</th>
               </tr>
@@ -101,7 +101,7 @@ const Analysis = () => {
               ) : (
                 <tr className="no-data-container">
                   <td>
-                    <img src={noDataGif} alt="No data found" />
+                    {/* <img src={noDataGif} alt="No data found" /> */}
                   </td>
                 </tr>
               )}
