@@ -21,6 +21,10 @@ const Analysis = () => {
     }
   }, [selectedQuiz]);
 
+  const formatNumber = (value: number): string | number => {
+    return Number.isInteger(value) ? value : value.toFixed(2);
+  };
+
   return (
     <div className="Analysis">
       <div className="table-container">
@@ -85,9 +89,11 @@ const Analysis = () => {
                     <td className="td">{item.itemNumber}</td>
                     <td className="td">{item.correctCount}</td>
                     <td className="td">{item.incorrectCount}</td>
-                    <td className="td">{item.difficultyIndex}</td>
+                    <td className="td">{formatNumber(item.difficultyIndex)}</td>
                     <td className="td">{item.difficultyInterpretation}</td>
-                    <td className="td">{item.discriminationIndex}</td>
+                    <td className="td">
+                      {formatNumber(item.discriminationIndex)}
+                    </td>
                     <td className="td">{item.discriminationInterpretation}</td>
                     <td className="td">{item.suggestedDecision}</td>
                   </tr>
