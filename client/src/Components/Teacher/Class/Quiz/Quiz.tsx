@@ -38,6 +38,7 @@ const Quiz = () => {
   const [studentToDelete, setStudentToDelete] = useState<StudentQuiz | null>(
     null
   );
+  const [filterValue, setFilterValue] = useState<string>("All");
 
   useEffect(() => {
     if (selectedQuiz?.quizid) {
@@ -164,6 +165,15 @@ const Quiz = () => {
     return `${formattedDate} | ${formattedTime}`;
   };
 
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilterValue(event.target.value);
+  };
+
+  const filteredStudents = studentsWithScores.filter((student) => {
+    if (filterValue === "All") return true;
+    return student.editedStatus === filterValue;
+  });
+
   return (
     <div className="Quiz Main MainContent">
       <Header />
@@ -185,10 +195,37 @@ const Quiz = () => {
             </button>
           </div>
           {selectedQuiz?.dueDateTime && (
-            <h5 style={{ marginLeft: "10px", fontStyle: "italic" }}>
+            <h5 style={{ marginTop: "10px", fontStyle: "italic" }}>
               Due Date: {formatDueDate(selectedQuiz.dueDateTime)}
             </h5>
           )}
+          <div
+            className="filter-container"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <label
+              htmlFor="statusFilter"
+              style={{ marginRight: "10px", fontSize: "13px" }}
+            >
+              Filter by Status:
+            </label>
+            <select
+              id="statusFilter"
+              value={filterValue}
+              onChange={handleFilterChange}
+              style={{
+                padding: "7px",
+                borderRadius: "5px",
+                width: "120px",
+                backgroundColor: "#D4D4D4",
+              }}
+            >
+              <option value="All">All</option>
+              <option value="PENDING">Pending</option>
+              <option value="APPROVED">Approved</option>
+              <option value="NONE">None</option>
+            </select>
+          </div>
           <div className="upload-download">
             {/* <button onClick={() => setIsModalOpen(true)}>Upload</button> */}
             <button onClick={handleDownloadExcel}>Download Excel</button>
@@ -220,12 +257,12 @@ const Quiz = () => {
                     loading={isFetching}
                   />
                 </div>
-              ) : studentsWithScores.length === 0 ? (
+              ) : filteredStudents.length === 0 ? (
                 <div className="no-data-container">
                   <img src={noDataGif} alt="No Data Found" />
                 </div>
               ) : (
-                studentsWithScores.map((student, i) => (
+                filteredStudents.map((student, i) => (
                   <li
                     key={i}
                     className={`tr ${
@@ -259,7 +296,7 @@ const Quiz = () => {
                       </button> */}
                       <button
                         className="delete"
-                        style={{marginLeft: "50px"}}
+                        style={{ marginLeft: "50px" }}
                         onClick={() => handleDeleteStudentScore(student)}
                       >
                         <FontAwesomeIcon
