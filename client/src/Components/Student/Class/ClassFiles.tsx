@@ -198,13 +198,15 @@ const ClassFiles = () => {
                     // Adjust status display for small screens
                     if (isSmallScreen) {
                       status =
-                        status === "NONE"
-                          ? "None"
-                          : status === "APPROVED"
-                          ? "Apprd"
-                          : status === "PENDING"
-                          ? "Pendg"
-                          : status;
+                      status === "Not Yet Uploaded"
+                      ? "No Upload"
+                      : status === "NONE"
+                      ? "None"
+                      : status === "APPROVED"
+                      ? "Apprd"
+                      : status === "PENDING"
+                      ? "Pendg"
+                      : status;
                     } else {
                     }
 
