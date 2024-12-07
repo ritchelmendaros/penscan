@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import Header from "../../../Common/Header";
 import Gradients from "../../../Common/Gradients";
 import SmilingRobot from "../../../Common/SmilingRobot";
-import { getAllQuizScores } from "../../../../apiCalls/QuizAPIs";
+import {
+  getAllQuizScores,
+  getQuizAnalysis,
+} from "../../../../apiCalls/QuizAPIs";
 import { useQuiz } from "../../../Context/QuizContext";
-import { StudentQuiz } from "../../../Interface/Quiz";
+import { ItemAnalysisInterface, StudentQuiz } from "../../../Interface/Quiz";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,6 +42,7 @@ const Quiz = () => {
     null
   );
   const [filterValue, setFilterValue] = useState<string>("All");
+  const [itemAnalysis, setItemAnalysis] = useState<ItemAnalysisInterface[]>([]);
 
   useEffect(() => {
     if (selectedQuiz?.quizid) {
@@ -69,6 +73,17 @@ const Quiz = () => {
     }
   }, [selectedQuiz, refreshScores]);
 
+  useEffect(() => {
+    if (selectedQuiz?.quizid) {
+      getQuizAnalysis(selectedQuiz.quizid)
+        .then((res) => {
+          setItemAnalysis(res);
+          setIsLoading(false);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [selectedQuiz]);
+
   const handleViewStudentScore = (student: StudentQuiz) => {
     setSelectedStudentResult(student);
     navigate(`/dashboard/class/quiz/quiz-result`);
@@ -80,15 +95,65 @@ const Quiz = () => {
   // };
 
   const handleDownloadExcel = () => {
+    const calculateColumnWidths = <T extends Record<string, any>>(
+      data: T[]
+    ) => {
+      const keys = Object.keys(data[0]) as Array<keyof T>;
+      return keys.map((key) => ({
+        wch: Math.max(
+          key.toString().length, // Header length
+          ...data.map((row) => (row[key] ? row[key].toString().length : 0))
+        ),
+      }));
+    };
+
     const data = studentsWithScores.map((student) => ({
       "Student Name": `${student.firstName} ${student.lastName}`,
       Score: student.finalScore,
     }));
+    const worksheetScores = XLSX.utils.json_to_sheet(data);
+    worksheetScores["!cols"] = calculateColumnWidths(data);
 
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    const worksheetAnalysis = itemAnalysis
+      ? XLSX.utils.json_to_sheet(
+          itemAnalysis.map((analysis) => ({
+            "Item Number": analysis.itemNumber,
+            "Correct Count": analysis.correctCount,
+            "Incorrect Count": analysis.incorrectCount,
+            "Difficulty Index": analysis.difficultyIndex,
+            Difficulty: analysis.difficultyInterpretation,
+            "Discrimination Index": analysis.discriminationIndex,
+            Discrimination: analysis.discriminationInterpretation,
+            "Suggested Decision": analysis.suggestedDecision,
+          }))
+        )
+      : null;
+
+    if (worksheetAnalysis) {
+      const analysisData = itemAnalysis.map((analysis) => ({
+        "Item Number": analysis.itemNumber,
+        "Correct Count": analysis.correctCount,
+        "Incorrect Count": analysis.incorrectCount,
+        "Difficulty Index": analysis.difficultyIndex,
+        Difficulty: analysis.difficultyInterpretation,
+        "Discrimination Index": analysis.discriminationIndex,
+        Discrimination: analysis.discriminationInterpretation,
+        "Suggested Decision": analysis.suggestedDecision,
+      }));
+      worksheetAnalysis["!cols"] = calculateColumnWidths(analysisData);
+    }
+
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Scores");
-    XLSX.writeFile(workbook, "StudentScores.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheetScores, "Scores");
+
+    if (worksheetAnalysis) {
+      XLSX.utils.book_append_sheet(workbook, worksheetAnalysis, "Analysis");
+    }
+
+    XLSX.writeFile(
+      workbook,
+      selectedQuiz?.quizname + " Score and Analysis.xlsx"
+    );
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
