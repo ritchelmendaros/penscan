@@ -199,7 +199,7 @@ const ClassFiles = () => {
                     if (isSmallScreen) {
                       status =
                         status === "NONE"
-                          ? "No Upload"
+                          ? "None"
                           : status === "APPROVED"
                           ? "Apprd"
                           : status === "PENDING"
