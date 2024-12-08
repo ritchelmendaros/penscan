@@ -47,6 +47,7 @@ const ClassFiles = () => {
             quizName: q.quizname,
             dueDateTime: formatDueDate(q.dueDateTime),
             dueDateTimeRaw: q.dueDateTime,
+            totalitems: q.totalitems
           }));
           setQuizzes(quizzesWithProperMapping);
 
@@ -109,6 +110,7 @@ const ClassFiles = () => {
       teacherid: user?.userid || "",
       quizanswerkey: [],
       dueDateTime: quiz.dueDateTime,
+      totalitems: quiz.totalitems,
     };
   };
 

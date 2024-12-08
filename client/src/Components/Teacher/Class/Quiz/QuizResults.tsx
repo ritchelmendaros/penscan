@@ -474,12 +474,15 @@ const QuizResults = () => {
         <tr key={i}>
           <td>
             {i}{" "}
-            <input
-              type="checkbox"
-              className="custom-checkbox"
-              checked={!!studentAnswers[i]?.correct}
-              onChange={() => handleToggleCorrect(i)}
-            />
+            {selectedQuiz?.totalitems !== undefined && i <= selectedQuiz.totalitems && (
+  <input
+    type="checkbox"
+    className="custom-checkbox"
+    checked={!!studentAnswers[i]?.correct}
+    onChange={() => handleToggleCorrect(i)}
+  />
+)}
+
           </td>
 
           <td>
@@ -527,18 +530,21 @@ const QuizResults = () => {
               )}
           </td>
           <td>{studentAnswer.answer}</td>
-          <td className={`td ${highlightClass}`}>
-            {isEditing && editedAnswerObj.isedited === false ? (
-              <input
-                type="text"
-                value={editedAnswerObj?.editeditem}
-                className="input-box"
-                onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
-              />
-            ) : (
-              editedAnswerObj?.editeditem
-            )}
-          </td>
+          {selectedQuiz?.totalitems !== undefined && i <= selectedQuiz.totalitems && (
+  <td className={`td ${highlightClass}`}>
+    {isEditing && editedAnswerObj.isedited === false ? (
+      <input
+        type="text"
+        value={editedAnswerObj?.editeditem}
+        className="input-box"
+        onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
+      />
+    ) : (
+      editedAnswerObj?.editeditem
+    )}
+  </td>
+)}
+
           <td>{correctAnswer}</td>
           <td>
             {editedAnswers[i]?.feedback?.length > 0 && (

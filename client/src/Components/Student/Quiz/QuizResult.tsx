@@ -134,7 +134,7 @@ const StudentQuizResults = () => {
 
   const handleHover = (itemIndex: number) => {
     setHoveredItem(itemIndex);
-    console.log(hoveredItem)
+    console.log(hoveredItem);
     setShowFeedbackPerItemModalDisplay(true);
     setFeedbackPerItem(
       editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
@@ -199,7 +199,11 @@ const StudentQuizResults = () => {
       rows.push(
         <li key={i} className="tr1">
           <p className="td1"></p>
-          <p className="td1">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
+          <p className="td1">
+      {selectedQuiz?.totalitems && i <= selectedQuiz.totalitems ? (
+        studentAnswers[i - 1]?.correct ? "✔️" : "❌"
+      ) : null}
+    </p>
           <p className="td1">{i}</p>
           <p className="td1" style={{ marginLeft: "-50px" }}>
             {studentAnswer}
@@ -281,7 +285,7 @@ const StudentQuizResults = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const validFileTypes = ['image/jpeg', 'image/png'];
+      const validFileTypes = ["image/jpeg", "image/png"];
       if (validFileTypes.includes(file.type)) {
         setSelectedFile(file);
       } else {
@@ -292,7 +296,6 @@ const StudentQuizResults = () => {
       setSelectedFile(null);
     }
   };
-  
 
   const handleUpload = async () => {
     if (selectedFile && selectedQuiz) {
