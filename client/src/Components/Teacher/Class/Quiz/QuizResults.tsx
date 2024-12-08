@@ -286,7 +286,7 @@ const QuizResults = () => {
 
   const confirmSave = async () => {
     setIsModalOpen(false);
-    isModalOpen
+    isModalOpen;
     try {
       setIsSaving(true);
       if (
@@ -409,7 +409,7 @@ const QuizResults = () => {
   };
 
   const handleToggleCorrect = (index: number) => {
-    const isCorrect = studentAnswers[index]?.correct; 
+    const isCorrect = studentAnswers[index]?.correct;
     if (isCorrect) {
       handleUncheck(index);
     } else {
@@ -454,35 +454,54 @@ const QuizResults = () => {
       let highlightClass = "";
       if (editedStatus === "NONE") {
         highlightClass = "";
-      } else if ((editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") && !studentAnswer.correct) {
+      } else if (
+        editedAnswerObj.isedited &&
+        editedAnswerObj.editedby === "teacher" &&
+        !studentAnswer.correct
+      ) {
         highlightClass = "highlight-disapproved";
-      } else if ((editedAnswerObj?.isapproved) && (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher")) {
+      } else if (
+        editedAnswerObj?.isapproved &&
+        editedAnswerObj.isedited &&
+        editedAnswerObj.editedby === "teacher"
+      ) {
         highlightClass = "highlight-approved";
       } else if (editedAnswerObj?.isdisapproved && !studentAnswer.correct) {
         highlightClass = "highlight-disapproved";
       } else if (editedAnswerObj?.isapproved && !studentAnswer.correct) {
         highlightClass = "highlight-disapproved";
-      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "teacher") {
+      } else if (
+        editedAnswerObj.isedited &&
+        editedAnswerObj.editedby === "teacher"
+      ) {
         highlightClass = "highlight-approved";
-      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student" && (!editedAnswerObj.isdisapproved && !editedAnswerObj.isapproved)) {
+      } else if (
+        editedAnswerObj.isedited &&
+        editedAnswerObj.editedby === "student" &&
+        !editedAnswerObj.isdisapproved &&
+        !editedAnswerObj.isapproved
+      ) {
         highlightClass = "highlight-edited";
-      } else if (editedAnswerObj.isedited && editedAnswerObj.editedby === "student") {
+      } else if (
+        editedAnswerObj.isedited &&
+        editedAnswerObj.editedby === "student"
+      ) {
         highlightClass = "highlight-approved";
-      } 
+      }
 
       rows.push(
         <tr key={i}>
           <td>
             {i}{" "}
-            {selectedQuiz?.totalitems !== undefined && i <= selectedQuiz.totalitems && (
-  <input
-    type="checkbox"
-    className="custom-checkbox"
-    checked={!!studentAnswers[i]?.correct}
-    onChange={() => handleToggleCorrect(i)}
-  />
-)}
-
+            {selectedQuiz?.totalitems !== undefined &&
+              i <= selectedQuiz.totalitems && (
+                <input
+                  type="checkbox"
+                  className="custom-checkbox"
+                  checked={!!studentAnswers[i]?.correct}
+                  onChange={() => handleToggleCorrect(i)}
+                />
+              )}
           </td>
 
           <td>
@@ -530,20 +549,23 @@ const QuizResults = () => {
               )}
           </td>
           <td>{studentAnswer.answer}</td>
-          {selectedQuiz?.totalitems !== undefined && i <= selectedQuiz.totalitems && (
-  <td className={`td ${highlightClass}`}>
-    {isEditing && editedAnswerObj.isedited === false ? (
-      <input
-        type="text"
-        value={editedAnswerObj?.editeditem}
-        className="input-box"
-        onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
-      />
-    ) : (
-      editedAnswerObj?.editeditem
-    )}
-  </td>
-)}
+          {selectedQuiz?.totalitems !== undefined &&
+            i <= selectedQuiz.totalitems && (
+              <td className={`td ${highlightClass}`}>
+                {isEditing && editedAnswerObj.isedited === false ? (
+                  <input
+                    type="text"
+                    value={editedAnswerObj?.editeditem}
+                    className="input-box"
+                    onChange={(e) =>
+                      handleStudentAnswerChange(i, e.target.value)
+                    }
+                  />
+                ) : (
+                  editedAnswerObj?.editeditem
+                )}
+              </td>
+            )}
 
           <td>{correctAnswer}</td>
           <td>
@@ -684,12 +706,12 @@ const QuizResults = () => {
               <div className="viewcenter-button">
                 {isEditing ? (
                   <button
-                  className="viewedit"
-                  onClick={handleSaveClick}
-                  disabled={isSaving}
-                >
-                  Save
-                </button>
+                    className="viewedit"
+                    onClick={handleSaveClick}
+                    disabled={isSaving}
+                  >
+                    Save
+                  </button>
                 ) : (
                   <button className="viewedit" onClick={() => handleEdit()}>
                     Edit

@@ -200,10 +200,12 @@ const StudentQuizResults = () => {
         <li key={i} className="tr1">
           <p className="td1"></p>
           <p className="td1">
-      {selectedQuiz?.totalitems && i <= selectedQuiz.totalitems ? (
-        studentAnswers[i - 1]?.correct ? "✔️" : "❌"
-      ) : null}
-    </p>
+            {selectedQuiz?.totalitems && i <= selectedQuiz.totalitems
+              ? studentAnswers[i - 1]?.correct
+                ? "✔️"
+                : "❌"
+              : null}
+          </p>
           <p className="td1">{i}</p>
           <p className="td1" style={{ marginLeft: "-50px" }}>
             {studentAnswer}
