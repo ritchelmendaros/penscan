@@ -10,6 +10,7 @@ import { postCreateClass } from "../../apiCalls/classAPIs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ConfirmationModal from "../../Components/Modal/ConfirmationModal";
+import BackBtn from "../Common/BackBtn";
 
 const CreateClass: React.FC = () => {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ const CreateClass: React.FC = () => {
   return (
     <div className="CreateClass Main MainContent">
       <Header />
+      <BackBtn />
       <main>
         <div className="content">
           <h2>Create class</h2>

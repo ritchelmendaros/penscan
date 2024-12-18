@@ -14,7 +14,7 @@
     .tbody {
       min-height: 450px;
       max-height: 450px;
-      overflow-y: hidden;
+      overflow-y: auto;
       background-color: rgb(49, 49, 49);
       border-radius: 0 0 5px 5px;
       .tr {

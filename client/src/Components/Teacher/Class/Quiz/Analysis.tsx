@@ -3,7 +3,6 @@ import { useQuiz } from "../../../Context/QuizContext";
 import { getQuizAnalysis } from "../../../../apiCalls/QuizAPIs";
 import { ItemAnalysisInterface } from "../../../Interface/Quiz";
 import { SyncLoader } from "react-spinners";
-import noDataGif from "../../../../assets/nodata.gif";
 
 const Analysis = () => {
   const { selectedQuiz, studentScoreResults } = useQuiz();
@@ -20,6 +19,10 @@ const Analysis = () => {
         .catch((err) => console.error(err));
     }
   }, [selectedQuiz]);
+
+  const formatNumber = (value: number): string | number => {
+    return Number.isInteger(value) ? value : value.toFixed(2);
+  };
 
   return (
     <div className="Analysis">
@@ -65,9 +68,9 @@ const Analysis = () => {
                 <th>Item</th>
                 <th>Correct</th>
                 <th>Incorrect</th>
-                <th>P</th>
+                <th>P (Difficulty)</th>
                 <th>Difficulty</th>
-                <th>D</th>
+                <th>D (Discrimination)</th>
                 <th>Discrimination</th>
                 <th>Suggested</th>
               </tr>
@@ -85,9 +88,11 @@ const Analysis = () => {
                     <td className="td">{item.itemNumber}</td>
                     <td className="td">{item.correctCount}</td>
                     <td className="td">{item.incorrectCount}</td>
-                    <td className="td">{item.difficultyIndex}</td>
+                    <td className="td">{formatNumber(item.difficultyIndex)}</td>
                     <td className="td">{item.difficultyInterpretation}</td>
-                    <td className="td">{item.discriminationIndex}</td>
+                    <td className="td">
+                      {formatNumber(item.discriminationIndex)}
+                    </td>
                     <td className="td">{item.discriminationInterpretation}</td>
                     <td className="td">{item.suggestedDecision}</td>
                   </tr>
@@ -95,7 +100,7 @@ const Analysis = () => {
               ) : (
                 <tr className="no-data-container">
                   <td>
-                    <img src={noDataGif} alt="No data found" />
+                    {/* <img src={noDataGif} alt="No data found" /> */}
                   </td>
                 </tr>
               )}

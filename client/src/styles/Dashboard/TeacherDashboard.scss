@@ -7,6 +7,9 @@
 
 .Dashboard {
   .TeacherDashboard {
+    .back-btn{
+      margin-left: -16.3%;
+    }
     .title-container {
       display: flex;
       justify-content: space-between;
@@ -16,6 +19,7 @@
         padding: 10px 30px;
         border-radius: 10px;
         font-weight: bold;
+        margin-left: auto;
 
         &:hover {
           padding: 10px 40px;
@@ -24,8 +28,6 @@
       }
     }
 
-<<<<<<< HEAD
-=======
     .tabs {
       display: flex;
       gap: 0;
@@ -61,7 +63,6 @@
       }
     }    
 
->>>>>>> due-date
     .classes {
       display: grid;
       gap: 20px;
@@ -174,37 +175,15 @@
       gap: 30px;
       margin-top: 20px;
 
-<<<<<<< HEAD
-      .modal-button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: none;
-        background-color: #3498db;
-        color: white;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #2980b9;
-        }
-      }
-=======
->>>>>>> due-date
       .modal-buttonsubmit {
         padding: 10px 20px;
         border-radius: 5px;
         border: none;
-<<<<<<< HEAD
-        background-color: #03578f;
-=======
         background-color: #436edc;
->>>>>>> due-date
         color: white;
         cursor: pointer;
 
         &:hover {
-<<<<<<< HEAD
-          background-color: #2980b9;
-=======
           background-color: #134ad4;
         }
       }
@@ -218,7 +197,6 @@
 
         &:hover {
           background-color: #0b81c5;
->>>>>>> due-date
         }
       }
     }

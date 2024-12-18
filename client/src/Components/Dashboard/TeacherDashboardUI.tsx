@@ -23,7 +23,8 @@ import {
   getQuizResultsPerClass,
 } from "../../apiCalls/classAPIs";
 import { useCurrUser } from "../Context/UserContext";
-import "@/Components/index.css"
+import "@/Components/index.css";
+import noDataGif from "../../assets/nodata.gif";
 
 const TeacherDashboardUI = () => {
   const [totalClasses, setTotalClasses] = useState<number>(0);
@@ -97,11 +98,13 @@ const TeacherDashboardUI = () => {
             };
           }
           return {
-            className: key, 
-            quizzes: [], 
+            className: key,
+            quizzes: [],
           };
         });
-        const sortedClasses = processedData.sort((a, b) => a.className.localeCompare(b.className));
+        const sortedClasses = processedData.sort((a, b) =>
+          a.className.localeCompare(b.className)
+        );
         setClassesData(sortedClasses);
       } catch (error) {
         console.error("Error fetching quiz results:", error);
@@ -115,7 +118,7 @@ const TeacherDashboardUI = () => {
   }, [teacherId]);
 
   const handleClassesClick = () => {
-    navigate("/dashboard/teacher/classes"); 
+    navigate("/dashboard/teacher/classes");
   };
 
   return (
@@ -176,7 +179,6 @@ const TeacherDashboardUI = () => {
                         All
                       </SelectItem>
 
-                      {/* Dynamic class options */}
                       {classesData.map((classData, index) => (
                         <SelectItem
                           key={index}
@@ -190,10 +192,32 @@ const TeacherDashboardUI = () => {
                   </Select>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <Graph
-                    classesData={classesData}
-                    selectedClass={selectedClass}
-                  />
+                  {classesData.length === 0 ||
+                  (selectedClass !== "All" &&
+                    !classesData.some(
+                      (classData) => classData.className === selectedClass
+                    )) ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                        marginTop: "10%"
+                      }}
+                    >
+                      <img
+                        src={noDataGif}
+                        alt="No data found"
+                        style={{ width: "250px" }}
+                      />
+                    </div>
+                  ) : (
+                    <Graph
+                      classesData={classesData}
+                      selectedClass={selectedClass}
+                    />
+                  )}
                 </CardContent>
               </Card>
 

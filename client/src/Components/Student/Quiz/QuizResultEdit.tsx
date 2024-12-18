@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { studentuploadStudentQuiz } from "../../../apiCalls/studentQuizApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import BackBtn from "../../Common/BackBtn";
 
 interface Answer {
   itemnumber: number;
@@ -111,7 +112,7 @@ const StudentQuizResultEdit = () => {
   }, [studentResult]);
 
   const handleFetchLogs = async () => {
-    console.log(dueDate)
+    console.log(dueDate);
     if (showModal) {
       setShowModal(false);
       return;
@@ -120,7 +121,7 @@ const StudentQuizResultEdit = () => {
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
-        setLogs(response.logs); 
+        setLogs(response.logs);
         setShowModal(true);
       } else {
         toast.error("Unexpected response format");
@@ -153,7 +154,6 @@ const StudentQuizResultEdit = () => {
 
       const editedStatus = studentResult?.editedstatus;
 
-
       let highlightClass = "";
 
       if (editedStatus === "NONE") {
@@ -175,19 +175,27 @@ const StudentQuizResultEdit = () => {
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
-          <p className="td">{studentAnswers[i - 1]?.correct ? "✔️" : "❌"}</p>
+          <p className="td1">
+            {selectedQuiz?.totalitems && i <= selectedQuiz.totalitems
+              ? studentAnswers[i - 1]?.correct
+                ? "✔️"
+                : "❌"
+              : null}
+          </p>
           <p className="td">{i}</p>
           <p className="td" style={{ marginLeft: "-50px" }}>
             {studentAnswer}
           </p>
           <p className="td" style={{ marginLeft: "-40px" }}>
-            <input
-              type="text"
-              className={`${highlightClass}`}
-              value={editedAnswerObj.editeditem}
-              onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
-              disabled={isDisabled}
-            />
+          {selectedQuiz?.totalitems && i <= selectedQuiz.totalitems ? (
+              <input
+                type="text"
+                className={`${highlightClass}`}
+                value={editedAnswerObj.editeditem}
+                onChange={(e) => handleStudentAnswerChange(i, e.target.value)}
+                disabled={isDisabled}
+              />
+            ) : null}
           </p>
           <p className="td"></p>
         </li>
@@ -318,6 +326,12 @@ const StudentQuizResultEdit = () => {
   return (
     <div className="QuizResults Main MainContent">
       <Header />
+      <BackBtn
+        dynamicRoutes={{
+          "/dashboard/class/quiz/quiz-result-edit": () =>
+            `/dashboard/class/${clickedClass?.classid}`,
+        }}
+      />
       <main>
         {loading ? (
           <div className="loader-container">

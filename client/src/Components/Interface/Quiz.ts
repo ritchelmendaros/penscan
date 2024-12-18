@@ -6,6 +6,7 @@ interface Quiz {
     // quizanswerkey: string;
     quizanswerkey: { itemnumber: number; answer: string }[];
     dueDateTime: string;
+    totalitems: number;
 }
 //Student Quiz
 interface Quizzes {
@@ -13,6 +14,7 @@ interface Quizzes {
     quizName: string;
     dueDateTime: string;
     dueDateTimeRaw: string;
+    totalitems: number;
 }
 
 interface StudentQuiz {

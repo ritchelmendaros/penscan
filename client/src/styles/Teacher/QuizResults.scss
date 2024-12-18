@@ -1,6 +1,6 @@
 $primary-color: #5680e9;
 $background-color: #1a1a1a;
-$border-color: #333333;
+$border-color: #4f4f4f;
 
 .QuizResults {
   .student-details {
@@ -51,10 +51,7 @@ $border-color: #333333;
       height: 450px;
       border-radius: 10px;
       overflow-x: auto;
-<<<<<<< HEAD
-=======
       overflow-y: auto;
->>>>>>> due-date
       scrollbar-width: none;
       -ms-overflow-style: none;
 
@@ -62,13 +59,11 @@ $border-color: #333333;
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
-        background-color: $grey;
+        background-color: #292929;
         border-radius: 10px;
         overflow: hidden;
-        
 
         .highlight-edited {
-          max-width: 95%;
           background-color: rgba(227, 227, 136, 0.2);
           padding-left: 5px;
           border-radius: 4px;
@@ -88,16 +83,6 @@ $border-color: #333333;
           border-radius: 4px;
         }
 
-<<<<<<< HEAD
-        th,
-        td {
-          padding: 10px;
-          text-align: left;
-          border-bottom: 1px solid $border-color;
-        }
-
-=======
->>>>>>> due-date
         th {
           background-color: $primary-color;
           color: white;
@@ -117,8 +102,63 @@ $border-color: #333333;
         }
 
         tr:hover {
-          background-color: rgba(255, 255, 255, 0.1);
+          background-color: rgba(255, 255, 255, 0.107);
         }
+
+        .input-box {
+          background-color: #363636;
+          padding: 8px 12px;
+          border: 1px solid #6a6969;
+          font-size: 14px;
+          color: white;
+          border-radius: 5px;
+          width: 100%;
+
+          &:focus {
+            outline: none;
+            border-color: #007bff;
+          }
+        }
+      }
+      .custom-checkbox {
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        outline: none;
+        left: 5px;
+        background-color: #b72d4b;
+        position: relative;
+        transition: background-color 0.3s ease, border-color 0.3s ease,
+          transform 0.2s ease;
+      }
+
+      .custom-checkbox:hover {
+        border-color: #888;
+        transform: scale(1.1);
+      }
+
+      .custom-checkbox::after {
+        content: "✖";
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+
+      .custom-checkbox:checked {
+        background-color: #0b8457;
+        border-color: #0b8457;
+      }
+
+      .custom-checkbox:checked::after {
+        content: "✔";
+        color: white;
+        font-size: 12px;
       }
 
       .approval-buttons {
@@ -134,7 +174,7 @@ $border-color: #333333;
           font-weight: bold;
 
           &.btn-primary {
-            background-color: #0B8457;
+            background-color: #0b8457;
             color: white;
             width: 125px;
           }
@@ -169,7 +209,7 @@ $border-color: #333333;
 
   .viewcenter-button {
     display: flex;
-    margin-top: 5px;
+    margin-top: -5px;
     justify-content: center;
 
     .viewapprove {
@@ -181,11 +221,20 @@ $border-color: #333333;
       background-color: rgb(0, 124, 41);
     }
 
+    .viewedit {
+      width: 155px;
+      padding: 7px 50px;
+      border-radius: 5px;
+      margin-left: 1000px;
+      background-color: #3564dc;
+      font-size: 15px;
+    }
+
     .viewclose {
       width: 155px;
       padding: 7px 50px;
       border-radius: 5px;
-      margin-left: 1150px;
+      margin-left: 50px;
       font-size: 15px;
     }
 
@@ -213,75 +262,6 @@ $border-color: #333333;
   }
 
   .modal {
-<<<<<<< HEAD
-    display: flex; 
-    justify-content: center;
-    align-items: flex-start; 
-    position: fixed; 
-    margin-top: 140px;
-    margin-right: 160px;
-    top: 0; 
-    right: 0; 
-    width: 23%; 
-    height: auto; 
-    z-index: 1000; 
-
-    .modal-content {
-        background-color: #242526;
-        margin: 20px; 
-        padding: 20px;
-        border-radius: 10px;
-        width: 80%; 
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            h2 {
-                margin: 0;
-                color: white;
-            }
-
-            .close {
-                color: white;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-
-                &:hover,
-                &:focus {
-                    color: #bbb;
-                    text-decoration: none;
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .modal-body {
-            color: white;
-            padding: 10px 0;
-
-            .log-item {
-                font-style: italic; 
-                color: #b0c4de; 
-                font-size: 12px; 
-            }
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-
-            .btn {
-                margin-left: 10px;
-            }
-        }
-    }
-}
-
-
-=======
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -293,7 +273,7 @@ $border-color: #333333;
     width: 23%;
     height: auto;
     z-index: 1000;
-  
+
     .modal-content {
       background-color: #242526;
       margin: 20px;
@@ -304,36 +284,36 @@ $border-color: #333333;
       height: 450px;
       overflow-y: scroll;
     }
-  
+
     .modal-content::-webkit-scrollbar {
       width: 5px;
       padding: 10px;
     }
-  
+
     .modal-content::-webkit-scrollbar-thumb {
       background-color: #fff;
       border-radius: 40px;
     }
-  
+
     .modal-content::-webkit-scrollbar-track {
       background: none;
     }
-  
+
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-  
+
       h2 {
         margin: 0;
         color: white;
       }
-  
+
       .close {
         color: white;
         font-size: 28px;
         font-weight: bold;
-  
+
         &:hover,
         &:focus {
           color: #bbb;
@@ -342,32 +322,31 @@ $border-color: #333333;
         }
       }
     }
-  
+
     .modal-body {
       color: white;
       padding: 10px 0;
-  
+
       .log-item {
         font-style: italic;
         color: #b0c4de;
         font-size: 12px;
       }
     }
-  
+
     .modal-footer {
       display: flex;
       justify-content: flex-end;
-  
+
       .btn {
         margin-left: 10px;
       }
     }
   }
-  
 
   .modal-container-feedback {
     position: fixed;
-    inset: 0; 
+    inset: 0;
     margin: auto;
     width: 30%;
     height: 30%;
@@ -379,7 +358,7 @@ $border-color: #333333;
     z-index: 1000;
 
     .modal-content-feedback {
-      background-color:#242526;
+      background-color: #242526;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -403,7 +382,7 @@ $border-color: #333333;
         width: 100%;
         padding: 10px;
         margin-bottom: 15px;
-        border: 1px solid #DEE1EC;
+        border: 1px solid #dee1ec;
         border-radius: 4px;
         background-color: #1e1e1e;
         color: #fff;
@@ -421,7 +400,7 @@ $border-color: #333333;
           color: #fff;
 
           &:first-child {
-            background-color: #EAC100;
+            background-color: #eac100;
           }
 
           &:last-child {
@@ -435,5 +414,4 @@ $border-color: #333333;
       }
     }
   }
->>>>>>> due-date
 }

@@ -2,44 +2,43 @@ import {
     Quiz,
     StudentQuiz,
     StudentImageResult,
-} from "../Components/Interface/Quiz";
-import axiosInstance from "./common/axiosInstance";
+} from '../Components/Interface/Quiz';
+import axiosInstance from './common/axiosInstance';
 
 // const BASE_URL = "https://penscan-api.onrender.com/api/studentquiz";
 // const BASE_URL1 = "https://penscan-api.onrender.com/api/quiz";
 
 export const getAllQuizes: (
     teacherID: string,
-    classID: string
+    classID: string,
 ) => Promise<Quiz[]> = async (teacherID, classID) => {
     try {
         const response = await axiosInstance.get<Quiz[]>(
-            "/api/quiz/getquizbyteacherid",
+            '/api/quiz/getquizbyteacherid',
             {
-                params: {
+                params : {
                     teacherid: teacherID,
-                    classid: classID,
-                },
+                    classid: classID
+                }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error('Error fetching classes:', error);
         throw error;
     }
 };
 
 export const getQuizzesByClassId = async (classId: string): Promise<Quiz[]> => {
     try {
-        const response = await axiosInstance.get<Quiz[]>(
-            "/api/quiz/getquizbyclassid",
+        const response = await axiosInstance.get<Quiz[]>('/api/quiz/getquizbyclassid',
             {
-                params: { classid: classId },
+                params : { classid: classId }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching quizzes by class ID:", error);
+        console.error('Error fetching quizzes by class ID:', error);
         throw error;
     }
 };
@@ -50,12 +49,12 @@ export const getAllQuizScores = async (quizID: string) => {
         const response = await axiosInstance.get<StudentQuiz[]>(
             `/api/studentquiz/getscoresandstudentids`,
             {
-                params: { quizid: quizID },
+                params : { quizid: quizID }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error('Error fetching classes:', error);
         throw error;
     }
 };
@@ -63,17 +62,17 @@ export const getAllQuizScores = async (quizID: string) => {
 export const getQuizResults = async (studentID: string, quizID: string) => {
     try {
         const response = await axiosInstance.get<StudentImageResult>(
-            "/api/studentquiz/get",
+            '/api/studentquiz/get',
             {
-                params: {
+                params : {
                     studentid: studentID,
-                    quizid: quizID,
-                },
+                    quizid: quizID
+                }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error('Error fetching classes:', error);
         throw error;
     }
 };
@@ -83,59 +82,59 @@ export const addQuiz = async (
     quizName: string,
     userId: string,
     correctAnswer: { itemnumber: number; answer: string }[],
-    dueDateTime: string,
-    totalitems: number
+    dueDateTime: string, 
+    totalitems: number,
 ) => {
     try {
-        const response = await axiosInstance.post("/api/quiz/addquiz", {
-            classid: classid,
-            quizname: quizName,
-            teacherid: userId,
-            quizanswerkey: correctAnswer,
-            dueDateTime: dueDateTime,
-            totalitems: totalitems,
-        });
+        const response = await axiosInstance.post(
+            '/api/quiz/addquiz',
+            {
+                classid: classid,
+                quizname: quizName,
+                teacherid: userId,
+                quizanswerkey: correctAnswer,
+                dueDateTime: dueDateTime,
+                totalitems: totalitems
+            },
+        );
         // console.log('Quiz added:', response.data);
-        return response.data;
+        return response.data; 
     } catch (error) {
         // console.error('Error adding quiz:', error);
-        throw error;
+        throw error; 
     }
 };
 
 export const getQuizAnalysis = async (quizID: string) => {
     try {
         const response = await axiosInstance.get(
-            "/api/item-analysis/getitemanalysis",
+            '/api/item-analysis/getitemanalysis',
             {
-                params: { quizid: quizID },
+                params : { quizid: quizID }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error('Error fetching classes:', error);
         throw error;
     }
 };
 
 //Student
-export const getQuizNamesByUserIdAndClassId = async (
-    userId: string,
-    classId: string
-): Promise<any[]> => {
+export const getQuizNamesByUserIdAndClassId = async (userId: string, classId: string): Promise<any[]> => {
     try {
         const response = await axiosInstance.get<any[]>(
-            "/api/students/getquizidsandnamesbyuseridandclassid",
+            '/api/students/getquizidsandnamesbyuseridandclassid',
             {
-                params: {
+                params : {
                     userid: userId,
-                    classid: classId,
-                },
+                    classid: classId
+                }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching quiz names:", error);
+        console.error('Error fetching quiz names:', error);
         throw error;
     }
 };
@@ -143,14 +142,14 @@ export const getQuizNamesByUserIdAndClassId = async (
 export const getAnswerKey = async (quizId: string): Promise<string> => {
     try {
         const response = await axiosInstance.get<string>(
-            "/api/quiz/getanswerkey",
+            '/api/quiz/getanswerkey',
             {
-                params: { quizid: quizId },
+                params : { quizid: quizId }
             }
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching answer key:", error);
+        console.error('Error fetching answer key:', error);
         throw error;
     }
 };
@@ -160,29 +159,32 @@ export const editQuiz = async (
     quizName: string,
     dueDateTime: string,
     answerKeys: { itemnumber: number; answer: string }[]
-) => {
+  ) => {
     try {
-        const response = await axiosInstance.put("/api/quiz/edit", {
-            quizId: quizId,
-            quizName: quizName,
-            dueDateTime: dueDateTime,
-            answerKeys: answerKeys,
-        });
-        return response.data;
+      const response = await axiosInstance.put(
+        '/api/quiz/edit', 
+        {
+          quizId: quizId,
+          quizName: quizName,
+          dueDateTime: dueDateTime,
+          answerKeys: answerKeys
+        }
+      );
+      return response.data;
     } catch (error) {
-        console.error("Error editing quiz:", error);
-        throw error;
+      console.error('Error editing quiz:', error);
+      throw error;
     }
-};
-
-export const deleteQuiz = async (quizId: string) => {
+  };
+ 
+  export const deleteQuiz = async (quizId: string) => {
     try {
         const response = await axiosInstance.delete(`/api/quiz/deletequiz`, {
-            params: { quizid: quizId },
+            params: { quizid: quizId }
         });
-        return response.data;
+        return response.data; 
     } catch (error) {
-        console.error("Error deleting quiz:", error);
-        throw error;
+        console.error('Error deleting quiz:', error);
+        throw error; 
     }
 };
