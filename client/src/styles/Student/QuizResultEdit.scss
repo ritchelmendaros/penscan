@@ -1,109 +1,109 @@
 // StudentQuizResults.scss
 
 .QuizResults {
-  .image-feedback-container {
-    position: relative; 
-    display: inline-block;
+    .image-feedback-container {
+        position: relative;
+        display: inline-block;
 
-    img {
-      transition: transform 0.3s ease; 
-      max-width: 100%; 
-      
-      &.hovered {
-        transform: scale(1.1); 
-        z-index: 10; 
-      }
+        img {
+            transition: transform 0.3s ease;
+            max-width: 100%;
+
+            &.hovered {
+                transform: scale(1.1);
+                z-index: 10;
+            }
+        }
     }
-  }
-  .buttons-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    .buttons-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
 
-    .studentedit {
-      width: 125px;
-      padding: 7px 10px;
-      border-radius: 5px;
-      margin-left: 20px;
-      font-size: 15px;
-      background-color: rgb(210, 200, 4);
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
+        .studentedit {
+            width: 125px;
+            padding: 7px 10px;
+            border-radius: 5px;
+            margin-left: 20px;
+            font-size: 15px;
+            background-color: rgb(210, 200, 4);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
 
-      &:hover {
-        background-color: rgb(186, 170, 0);
-      }
+            &:hover {
+                background-color: rgb(186, 170, 0);
+            }
+        }
+
+        .studenteditclose {
+            width: 125px;
+            padding: 7px 10px;
+            border-radius: 5px;
+            margin-left: 20px;
+            font-size: 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #416edf;
+            }
+        }
+
+        .studenteditsave {
+            width: 125px;
+            padding: 7px 10px;
+            border-radius: 5px;
+            margin-left: 20px;
+            font-size: 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: rgb(0, 22, 150);
+
+            &:hover {
+                background-color: rgb(15, 4, 113);
+            }
+        }
     }
-
-    .studenteditclose {
-      width: 125px;
-      padding: 7px 10px;
-      border-radius: 5px;
-      margin-left: 20px;
-      font-size: 15px;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: #416edf;
-      }
-    }
-
-    .studenteditsave {
-      width: 125px;
-      padding: 7px 10px;
-      border-radius: 5px;
-      margin-left: 20px;
-      font-size: 15px;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      background-color: rgb(0, 22, 150);
-
-      &:hover {
-        background-color: rgb(15, 4, 113);
-      }
-    }
-  }
 }
 
 .student-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 50px;
-
-  .score-container {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    gap: 50px;
 
-    h3 {
-      margin-right: 20px;
+    .score-container {
+        display: flex;
+        align-items: center;
+
+        h3 {
+            margin-right: 20px;
+        }
+
+        .additional-points {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            span {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            input {
+                width: 50px;
+                padding: 8px;
+                font-size: 16px;
+                border-radius: 5px;
+                border: none;
+                text-align: center;
+            }
+        }
     }
-
-    .additional-points {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      span {
-        font-size: 18px;
-        font-weight: bold;
-      }
-
-      input {
-        width: 50px;
-        padding: 8px;
-        font-size: 16px;
-        border-radius: 5px;
-        border: none;
-        text-align: center;
-      }
-    }
-  }
 }

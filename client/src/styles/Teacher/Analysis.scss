@@ -1,92 +1,91 @@
 .Analysis {
-  h3 {
-    text-align: center;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  .table-container {
-    display: grid;
-    gap: 20px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-
-
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      border-radius: 15px;
-      background-color: #343434;
-      border: none;
-      max-height: 450px;
-      overflow-y: auto;
-      
-      th {
-        padding: 10px;
-        background-color: #5680e9;
-        font-weight: bold;
-        border: none;
-      }
-
-      td {
-        padding: 15px;
-        border: none;
-        font-size: 0.9em;
-      }
-
-      thead tr:first-child th:first-child {
-        border-top-left-radius: 15px;
-      }
-      thead tr:first-child th:last-child {
-        border-top-right-radius: 15px;
-      }
-      tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 15px;
-      }
-      tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 15px;
-      }
-
-      tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      .no-data-container {
+    h3 {
         text-align: center;
-        td {
-          padding: 20px;
-          border: none;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .table-container {
+        display: grid;
+        gap: 20px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            border-radius: 15px;
+            background-color: #343434;
+            border: none;
+            max-height: 450px;
+            overflow-y: auto;
+
+            th {
+                padding: 10px;
+                background-color: #5680e9;
+                font-weight: bold;
+                border: none;
+            }
+
+            td {
+                padding: 15px;
+                border: none;
+                font-size: 0.9em;
+            }
+
+            thead tr:first-child th:first-child {
+                border-top-left-radius: 15px;
+            }
+            thead tr:first-child th:last-child {
+                border-top-right-radius: 15px;
+            }
+            tbody tr:last-child td:first-child {
+                border-bottom-left-radius: 15px;
+            }
+            tbody tr:last-child td:last-child {
+                border-bottom-right-radius: 15px;
+            }
+
+            tbody tr:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .no-data-container {
+                text-align: center;
+                td {
+                    padding: 20px;
+                    border: none;
+                }
+            }
         }
-      }
     }
-  }
 
-  .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-  }
-
-  .no-data-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    text-align: center;
-
-    img {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 10px;
+    .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 1000;
     }
-  }
+
+    .no-data-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    }
 }
