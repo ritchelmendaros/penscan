@@ -22,4 +22,21 @@ public class ItemAnalysis {
     public void setItemNumber(int itemNumber) {
         this.itemNumber = itemNumber;
     }
+
+    public void incrementCorrectCount() {
+        this.correctCount++;
+    }
+
+    public void incrementIncorrectCount() {
+        this.incorrectCount++;
+    }
+
+    public void decrementCorrectCount() {
+        this.correctCount--;
+    }
+
+    public void decrementIncorrectCount() {
+        this.incorrectCount--;
+    }
+
 }

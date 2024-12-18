@@ -6,4 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface QuizRepository extends MongoRepository<Quiz, String> {
     List<Quiz> findByTeacheridAndClassid(String teacherId, String classId);
+
+    List<Quiz> findByClassidIn(List<String> classIds);
+
+    List<Quiz> findByClassid(String classId);
 }

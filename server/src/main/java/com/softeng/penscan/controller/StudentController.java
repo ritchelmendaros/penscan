@@ -6,13 +6,10 @@ import com.softeng.penscan.utils.QuizDTO;
 import com.softeng.penscan.service.StudentService;
 import com.softeng.penscan.service.UserService;
 import com.softeng.penscan.utils.StudentClassResponse;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import com.softeng.penscan.model.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -106,7 +103,7 @@ public class StudentController {
         } catch (Exception e) {
             String errorMessage = "Error getting quiz IDs and names for user with ID " + userId + " and class ID "
                     + classId;
-            QuizDTO errorDTO = new QuizDTO(null, null); 
+            QuizDTO errorDTO = new QuizDTO(null, null);
             List<QuizDTO> errorList = new ArrayList<>();
             errorList.add(errorDTO);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

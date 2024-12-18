@@ -114,4 +114,20 @@ public class StudentService {
         return quizOptional.map(Quiz::getQuizname).orElse(null);
     }
 
+    public List<Student> getStudentsByQuizId(String quizId) {
+        return studentRepository.findByQuizid(quizId);
+    }
+
+    public Student save(Student student) {
+        return studentRepository.save(student);
+    }
+
+    public Student getStudentById(String studentId) {
+        Optional<Student> studentOptional = studentRepository.findById(studentId);
+        return studentOptional.orElse(null);
+    }
+
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
+    }
 }

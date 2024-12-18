@@ -19,4 +19,5 @@ public interface StudentRepository extends MongoRepository<Student, String> {
 
     List<Student> findByClassid(String classId);
 
+    List<Student> findByQuizid(String quizId);
 }
