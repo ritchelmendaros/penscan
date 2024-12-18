@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import Header from '../Common/Header';
+import { useEffect, useState } from "react";
+import Header from "../Common/Header";
 import TeacherDashboardUI from "./TeacherDashboardUI";
-import robot from '../../assets/robot.svg';
-import Gradients from '../Common/Gradients';
-import StudentDashboard from './StudentDashboard';
-import { useCurrUser } from '../Context/UserContext';
+import robot from "../../assets/robot.svg";
+import Gradients from "../Common/Gradients";
+import StudentDashboard from "./StudentDashboard";
+import { useCurrUser } from "../Context/UserContext";
 import {
     getAllClasses,
     getUserClassesByUserId,
-} from '../../apiCalls/classAPIs';
-import { ClassInterface } from '../Interface/ClassInterface';
-import { useClass } from '../Context/ClassContext';
-import { getDetailsByUsername } from '../../apiCalls/userApi';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+} from "../../apiCalls/classAPIs";
+import { ClassInterface } from "../Interface/ClassInterface";
+import { useClass } from "../Context/ClassContext";
+import { getDetailsByUsername } from "../../apiCalls/userApi";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Dashboard = () => {
     const [classes, setClasses] = useState<ClassInterface[]>([]);
@@ -23,8 +23,8 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (user?.userid) {
-            setLoading(true); 
-            if (userType === 'Teacher') {
+            setLoading(true);
+            if (userType === "Teacher") {
                 getAllClasses(user.userid)
                     .then((classes: ClassInterface[]) => {
                         setClasses(classes);
@@ -33,7 +33,7 @@ const Dashboard = () => {
                     .catch(() => {
                         // toast.error('Failed to get classes:', error);
                     });
-            } else if (userType === 'Student') {
+            } else if (userType === "Student") {
                 getDetailsByUsername(user.username)
                     .then((userDetails) => {
                         return getUserClassesByUserId(userDetails.userid);
@@ -46,68 +46,63 @@ const Dashboard = () => {
                         // toast.error('Failed to get user classes:', error);
                     })
                     .finally(() => {
-                            setLoading(false); 
+                        setLoading(false);
                     });
             }
         }
     }, [setClassList, user, userType]);
 
     const fetchClasses = async () => {
-        setLoading(true); 
+        setLoading(true);
         try {
-            if (user) { 
-                if (userType === 'Teacher' && user.userid) {
+            if (user) {
+                if (userType === "Teacher" && user.userid) {
                     const classes = await getAllClasses(user.userid);
                     setClasses(classes);
                     setClassList(classes);
-                } else if (userType === 'Student' && user.username) {
-                    const userDetails = await getDetailsByUsername(user.username);
-                    const userClasses = await getUserClassesByUserId(userDetails.userid);
+                } else if (userType === "Student" && user.username) {
+                    const userDetails = await getDetailsByUsername(
+                        user.username
+                    );
+                    const userClasses = await getUserClassesByUserId(
+                        userDetails.userid
+                    );
                     setClasses(userClasses);
                     setClassList(userClasses);
                 }
             }
         } catch (error) {
-<<<<<<< HEAD
-            toast.error('Failed to fetch classes');
-=======
             // toast.error('Failed to fetch classes');
->>>>>>> due-date
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchClasses(); 
+        fetchClasses();
     }, [user, userType]);
 
     return (
         <>
-      {userType === "Teacher" ? (
-        <TeacherDashboardUI />
-      ) : userType === "Student" ? (
-        <>
-          <div className="Dashboard Main MainContent">
-            <Header />
-            <main>
-<<<<<<< HEAD
-                {userType === 'Teacher' ? (
-                    <TeacherDashboard classes={classes} fetchClasses={fetchClasses} />
-                ) : userType === 'Student' ? (
-                    <StudentDashboard classes={classes} loading={loading} />
-                ) : null}
-=======
-              <StudentDashboard classes={classes} loading={loading} />
->>>>>>> due-date
-            </main>
-            <img src={robot} alt="" className="robot" />
-            <Gradients />
-            <ToastContainer />
-          </div>
+            {userType === "Teacher" ? (
+                <TeacherDashboardUI />
+            ) : userType === "Student" ? (
+                <>
+                    <div className="Dashboard Main MainContent">
+                        <Header />
+                        <main>
+                            <StudentDashboard
+                                classes={classes}
+                                loading={loading}
+                            />
+                        </main>
+                        <img src={robot} alt="" className="robot" />
+                        <Gradients />
+                        <ToastContainer />
+                    </div>
+                </>
+            ) : null}
         </>
-      ) : null}
-    </>
     );
 };
 

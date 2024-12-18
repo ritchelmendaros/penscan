@@ -2,269 +2,275 @@ import { ClassInterface } from "../Components/Interface/ClassInterface";
 import axiosInstance from "./common/axiosInstance";
 
 export const getAllClasses: (
-  userID: string
+    userID: string
 ) => Promise<ClassInterface[]> = async (userID) => {
-  try {
-    const response = await axiosInstance.get<ClassInterface[]>(
-      "/api/classes/getclassesbyteacherid",
-      {
-        params: { teacherid: userID },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching classes:", error);
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.get<ClassInterface[]>(
+            "/api/classes/getclassesbyteacherid",
+            {
+                params: { teacherid: userID },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching classes:", error);
+        throw error;
+    }
 };
 
 interface PostCreateClassResponse {
-  errMsg?: string;
-  msg?: string;
-  data?: any;
+    errMsg?: string;
+    msg?: string;
+    data?: any;
 }
 
 export const postCreateClass = async (
-  className: string,
-  teacherID: string
+    className: string,
+    teacherID: string
 ): Promise<PostCreateClassResponse | undefined> => {
-  try {
-    const response = await axiosInstance.get("/api/classes/checkclass", {
-      params: {
-        classname: className,
-        teacherid: teacherID,
-      },
-    });
+    try {
+        const response = await axiosInstance.get("/api/classes/checkclass", {
+            params: {
+                classname: className,
+                teacherid: teacherID,
+            },
+        });
 
-    if (response.data.exists) {
-      //
-    } else {
-      await axiosInstance.post("/api/classes/add", {
-        classname: className,
-        teacherid: teacherID,
-        isactive: 1,
-      });
+        if (response.data.exists) {
+            //
+        } else {
+            await axiosInstance.post("/api/classes/add", {
+                classname: className,
+                teacherid: teacherID,
+                isactive: 1,
+            });
+        }
+    } catch (error) {
+        console.error("Error creating class:", error);
+        return {
+            errMsg: "An error occurred while creating the class.",
+        };
     }
-  } catch (error) {
-    console.error("Error creating class:", error);
-    return {
-      errMsg: "An error occurred while creating the class.",
-    };
-  }
 };
 
 //Students
 export const getUserClassesByUserId = async (
-  userId: string
+    userId: string
 ): Promise<ClassInterface[]> => {
-  try {
-    const response = await axiosInstance.get<ClassInterface[]>(
-      "/api/students/getclassidsbyuserid",
-      {
-        params: { userid: userId },
-      }
-    );
-    const classIds = response.data;
-    if (classIds.length > 0) {
-      const allClassIds = classIds.join(",");
-      const classDetailsResponse = await axiosInstance.get<ClassInterface[]>(
-        "/api/classes/getclassdetails",
-        {
-          params: { classids: allClassIds },
+    try {
+        const response = await axiosInstance.get<ClassInterface[]>(
+            "/api/students/getclassidsbyuserid",
+            {
+                params: { userid: userId },
+            }
+        );
+        const classIds = response.data;
+        if (classIds.length > 0) {
+            const allClassIds = classIds.join(",");
+            const classDetailsResponse = await axiosInstance.get<
+                ClassInterface[]
+            >("/api/classes/getclassdetails", {
+                params: { classids: allClassIds },
+            });
+            return classDetailsResponse.data;
+        } else {
+            return [];
         }
-      );
-      return classDetailsResponse.data;
-    } else {
-      return [];
+    } catch (error) {
+        console.error("Error fetching user classes:", error);
+        throw error;
     }
-  } catch (error) {
-    console.error("Error fetching user classes:", error);
-    throw error;
-  }
 };
 
 export const editClassName = async (classId: string, classname: string) => {
-  try {
-    const response = await axiosInstance.put("/api/classes/name/edit", null, {
-      params: { classId, classname },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error updating class name:", error);
-<<<<<<< HEAD
-    throw error; 
-  }
-};
-=======
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.put(
+            "/api/classes/name/edit",
+            null,
+            {
+                params: { classId, classname },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error updating class name:", error);
+        throw error;
+    }
 };
 
 export const deleteClass = async (classId: string) => {
-  try {
-    const response = await axiosInstance.delete(`/api/classes/delete`, {
-      params: { classId },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error deleting class:", error);
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.delete(`/api/classes/delete`, {
+            params: { classId },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting class:", error);
+        throw error;
+    }
 };
 
 export const getTotalClassesByTeacher = async (
-  teacherId: string
+    teacherId: string
 ): Promise<number> => {
-  try {
-    const response = await axiosInstance.get<number>("/api/classes/total", {
-      params: { teacherId },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching total classes by teacher:", error);
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.get<number>("/api/classes/total", {
+            params: { teacherId },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching total classes by teacher:", error);
+        throw error;
+    }
 };
 
 export const getTotalStudentsPerClass = async (
-  teacherId: string
+    teacherId: string
 ): Promise<{ className: string; studentCount: number }[]> => {
-  try {
-    const response = await axiosInstance.get<
-      { className: string; studentCount: number }[]
-    >("/api/classes/total/studentperclass", {
-      params: { teacherId },
-    });
+    try {
+        const response = await axiosInstance.get<
+            { className: string; studentCount: number }[]
+        >("/api/classes/total/studentperclass", {
+            params: { teacherId },
+        });
 
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching total students per class:", error);
-    throw error;
-  }
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching total students per class:", error);
+        throw error;
+    }
 };
 
 export const getActivityLogsByTeacher = async (teacherId: string) => {
-  try {
-    const response = await axiosInstance.get(
-      "/api/classes/getallactivitylogs",
-      {
-        params: { teacherId },
-      }
-    );
+    try {
+        const response = await axiosInstance.get(
+            "/api/classes/getallactivitylogs",
+            {
+                params: { teacherId },
+            }
+        );
 
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching activity logs:", error);
-    throw error;
-  }
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching activity logs:", error);
+        throw error;
+    }
 };
 
 export const getTotalQuizzes = async (teacherId: string): Promise<number> => {
-  try {
-    const response = await axiosInstance.get<number>(
-      "/api/classes/total/quiz",
-      {
-        params: { teacherId },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching total quizzes:", error);
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.get<number>(
+            "/api/classes/total/quiz",
+            {
+                params: { teacherId },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching total quizzes:", error);
+        throw error;
+    }
 };
 
 export const getTotalStudents = async (teacherId: string): Promise<number> => {
-  try {
-    const response = await axiosInstance.get<number>(
-      "/api/classes/total/students",
-      {
-        params: { teacherId },
-      }
-    );
+    try {
+        const response = await axiosInstance.get<number>(
+            "/api/classes/total/students",
+            {
+                params: { teacherId },
+            }
+        );
 
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching total students:", error);
-    throw error;
-  }
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching total students:", error);
+        throw error;
+    }
 };
 
 export const getQuizResultsPerClass = async (
-  teacherId: string
+    teacherId: string
 ): Promise<any> => {
-  try {
-    const response = await axiosInstance.get<any>(
-      "/api/classes/getquizresultperclass",
-      {
-        params: { teacherId },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching quiz results per class:", error);
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.get<any>(
+            "/api/classes/getquizresultperclass",
+            {
+                params: { teacherId },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching quiz results per class:", error);
+        throw error;
+    }
 };
 
-export const deactivateClass = async (
-  classId: string
-): Promise<any> => {
-  try {
-    const response = await axiosInstance.put("/api/classes/deactivate", null, {
-      params: { classId },
-    });
+export const deactivateClass = async (classId: string): Promise<any> => {
+    try {
+        const response = await axiosInstance.put(
+            "/api/classes/deactivate",
+            null,
+            {
+                params: { classId },
+            }
+        );
 
-    if (response.status === 200) {
-      return "Class deactivated.";
+        if (response.status === 200) {
+            return "Class deactivated.";
+        }
+    } catch (error) {
+        console.error("Error deactivating class:", error);
+        return "An error occurred while deactivating the class.";
     }
-  } catch (error) {
-    console.error("Error deactivating class:", error);
-    return "An error occurred while deactivating the class.";
-  }
 };
 
-export const activateClass = async (
-  classId: string
-): Promise<any> => {
-  try {
-    const response = await axiosInstance.put("/api/classes/activate", null, {
-      params: { classId },
-    });
+export const activateClass = async (classId: string): Promise<any> => {
+    try {
+        const response = await axiosInstance.put(
+            "/api/classes/activate",
+            null,
+            {
+                params: { classId },
+            }
+        );
 
-    if (response.status === 200) {
-      return "Class activated.";
+        if (response.status === 200) {
+            return "Class activated.";
+        }
+    } catch (error) {
+        console.error("Error activating class:", error);
+        return "An error occurred while activating the class.";
     }
-  } catch (error) {
-    console.error("Error activating class:", error);
-    return "An error occurred while activating the class.";
-  }
 };
 
 export const joinClass = async (userId: string, classCode: string) => {
-  try {
-    const response = await axiosInstance.post("/api/classes/join", null, {
-      params: { userId, classCode },
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Error joining class:", error.response?.data || error.message);
-    throw new Error(error.response?.data || "Failed to join class.");
-  }
+    try {
+        const response = await axiosInstance.post("/api/classes/join", null, {
+            params: { userId, classCode },
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error(
+            "Error joining class:",
+            error.response?.data || error.message
+        );
+        throw new Error(error.response?.data || "Failed to join class.");
+    }
 };
 
-export const getClassCodeByClassId: (classId: string) => Promise<string> = async (classId) => {
-  try {
-    const response = await axiosInstance.get<string>(
-      "/api/classes/getclasscodebyid", 
-      {
-        params: { classid: classId },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching class code:", error);
-    throw error;
-  }
+export const getClassCodeByClassId: (
+    classId: string
+) => Promise<string> = async (classId) => {
+    try {
+        const response = await axiosInstance.get<string>(
+            "/api/classes/getclasscodebyid",
+            {
+                params: { classid: classId },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching class code:", error);
+        throw error;
+    }
 };
->>>>>>> due-date
