@@ -46,4 +46,20 @@
             font-weight: 500;
         }
     }
+
+    @media (max-width: 480px) { // Mobile screens
+        padding: 10px;
+        
+        .logo-container {
+            h3 {
+                display: none;
+            }
+        }
+
+        .user-container {
+            .user p {
+                display: none;
+            }
+        }
+    }
 }

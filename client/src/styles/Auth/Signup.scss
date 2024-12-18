@@ -68,4 +68,28 @@
             }
         }
     }
+
+    @media (max-width: 480px) { // Mobile screens
+        .container {
+            grid-template-columns: 1fr;
+            .img-container {
+                img {
+                    display: none;
+                }
+                margin-top: 20px;
+            }
+            form {
+                padding-left: 0;
+                h1 {
+                    margin-bottom: 30px;
+                }
+                .InputContainer {
+                    width: 100%;
+                }
+                button {
+                    margin-top: 5%;
+                }
+            }
+        }
+    }
 }

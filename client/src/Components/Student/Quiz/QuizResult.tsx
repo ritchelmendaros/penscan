@@ -16,7 +16,11 @@ import {
   getAllActivityLogs,
 } from "../../../apiCalls/studentQuizApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+<<<<<<< HEAD
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+=======
+import { faBell, faStickyNote } from "@fortawesome/free-solid-svg-icons";
+>>>>>>> due-date
 
 interface Answer {
   itemnumber: number;
@@ -44,6 +48,14 @@ const StudentQuizResults = () => {
   const [showModal, setShowModal] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
   const [studentQuizId, setStudentQuizId] = useState("");
+<<<<<<< HEAD
+=======
+  const [showFeedbackPerItemModalDisplay, setShowFeedbackPerItemModalDisplay] =
+    useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
+  const currentDate = new Date();
+>>>>>>> due-date
 
   useEffect(() => {
     if (user?.userid && selectedQuiz?.quizid) {
@@ -63,10 +75,14 @@ const StudentQuizResults = () => {
           setDueDate(dueDate);
           const formattedDueDate = formatDueDate(dueDate);
           setFormattedDueDate(formattedDueDate);
+<<<<<<< HEAD
         })
         .catch(() => {
          
+=======
+>>>>>>> due-date
         })
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });
@@ -85,6 +101,7 @@ const StudentQuizResults = () => {
             isapproved: curr.isapproved,
             isdisapproved: curr.isdisapproved,
             isedited: curr.isedited,
+            feedback: curr.feedback,
           };
           return acc;
         },
@@ -127,6 +144,23 @@ const StudentQuizResults = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const handleHover = (itemIndex: number) => {
+    setHoveredItem(itemIndex);
+    console.log(hoveredItem)
+    setShowFeedbackPerItemModalDisplay(true);
+    setFeedbackPerItem(
+      editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
+    );
+  };
+
+  const handleMouseLeave = () => {
+    setShowFeedbackPerItemModalDisplay(false);
+    setHoveredItem(null);
+  };
+
+>>>>>>> due-date
   const renderRows = () => {
     const maxItemNumber = Math.max(
       ...correctAnswers.map((ans) => ans.itemnumber),
@@ -146,6 +180,7 @@ const StudentQuizResults = () => {
       const studentAnswer = studentAnswerMap[i] || "";
       const editedAnswerObj = editedAnswers[i] || {
         editeditem: "",
+        isedited: false,
         isapproved: false,
         isdisapproved: false,
       };
@@ -191,7 +226,20 @@ const StudentQuizResults = () => {
             {editedItem}
           </p>
           <p className="td1">{correctAnswer}</p>
+<<<<<<< HEAD
           <p className="td1"></p>
+=======
+          <p className="td1">
+            {editedAnswers[i]?.feedback?.length > 1 && (
+              <FontAwesomeIcon
+                icon={faStickyNote}
+                className="notification-icon"
+                onMouseEnter={() => handleHover(i)}
+                onMouseLeave={handleMouseLeave}
+              />
+            )}
+          </p>
+>>>>>>> due-date
         </li>
       );
     }
@@ -234,6 +282,7 @@ const StudentQuizResults = () => {
     const dueDateTime = new Date(dueDate);
 
     if (dueDateTime < currentDate) {
+<<<<<<< HEAD
       toast.error("Can't edit: Due date has passed.");
       return;
     }
@@ -242,6 +291,14 @@ const StudentQuizResults = () => {
       toast(
         "This quiz has pending approval or already processed, you can't edit more than once."
       );
+=======
+      toast.error("Can't edit: This quiz is overdue.");
+      return;
+    } else if (editedStatus === "APPROVED") {
+      toast("Can't edit: Edited answers are already evaluated.");
+    } else if (editedStatus === "PENDING") {
+      toast("Can't edit: You can't edit more then once.");
+>>>>>>> due-date
     } else {
       navigate(`/dashboard/class/quiz/quiz-result-edit`);
     }
@@ -254,11 +311,18 @@ const StudentQuizResults = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
+      const validFileTypes = ['image/jpeg', 'image/png'];
+      if (validFileTypes.includes(file.type)) {
+        setSelectedFile(file);
+      } else {
+        setSelectedFile(null);
+        toast.error("Invalid file type. Please upload a JPG or PNG image.");
+      }
     } else {
       setSelectedFile(null);
     }
   };
+  
 
   const handleUpload = async () => {
     if (selectedFile && selectedQuiz) {
@@ -357,10 +421,22 @@ const StudentQuizResults = () => {
                     <p className="td1" style={{ marginLeft: "-30px" }}>
                       Edited Answer
                     </p>
+<<<<<<< HEAD
                     <p className="td1">Correct Answer</p>
+=======
+                    {dueDate && new Date(dueDate) < currentDate && (
+                      <p className="td1">Correct Answer</p>
+                    )}
+
+>>>>>>> due-date
                     <p />
+                    <p className="td1"></p>
                   </li>
                 </ul>
+<<<<<<< HEAD
+=======
+
+>>>>>>> due-date
                 <ul className="tbody1">{renderRows()}</ul>
                 <div className="buttons-container">
                   {!studentResult && (
@@ -447,6 +523,20 @@ const StudentQuizResults = () => {
           </div>
         </div>
       )}
+<<<<<<< HEAD
+=======
+
+      {showFeedbackPerItemModalDisplay && (
+        <div className="feedback-modal show">
+          <div className="modal-content">
+            <label>
+              <b>Feedback</b>
+            </label>
+            <p className="feedback-text">{feedbackperitem}</p>
+          </div>
+        </div>
+      )}
+>>>>>>> due-date
       <SmilingRobot />
       <Gradients />
       <ToastContainer />

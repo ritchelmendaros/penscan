@@ -36,12 +36,22 @@
   }
   
   .modal-buttons button:first-of-type {
-    background-color: #3e6ab7; 
-    color: white;
+    background-color: #3498db;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #2980b9;
+        }
   }
   
   .modal-buttons button:last-of-type {
-    background-color: #e94f4f; 
+    background-color: #b72d4b; 
     color: white;
+    cursor: pointer;
+
+        &:hover {
+          background-color: #911833;
+        }
   }
 }

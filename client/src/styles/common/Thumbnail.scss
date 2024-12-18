@@ -19,4 +19,9 @@
         transition: 0.2s;
         cursor: pointer;
     }
+
+    @media (max-width: 480px) { // Mobile screens
+        height: 70px;
+        margin-bottom: 5px;
+    }
 }

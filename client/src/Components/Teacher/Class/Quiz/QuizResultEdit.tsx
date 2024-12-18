@@ -19,7 +19,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 interface AnswerMap {
-  [key: number]: string;
+  [key: number]: {
+    answer: string;
+    correct: boolean;
+};
 }
 
 interface EditedAnswer {
@@ -53,6 +56,10 @@ const QuizResultEdit = () => {
   const [studentResult, setStudentResult] = useState<StudentImageResult>();
   const [showModal, setShowModal] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+<<<<<<< HEAD
+=======
+  const [ismodalloading, setModalLoading] = useState(true);
+>>>>>>> due-date
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,14 +106,17 @@ const QuizResultEdit = () => {
   useEffect(() => {
     if (studentResult?.recognizedAnswers) {
       const answersMap = studentResult.recognizedAnswers.reduce(
-        (acc: { [key: number]: string }, answerObj) => {
-          acc[answerObj.itemnumber] = answerObj.answer;
-          return acc;
-        },
-        {}
+          (acc: { [key: number]: { answer: string; correct: boolean } }, answerObj) => {
+              acc[answerObj.itemnumber] = {
+                  answer: answerObj.answer,
+                  correct: answerObj.correct,
+              };
+              return acc;
+          },
+          {}
       );
       setStudentAnswers(answersMap);
-    }
+  }
 
     if (selectedQuiz?.quizanswerkey) {
       setAnswers(selectedQuiz.quizanswerkey);
@@ -182,14 +192,15 @@ const QuizResultEdit = () => {
     setIsModalOpen(false);
     try {
       setIsSaving(true);
-
+      setModalLoading(true);
       if (
         editedStatus !== "PENDING" &&
-        Object.keys(editedAnswers).some(
-          (key) =>
-            studentAnswers[parseInt(key)] !==
-            editedAnswers[parseInt(key)].editeditem
-        )
+        Object.keys(editedAnswers).some((key) => {
+          const studentAnswer = studentAnswers[parseInt(key)];
+          const editedAnswer = editedAnswers[parseInt(key)].editeditem;
+    
+          return studentAnswer.answer !== editedAnswer;
+        })
       ) {
         setEditedStatus("PENDING");
       }
@@ -222,6 +233,7 @@ const QuizResultEdit = () => {
       toast.error("Error saving changes");
     } finally {
       setIsSaving(false);
+      setModalLoading(false);
     }
   };
 
@@ -265,9 +277,14 @@ const QuizResultEdit = () => {
       rows.push(
         <li key={i} className="tr">
           <p className="td"></p>
+<<<<<<< HEAD
           <p className="td"></p>
           <p className="td">{i}</p>
           <p className="td">{studentAnswer}</p>
+=======
+          <p className="td">{i} {studentAnswers[i]?.correct ? "✔️" : "❌"}</p>
+          <p className="td">{studentAnswer.answer}</p>
+>>>>>>> due-date
           <p className="td">
             {hasCorrectAnswer ? (
               <input
@@ -379,6 +396,7 @@ const QuizResultEdit = () => {
               onConfirm={confirmSave}
               onCancel={() => setIsModalOpen(false)}
               message="Are you sure you want to edit? You can only edit once."
+              loading={ismodalloading}
             />
           </>
         )}

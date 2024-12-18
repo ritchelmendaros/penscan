@@ -124,7 +124,7 @@ export const studentsaveStudentQuiz = async (
 export const approveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
       const response = await axiosInstance.put(
-        '/api/studentquiz/approve', 
+        '/api/studentquiz/markcheck', 
         null, 
         {
           params: {
@@ -146,7 +146,7 @@ export const approveQuizAnswer = async (studentQuizId: string, userId: string, s
 export const disapproveQuizAnswer = async (studentQuizId: string, userId: string, studentId: string, quizId: string, itemId: number, editedItem: string) => {
   try {
     const response = await axiosInstance.put(
-      '/api/studentquiz/disapprove', 
+      '/api/studentquiz/markuncheck', 
       null, 
       {
         params: {
@@ -236,3 +236,32 @@ export const getAllActivityLogs = async (studentQuizId: string) => {
     throw error;
   }
 };
+<<<<<<< HEAD
+=======
+
+export const addFeedbackToEditedAnswerPerItem = async (studentQuizId: string, itemId: number, feedback: string) => {
+  try {
+    const response = await axiosInstance.put(
+      '/api/studentquiz/addfeedbackperitem',
+      null, 
+      {
+        params: {
+          studentQuizId,
+          itemId,
+          feedback,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data || "Error adding feedback";
+      toast.error(errorMessage);
+    } else {
+      toast.error("An unexpected error occurred while adding feedback");
+    }
+    throw error;
+  }
+};
+
+>>>>>>> due-date

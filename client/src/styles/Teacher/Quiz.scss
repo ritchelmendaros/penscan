@@ -10,14 +10,15 @@
   }
 
   .table {
-    max-height: 500px;
+    width: 100%;
+    max-height: 450px;
     overflow-y: hidden;
     border-radius: 10px;
 
     .tbody {
       background-color: rgb(42, 42, 42);
       border-radius: 0 0 10px 10px;
-      height: 500px;
+      height: 450px;
       max-height: 500px;
       overflow-y: auto;
 

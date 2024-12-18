@@ -6,7 +6,11 @@ import { useClass } from "../Context/ClassContext";
 import { SyncLoader } from "react-spinners";
 import noDataGif from "../../assets/nodata.gif";
 import { ToastContainer, toast } from "react-toastify";
+<<<<<<< HEAD
 import { editClassName } from "../../apiCalls/classAPIs";
+=======
+import { editClassName, deleteClass, deactivateClass, activateClass } from "../../apiCalls/classAPIs";
+>>>>>>> due-date
 
 interface TeacherDashboardProps {
   classes: ClassInterface[];
@@ -19,12 +23,43 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editClassNameState, setEditClassName] = useState("");
   const [editingClassId, setEditingClassId] = useState<string | null>(null);
+<<<<<<< HEAD
+=======
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [classToDelete, setClassToDelete] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false); 
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [filteredClasses, setFilteredClasses] = useState<ClassInterface[]>(classes);
+  const [activeTab, setActiveTab] = useState("active");
+  const [isDeactivating, setIsDeactivating] = useState(false);
+  const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false);
+  const [classToDeactivate, setClassToDeactivate] = useState<string | null>(null);
+  const [isActivating, setIsActivating] = useState(false);
+  const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const [classToActivate, setClassToActivate] = useState<string | null>(null);
+>>>>>>> due-date
   
 
   useEffect(() => {
     setLoading(false);
   }, [classes]);
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    const filterClasses = (status: string) => {
+      if (status === "active") {
+        setFilteredClasses(classes.filter((item) => item.isactive));
+      } else if (status === "inactive") {
+        setFilteredClasses(classes.filter((item) => !item.isactive));
+      } else {
+        setFilteredClasses(classes);
+      }
+    };
+    filterClasses(activeTab);
+  }, [classes, activeTab]);  
+
+>>>>>>> due-date
   const handleOptionsToggle = (index: number) => {
     setActiveOptions(activeOptions === index ? null : index);
   };
@@ -32,26 +67,117 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
   const handleEdit = (classId: string, classname: string) => {
     setEditingClassId(classId); 
     setEditClassName(classname); 
+<<<<<<< HEAD
     setIsModalOpen(true); 
   };
 
   const handleDelete = (classId: string) => {
     console.log(classId)
     toast("Delete class");
+=======
+    setActiveOptions(null);
+    setIsModalOpen(true); 
+  };
+
+  const handleDeleteConfirmation = (classId: string) => {
+    setClassToDelete(classId);
+    setIsDeleteModalOpen(true); 
+    setActiveOptions(null);
+  };
+
+  const handleDeactivateConfirmation = (classId: string) => {
+    setClassToDeactivate(classId); 
+    setIsDeactivateModalOpen(true); 
+    setActiveOptions(null);
+  };
+
+  const handleActivateConfirmation = (classId: string) => {
+    setClassToActivate(classId); 
+    setIsActivateModalOpen(true); 
+    setActiveOptions(null);
+  };
+
+  const handleDeactivate = async () => {
+    if (classToDeactivate) {  
+      try {
+        setIsDeactivating(true);  
+        await deactivateClass(classToDeactivate);  
+        setIsDeactivating(false);  
+        setIsDeactivateModalOpen(false);  
+        await fetchClasses();  
+      } catch (error) {
+        toast.error("Failed to deactivate class.");
+      } finally {
+        setActiveOptions(null); 
+      }
+    }
+  };
+
+  const handleActivate = async () => {
+    if (classToActivate) {  
+      try {
+        setIsActivating(true);  
+        await activateClass(classToActivate);  
+        setIsActivating(false);  
+        setIsActivateModalOpen(false);  
+        await fetchClasses();  
+      } catch (error) {
+        toast.error("Failed to activate class.");
+      } finally {
+        setActiveOptions(null); 
+      }
+    }
+  };
+  
+
+  const handleDelete = async () => {
+    if (classToDelete) {
+      setIsDeleting(true); 
+      try {
+        await deleteClass(classToDelete); 
+        setIsDeleteModalOpen(false); 
+        await fetchClasses();
+        toast.success("Class deleted successfully.");
+      } catch (error) {
+        toast.error("Failed to delete class."); 
+      } finally {
+        setIsDeleting(false); 
+        setActiveOptions(null);
+      }
+    }
+>>>>>>> due-date
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+<<<<<<< HEAD
+=======
+    setIsDeleteModalOpen(false); 
+    setClassToDelete(null);
+    setIsDeactivateModalOpen(false);
+    setClassToDeactivate(null); 
+    setActiveOptions(null);
+>>>>>>> due-date
   };
 
   const handleSaveEdit = async () => {
     if (editingClassId && editClassNameState) {
+<<<<<<< HEAD
+=======
+      setIsEditing(true);
+>>>>>>> due-date
       try {
         await editClassName(editingClassId, editClassNameState);
         setIsModalOpen(false);
         await fetchClasses(); 
       } catch (error) {
         toast.error("Failed to update class name.");
+<<<<<<< HEAD
+=======
+      } finally {
+        setIsEditing(false); 
+        setActiveOptions(null);
+>>>>>>> due-date
       }
     }
   };  
@@ -62,6 +188,17 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
         <h2>Classes</h2>
         <Link to="/dashboard/create-class">Create class</Link>
       </div>
+      <div className="tabs">
+        <button className={`tab ${activeTab === "active" ? "active" : ""}`} onClick={() => setActiveTab("active")}>
+          Active
+        </button>
+        <button className={`tab ${activeTab === "inactive" ? "active" : ""}`} onClick={() => setActiveTab("inactive")}>
+          Inactive
+        </button>
+        <button className={`tab ${activeTab === "all" ? "active" : ""}`} onClick={() => setActiveTab("all")}>
+          All
+        </button>
+      </div>
 
       <div>
         {loading ? (
@@ -70,8 +207,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
           </div>
         ) : (
           <ul className="classes">
+<<<<<<< HEAD
             {classes.length > 0 ? (
               classes.map((item, i) => (
+=======
+            {filteredClasses.length > 0 ? (
+              filteredClasses.map((item, i) => (
+>>>>>>> due-date
                 <li key={i}>
                   <Link to="/dashboard/class" onClick={() => setClass(item)}>
                     <Thumbnail name={item.classname} />
@@ -95,7 +237,21 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
                         >
                           Edit
                         </button>
+<<<<<<< HEAD
                         <button onClick={() => handleDelete(item.classid)}>
+=======
+                        {activeTab === "active" && (
+                          <button onClick={() => handleDeactivateConfirmation(item.classid)}>
+                            Deactivate
+                          </button>
+                        )}
+                        {activeTab === "inactive" && (
+                          <button onClick={() => handleActivateConfirmation(item.classid)}>
+                            Activate
+                          </button>
+                        )}
+                        <button onClick={() => handleDeleteConfirmation(item.classid)}>
+>>>>>>> due-date
                           Delete
                         </button>
                       </div>
@@ -123,7 +279,60 @@ const TeacherDashboard: React.FC<TeacherDashboardProps & { fetchClasses: () => P
               placeholder="Enter class name"
             />
             <div className="button-container">
+<<<<<<< HEAD
               <button className="modal-buttonsubmit" onClick={handleSaveEdit}>Submit</button>
+=======
+              {/* <button className="modal-buttonsubmit" onClick={handleSaveEdit}>Submit</button>
+               */}
+               <button className="modal-buttonsubmit" onClick={handleSaveEdit} disabled={isEditing}>
+                {isEditing ? <SyncLoader color="#fff" loading={isEditing} size={7} /> : "Submit"}
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+            </div>
+          </div>
+          <div className="modal-overlay" onClick={handleModalClose} />
+        </div>
+      )}
+      {isDeleteModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2 style={{marginBottom: "10px"}}>Confirm Deletion</h2>
+            <p>Are you sure you want to delete this class?</p>
+            <div className="button-container">
+              <button className="modal-buttonsubmit" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? <SyncLoader color="#fff" loading={isDeleting} size={7} /> : "Yes, Delete"}
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+            </div>
+          </div>
+          <div className="modal-overlay" onClick={handleModalClose} />
+        </div>
+      )}
+      {isDeactivateModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Confirm Deactivation</h2>
+            <p>Are you sure you want to deactivate this class?</p>
+            <div className="button-container">
+              <button className="modal-buttonsubmit" onClick={handleDeactivate} disabled={isDeactivating}>
+                {isDeactivating ? <SyncLoader color="#fff" loading={isDeactivating} size={7} /> : "Yes, Deactivate"}
+              </button>
+              <button className="modal-button" onClick={handleModalClose}>Cancel</button>
+            </div>
+          </div>
+          <div className="modal-overlay" onClick={handleModalClose} />
+        </div>
+      )}
+      {isActivateModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Confirm Activation</h2>
+            <p>Are you sure you want to activate this class?</p>
+            <div className="button-container">
+              <button className="modal-buttonsubmit" onClick={handleActivate} disabled={isActivating}>
+                {isActivating ? <SyncLoader color="#fff" loading={isActivating} size={7} /> : "Yes, Activate"}
+              </button>
+>>>>>>> due-date
               <button className="modal-button" onClick={handleModalClose}>Cancel</button>
             </div>
           </div>

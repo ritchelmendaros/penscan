@@ -45,7 +45,7 @@
 
   .main-results {
     display: grid;
-    grid-template-columns: 270px 1fr;
+    grid-template-columns: 260px 1fr;
     gap: 20px;
     margin-top: 20px;
 
@@ -73,7 +73,7 @@
     }
 
     .table {
-      max-height: 500px;
+      max-height: 450px;
       overflow: hidden;
       border-radius: 10px;
 
@@ -83,12 +83,14 @@
         grid-template-columns:  40px 1fr 3fr 3fr 3fr;  
         text-align: left;
       }
+      
 
       .thead {
         background-color: $blue-btn;
         border-radius: 5px 5px 0 0;
         padding: 5px;
         font-weight: bold;
+        font-size: 1em;
       }
 
       .tbody {
@@ -98,6 +100,7 @@
         overflow-y: scroll; 
         scrollbar-width: none; 
         -ms-overflow-style: none;
+        
 
         .highlight-edited {
           max-width: 95%;

@@ -21,7 +21,7 @@ export const getAllClasses: (
 interface PostCreateClassResponse {
   errMsg?: string;
   msg?: string;
-  data?: any; // Adjust type based on the expected response data
+  data?: any;
 }
 
 export const postCreateClass = async (
@@ -42,6 +42,7 @@ export const postCreateClass = async (
       await axiosInstance.post("/api/classes/add", {
         classname: className,
         teacherid: teacherID,
+        isactive: 1,
       });
     }
   } catch (error) {
@@ -90,6 +91,180 @@ export const editClassName = async (classId: string, classname: string) => {
     return response.data;
   } catch (error) {
     console.error("Error updating class name:", error);
+<<<<<<< HEAD
     throw error; 
   }
 };
+=======
+    throw error;
+  }
+};
+
+export const deleteClass = async (classId: string) => {
+  try {
+    const response = await axiosInstance.delete(`/api/classes/delete`, {
+      params: { classId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting class:", error);
+    throw error;
+  }
+};
+
+export const getTotalClassesByTeacher = async (
+  teacherId: string
+): Promise<number> => {
+  try {
+    const response = await axiosInstance.get<number>("/api/classes/total", {
+      params: { teacherId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total classes by teacher:", error);
+    throw error;
+  }
+};
+
+export const getTotalStudentsPerClass = async (
+  teacherId: string
+): Promise<{ className: string; studentCount: number }[]> => {
+  try {
+    const response = await axiosInstance.get<
+      { className: string; studentCount: number }[]
+    >("/api/classes/total/studentperclass", {
+      params: { teacherId },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total students per class:", error);
+    throw error;
+  }
+};
+
+export const getActivityLogsByTeacher = async (teacherId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      "/api/classes/getallactivitylogs",
+      {
+        params: { teacherId },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching activity logs:", error);
+    throw error;
+  }
+};
+
+export const getTotalQuizzes = async (teacherId: string): Promise<number> => {
+  try {
+    const response = await axiosInstance.get<number>(
+      "/api/classes/total/quiz",
+      {
+        params: { teacherId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total quizzes:", error);
+    throw error;
+  }
+};
+
+export const getTotalStudents = async (teacherId: string): Promise<number> => {
+  try {
+    const response = await axiosInstance.get<number>(
+      "/api/classes/total/students",
+      {
+        params: { teacherId },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching total students:", error);
+    throw error;
+  }
+};
+
+export const getQuizResultsPerClass = async (
+  teacherId: string
+): Promise<any> => {
+  try {
+    const response = await axiosInstance.get<any>(
+      "/api/classes/getquizresultperclass",
+      {
+        params: { teacherId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching quiz results per class:", error);
+    throw error;
+  }
+};
+
+export const deactivateClass = async (
+  classId: string
+): Promise<any> => {
+  try {
+    const response = await axiosInstance.put("/api/classes/deactivate", null, {
+      params: { classId },
+    });
+
+    if (response.status === 200) {
+      return "Class deactivated.";
+    }
+  } catch (error) {
+    console.error("Error deactivating class:", error);
+    return "An error occurred while deactivating the class.";
+  }
+};
+
+export const activateClass = async (
+  classId: string
+): Promise<any> => {
+  try {
+    const response = await axiosInstance.put("/api/classes/activate", null, {
+      params: { classId },
+    });
+
+    if (response.status === 200) {
+      return "Class activated.";
+    }
+  } catch (error) {
+    console.error("Error activating class:", error);
+    return "An error occurred while activating the class.";
+  }
+};
+
+export const joinClass = async (userId: string, classCode: string) => {
+  try {
+    const response = await axiosInstance.post("/api/classes/join", null, {
+      params: { userId, classCode },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error joining class:", error.response?.data || error.message);
+    throw new Error(error.response?.data || "Failed to join class.");
+  }
+};
+
+export const getClassCodeByClassId: (classId: string) => Promise<string> = async (classId) => {
+  try {
+    const response = await axiosInstance.get<string>(
+      "/api/classes/getclasscodebyid", 
+      {
+        params: { classid: classId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching class code:", error);
+    throw error;
+  }
+};
+>>>>>>> due-date

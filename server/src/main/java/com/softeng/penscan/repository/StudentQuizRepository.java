@@ -13,4 +13,13 @@ public interface StudentQuizRepository extends MongoRepository<StudentQuiz, Stri
     Optional<StudentQuiz> findByStudentidAndQuizid(String studentId, String quizId);
 
     List<StudentQuiz> findByQuizid(String quizId);
+
+    void deleteAllByStudentidAndQuizid(String studentId, String quizId);
+
+    List<StudentQuiz> findAllByStudentidAndQuizidIn(String studentId, List<String> quizIds);
+
+    int countByQuizid(String quizid);
+
+    List<StudentQuiz> findByQuizidIn(List<String> quizIds);
+
 }

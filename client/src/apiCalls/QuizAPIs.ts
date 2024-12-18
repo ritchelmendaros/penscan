@@ -82,7 +82,12 @@ export const addQuiz = async (
     quizName: string,
     userId: string,
     correctAnswer: { itemnumber: number; answer: string }[],
+<<<<<<< HEAD
     dueDateTime: string
+=======
+    dueDateTime: string, 
+    totalitems: number,
+>>>>>>> due-date
 ) => {
     try {
         const response = await axiosInstance.post(
@@ -93,6 +98,10 @@ export const addQuiz = async (
                 teacherid: userId,
                 quizanswerkey: correctAnswer,
                 dueDateTime: dueDateTime,
+<<<<<<< HEAD
+=======
+                totalitems: totalitems
+>>>>>>> due-date
             },
         );
         // console.log('Quiz added:', response.data);
@@ -174,4 +183,19 @@ export const editQuiz = async (
       throw error;
     }
   };
+<<<<<<< HEAD
   
+=======
+ 
+  export const deleteQuiz = async (quizId: string) => {
+    try {
+        const response = await axiosInstance.delete(`/api/quiz/deletequiz`, {
+            params: { quizid: quizId }
+        });
+        return response.data; 
+    } catch (error) {
+        console.error('Error deleting quiz:', error);
+        throw error; 
+    }
+};
+>>>>>>> due-date

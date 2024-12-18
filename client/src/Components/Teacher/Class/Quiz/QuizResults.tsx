@@ -4,6 +4,7 @@ import { useQuiz } from "../../../Context/QuizContext";
 import { useEffect, useState } from "react";
 import { getQuizResults } from "../../../../apiCalls/QuizAPIs";
 import {
+  addFeedbackToEditedAnswerPerItem,
   approveQuizAnswer,
   disapproveQuizAnswer,
   getAllActivityLogs,
@@ -15,7 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 import { useCurrUser } from "../../../Context/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+<<<<<<< HEAD
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+=======
+import { faBell, faStickyNote } from "@fortawesome/free-solid-svg-icons";
+>>>>>>> due-date
 
 const QuizResults = () => {
   const [answers, setAnswers] = useState<
@@ -23,8 +28,12 @@ const QuizResults = () => {
   >([]);
 
   const [studentAnswers, setStudentAnswers] = useState<{
-    [key: number]: string;
+    [key: number]: {
+      answer: string;
+      correct: boolean;
+    };
   }>({});
+
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [editedAnswers, setEditedAnswers] = useState<{
@@ -34,6 +43,7 @@ const QuizResults = () => {
       isapproved: boolean;
       isdisapproved: boolean;
       isedited: boolean;
+      feedback: string[];
     };
   }>({});
   const { selectedStudentResult, selectedQuiz } = useQuiz();
@@ -44,7 +54,18 @@ const QuizResults = () => {
   const { user } = useCurrUser();
   const [studentQuizId, setStudentQuizId] = useState("");
   const [showModal, setShowModal] = useState(false);
+<<<<<<< HEAD
   const [logs, setLogs] = useState<string[]>([]);
+=======
+  const [showFeedbackPerItemModal, setShowFeedbackPerItemModal] =
+    useState(false);
+  const [showFeedbackPerItemModalDisplay, setShowFeedbackPerItemModalDisplay] =
+    useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [feedbackperitem, setFeedbackPerItem] = useState<string>("");
+  const [logs, setLogs] = useState<string[]>([]);
+  const [currentItemIndex, setCurrentItemIndex] = useState<number | null>(null);
+>>>>>>> due-date
 
   useEffect(() => {
     if (selectedStudentResult?.userId && selectedQuiz?.quizid) {
@@ -74,10 +95,20 @@ const QuizResults = () => {
             isapproved: curr.isapproved,
             isdisapproved: curr.isdisapproved,
             isedited: curr.isedited,
+            feedback: curr.feedback,
           };
           return acc;
         },
-        {}
+        {} as {
+          [key: number]: {
+            itemnumber: number;
+            editeditem: string;
+            isapproved: boolean;
+            isdisapproved: boolean;
+            isedited: boolean;
+            feedback: string[];
+          };
+        }
       );
 
       setEditedAnswers(extractedEditedAnswers);
@@ -93,7 +124,11 @@ const QuizResults = () => {
     try {
       const response = await getAllActivityLogs(studentQuizId);
       if (response && Array.isArray(response.logs)) {
+<<<<<<< HEAD
         setLogs(response.logs); 
+=======
+        setLogs(response.logs);
+>>>>>>> due-date
         setShowModal(true);
       } else {
         toast.error("Unexpected response format");
@@ -103,7 +138,11 @@ const QuizResults = () => {
     }
   };
 
+<<<<<<< HEAD
   const handleApprove = async (itemIndex: number) => {
+=======
+  const handleCheck = async (itemIndex: number) => {
+>>>>>>> due-date
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -116,6 +155,13 @@ const QuizResults = () => {
       throw new Error("User ID is undefined");
     }
 
+<<<<<<< HEAD
+=======
+    const answerToSubmit = editedAnswers[itemIndex]?.editeditem
+      ? editedAnswers[itemIndex].editeditem
+      : studentAnswers[itemIndex]?.answer;
+
+>>>>>>> due-date
     try {
       await approveQuizAnswer(
         studentResult.studentquizid,
@@ -123,7 +169,7 @@ const QuizResults = () => {
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
-        editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
+        answerToSubmit
       );
 
       setEditedAnswers((prev) => ({
@@ -135,14 +181,15 @@ const QuizResults = () => {
         },
       }));
 
-      toast.success(`Answer for item ${itemIndex} approved`);
+      setCurrentItemIndex(itemIndex);
+      setShowFeedbackPerItemModal(true);
       setRefresh((prev) => prev + 1);
     } catch (error) {
       toast.error(`Error approving item ${itemIndex}`);
     }
   };
 
-  const handleDisapprove = async (itemIndex: number) => {
+  const handleUncheck = async (itemIndex: number) => {
     if (
       !studentResult ||
       !selectedStudentResult?.userId ||
@@ -156,6 +203,13 @@ const QuizResults = () => {
       throw new Error("User ID is undefined");
     }
 
+<<<<<<< HEAD
+=======
+    const answerToSubmit = editedAnswers[itemIndex]?.editeditem
+      ? editedAnswers[itemIndex].editeditem
+      : studentAnswers[itemIndex]?.answer;
+
+>>>>>>> due-date
     try {
       await disapproveQuizAnswer(
         studentResult.studentquizid,
@@ -163,7 +217,7 @@ const QuizResults = () => {
         selectedStudentResult.userId,
         selectedQuiz.quizid,
         itemIndex,
-        editedAnswers[itemIndex]?.editeditem || studentAnswers[itemIndex]
+        answerToSubmit
       );
 
       setEditedAnswers((prev) => ({
@@ -175,7 +229,8 @@ const QuizResults = () => {
         },
       }));
 
-      toast.success(`Answer for item ${itemIndex} disapproved`);
+      setCurrentItemIndex(itemIndex);
+      setShowFeedbackPerItemModal(true);
       setRefresh((prev) => prev + 1);
     } catch (error) {
       toast.error(`Error disapproving item ${itemIndex}`);
@@ -185,8 +240,14 @@ const QuizResults = () => {
   useEffect(() => {
     if (studentResult?.recognizedAnswers) {
       const answersMap = studentResult.recognizedAnswers.reduce(
-        (acc: { [key: number]: string }, answerObj) => {
-          acc[answerObj.itemnumber] = answerObj.answer;
+        (
+          acc: { [key: number]: { answer: string; correct: boolean } },
+          answerObj
+        ) => {
+          acc[answerObj.itemnumber] = {
+            answer: answerObj.answer,
+            correct: answerObj.correct,
+          };
           return acc;
         },
         {}
@@ -229,6 +290,22 @@ const QuizResults = () => {
     navigate("/dashboard/class/quiz");
   };
 
+<<<<<<< HEAD
+=======
+  const handleHover = (itemIndex: number) => {
+    setHoveredItem(itemIndex);
+    console.log(hoveredItem)
+    setShowFeedbackPerItemModalDisplay(true);
+    setFeedbackPerItem(
+      editedAnswers[itemIndex]?.feedback.join("\n") || "No feedback available."
+    );
+  };
+
+  const handleMouseLeave = () => {
+    setShowFeedbackPerItemModalDisplay(false);
+    setHoveredItem(null);
+  };
+>>>>>>> due-date
 
   const renderRows = () => {
     const totalItems = Math.max(
@@ -242,14 +319,17 @@ const QuizResults = () => {
       const correctAnswer = answers[i - 1]?.answer || "";
       const editedStatus = studentResult?.editedstatus;
 
-      const editedAnswerObj = editedAnswers[i] || null;
+      const editedAnswerObj = editedAnswers[i] || {
+        editeditem: "",
+        isedited: false,
+        isapproved: false,
+        isdisapproved: false,
+      };
+
       let editedAnswer =
         editedAnswerObj && editedAnswerObj.isedited
           ? editedAnswerObj.editeditem
           : "";
-
-      const isEditedDifferent =
-        editedAnswer !== "" && editedAnswer !== studentAnswer;
 
       let highlightClass = "";
       if (editedStatus === "NONE") {
@@ -258,42 +338,102 @@ const QuizResults = () => {
         highlightClass = "highlight-approved";
       } else if (editedAnswerObj?.isdisapproved) {
         highlightClass = "highlight-disapproved";
-      } else if (isEditedDifferent) {
+      } else if (editedAnswerObj.isedited) {
         highlightClass = "highlight-edited";
       }
 
       rows.push(
         <tr key={i}>
-          <td>{i}</td>
+          <td>
+            {i} {studentAnswers[i]?.correct ? "✔️" : "❌"}
+          </td>
           <td>
             {editedStatus !== "NONE" &&
               !editedAnswerObj?.isapproved &&
-              !editedAnswerObj?.isdisapproved &&
-              isEditedDifferent && (
+              editedAnswerObj?.isdisapproved &&
+              editedAnswerObj?.isedited && (
                 <div className="approval-buttons">
                   <button
-                    onClick={() => handleApprove(i)}
+                    onClick={() => handleCheck(i)}
                     className="btn btn-primary"
                   >
-                    Approve
+                    Mark Correct
                   </button>
+                </div>
+              )}
+            {editedStatus !== "NONE" &&
+              editedAnswerObj?.isapproved &&
+              !editedAnswerObj?.isdisapproved &&
+              editedAnswerObj?.isedited && (
+                <div className="approval-buttons">
                   <button
-                    onClick={() => handleDisapprove(i)}
+                    onClick={() => handleUncheck(i)}
                     className="btn btn-danger"
                   >
-                    Disapprove
+                    Mark Incorrect
+                  </button>
+                </div>
+              )}
+            {editedStatus !== "NONE" &&
+              !editedAnswerObj?.isapproved &&
+              !editedAnswerObj?.isdisapproved &&
+              editedAnswerObj?.isedited && (
+                <div className="approval-buttons">
+                  <button
+                    onClick={() => handleCheck(i)}
+                    className="btn btn-primary"
+                  >
+                    Mark Correct
                   </button>
                 </div>
               )}
           </td>
-          <td>{studentAnswer}</td>
+          <td>{studentAnswer.answer}</td>
           <td className={`td ${highlightClass}`}>{editedAnswer || ""}</td>
           <td>{correctAnswer}</td>
+          <td>
+            {editedAnswers[i]?.feedback?.length > 0 && (
+              <FontAwesomeIcon
+                icon={faStickyNote}
+                className="notification-icon"
+                onMouseEnter={() => handleHover(i)} 
+                onMouseLeave={handleMouseLeave} 
+              />
+            )}
+          </td>
         </tr>
       );
     }
 
     return rows;
+  };
+
+  const handleSaveFeedbackPerItem = async (itemIndex: number) => {
+    const feedbackForItem = feedbackperitem;
+
+    if (!feedbackForItem) {
+      toast.error("Feedback is empty for this item.");
+      return;
+    }
+    if (!studentResult?.studentquizid) {
+      toast.error("Studentquizid is empty for this item.");
+      return;
+    }
+
+    try {
+      const itemId = itemIndex;
+
+      await addFeedbackToEditedAnswerPerItem(
+        studentResult?.studentquizid,
+        itemId,
+        feedbackForItem
+      );
+
+      setFeedbackPerItem("");
+      setShowFeedbackPerItemModal(false);
+    } catch (error) {
+      toast.error("Error saving feedback.");
+    }
   };
 
   return (
@@ -317,7 +457,7 @@ const QuizResults = () => {
                 <i>{dueDate}</i>
               </h5>
               <div className="score-container">
-                <h3>Score: {selectedStudentResult?.score}</h3>
+                <h3>Score: {studentResult?.score}</h3>
                 <div className="additional-points">
                   <h3>
                     Bonus Points: {studentResult?.bonusscore}
@@ -351,10 +491,11 @@ const QuizResults = () => {
                   <thead>
                     <tr>
                       <th>Item</th>
-                      <th>Approval</th>
+                      <th>Review</th>
                       <th>Scanned Answer</th>
                       <th>Edited Answer</th>
                       <th>Correct Answer</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>{renderRows()}</tbody>
@@ -394,6 +535,44 @@ const QuizResults = () => {
         </div>
       )}
 
+<<<<<<< HEAD
+=======
+      {showFeedbackPerItemModal && currentItemIndex !== null && (
+        <div className="modal-container-feedback">
+          <div className="modal-content-feedback">
+            <h4>Include Feedback</h4>
+            <textarea
+              id="feedbackInput"
+              onChange={(e) => setFeedbackPerItem(e.target.value)}
+              className="feedback-input"
+              placeholder="Type your feedback here..."
+            ></textarea>
+            <div className="modal-buttons-feedback">
+              <button onClick={() => setShowFeedbackPerItemModal(false)}>
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  handleSaveFeedbackPerItem(currentItemIndex);
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFeedbackPerItemModalDisplay && (
+        <div className="feedback-modal show">
+          <div className="modal-content">
+          <label><b>Feedback</b></label>
+          <p className="feedback-text">{feedbackperitem}</p>
+          </div>
+        </div>
+      )}
+
+>>>>>>> due-date
       <Gradients />
       <ToastContainer />
     </div>

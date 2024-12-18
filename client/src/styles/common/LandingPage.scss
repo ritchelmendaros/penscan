@@ -54,3 +54,68 @@
         }
     }
 }
+
+@media (max-width: 480px) {
+    // Mobile screens
+    .LandingPage {
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            padding-top: 110px;
+            .logo-container {
+                img {
+                    height: 100px;
+                }
+                h2 {
+                    font-size: 3rem;
+                }
+            }
+        }
+
+        main {
+            padding: 0 !important;
+            .title-container {
+                order: 2;
+                width: 100%;
+                .btn {
+                    display: flex;
+                    justify-content: center;
+                    a {
+                        background-color: none !important;
+                        width: 300px;
+                        text-align: center;
+                        padding-top: -50px !important;
+                    }
+                }
+
+                .description {
+                    display: flex;
+                    justify-content: center;
+                    h1 {
+                        font-size: 1rem;
+                        // font-weight: 100;
+                    }
+                    h1:nth-child(2) {
+                        padding: 0 10px;
+                    }
+                }
+            }
+
+            .title-container::before {
+                display: flex;
+                justify-content: center;
+                content: "Thank you for being part of PenScan!";
+            }
+
+            img {
+                order: 1;
+                height: 300px;
+            }
+        }
+    }
+}

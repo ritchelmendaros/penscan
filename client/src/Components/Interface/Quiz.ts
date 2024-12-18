@@ -56,6 +56,11 @@ interface ItemAnalysisInterface {
     correctCount: number;
     incorrectCount: number;
     itemNumber: number;
+    difficultyIndex: number;
+    difficultyInterpretation: string;
+    discriminationIndex: number;
+    discriminationInterpretation: string;
+    suggestedDecision: string;
     itemanalysisid: string;
     quizid: string;
 }

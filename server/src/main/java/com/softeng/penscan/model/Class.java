@@ -19,4 +19,5 @@ public class Class {
     private String teacherid;
     private String classCode;
     private List<String> studentid;
+    private int isactive;
 }

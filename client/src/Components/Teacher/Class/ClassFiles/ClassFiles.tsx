@@ -11,7 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { setLocalStorage } from "../../../../Utils/LocalStorage";
 import { SyncLoader } from "react-spinners";
 import noDataGif from "../../../../assets/nodata.gif";
+<<<<<<< HEAD
 import { editQuiz } from "../../../../apiCalls/QuizAPIs";
+=======
+import { editQuiz, deleteQuiz } from "../../../../apiCalls/QuizAPIs";
+import ConfirmationModal from "../../../Modal/ConfirmationModal";
+>>>>>>> due-date
 
 const ClassFiles = () => {
   const navigate = useNavigate();
@@ -19,6 +24,11 @@ const ClassFiles = () => {
   const [loading, setLoading] = useState(true);
   const [activeOptions, setActiveOptions] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+<<<<<<< HEAD
+=======
+  const [isSaving, setIsSaving] = useState(false);
+  const [quizIdToDelete, setQuizIdToDelete] = useState<string | null>(null);
+>>>>>>> due-date
   const [editQuizNameState, setEditQuizName] = useState("");
   const [editDueDateState, setEditDueDate] = useState("");
   const [editAnswerKeyState, setEditAnswerKeyState] = useState<
@@ -28,6 +38,7 @@ const ClassFiles = () => {
   const { clickedClass } = useClass();
   const { user } = useCurrUser();
   const { setSelectedQuiz } = useQuiz();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user?.userid && clickedClass?.classid) {
@@ -68,11 +79,39 @@ const ClassFiles = () => {
     setEditDueDate(dueDate);
     setEditAnswerKeyState(answerKey);
     setIsModalOpen(true);
+<<<<<<< HEAD
   };
 
   const handleDelete = (quizId: string) => {
     console.log(quizId)
     toast("Delete quiz");
+=======
+    setActiveOptions(null);
+  };
+
+  const handleDelete = (quizId: string) => {
+    setQuizIdToDelete(quizId);
+    setActiveOptions(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (quizIdToDelete) {
+        await deleteQuiz(quizIdToDelete);
+        setQuizzes((prevQuizzes) =>
+          prevQuizzes.filter((quiz) => quiz.quizid !== quizIdToDelete)
+        );
+      } else {
+        console.error("No quiz ID to delete.");
+      }
+    } catch (error) {
+      console.error("Failed to delete quiz:", error);
+    } finally {
+      setIsDeleting(false);
+      setQuizIdToDelete(null);
+    }
+>>>>>>> due-date
   };
 
   const handleModalClose = () => {
@@ -81,6 +120,10 @@ const ClassFiles = () => {
 
   const handleSaveEdit = async () => {
     if (editingQuizId && editQuizNameState && editDueDateState) {
+<<<<<<< HEAD
+=======
+      setIsSaving(true); 
+>>>>>>> due-date
       try {
         await editQuiz(
           editingQuizId,
@@ -90,8 +133,27 @@ const ClassFiles = () => {
         );
         toast.success("Quiz updated successfully!");
         setIsModalOpen(false);
+<<<<<<< HEAD
       } catch (error) {
         toast.error("Failed to update quiz.");
+=======
+        if (user?.userid && clickedClass?.classid) {
+          setLoading(true);
+          getAllQuizes(user.userid, clickedClass.classid)
+            .then((quiz) => {
+              setQuizzes(quiz);
+              setLoading(false);
+            })
+            .catch(() => {
+              setLoading(false);
+            });
+        }
+      } catch (error) {
+        toast.error("Failed to update quiz.");
+      } finally {
+        setIsSaving(false); 
+        setActiveOptions(null);
+>>>>>>> due-date
       }
     }
   };
@@ -122,7 +184,11 @@ const ClassFiles = () => {
                     <div className="options-menu">
                       <button
                         onClick={(event) => {
+<<<<<<< HEAD
                           event.stopPropagation(); 
+=======
+                          event.stopPropagation();
+>>>>>>> due-date
                           handleEdit(
                             quiz.quizid,
                             quiz.quizname,
@@ -133,7 +199,16 @@ const ClassFiles = () => {
                       >
                         Edit
                       </button>
+<<<<<<< HEAD
                       <button onClick={() => handleDelete(quiz.quizid)}>
+=======
+                      <button
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDelete(quiz.quizid);
+                        }}
+                      >
+>>>>>>> due-date
                         Delete
                       </button>
                     </div>
@@ -195,8 +270,17 @@ const ClassFiles = () => {
             </div>
 
             <div className="button-container">
+<<<<<<< HEAD
               <button className="modal-buttonsubmit" onClick={handleSaveEdit}>
                 Save
+=======
+              <button className="modal-buttonsubmit" onClick={handleSaveEdit} disabled={isSaving}>
+                {isSaving ? (
+                  <SyncLoader color="#fff" loading={isSaving} size={7} />
+                ) : (
+                  "Save"
+                )}
+>>>>>>> due-date
               </button>
               <button className="modal-button" onClick={handleModalClose}>
                 Cancel
@@ -206,6 +290,17 @@ const ClassFiles = () => {
         </div>
       )}
 
+<<<<<<< HEAD
+=======
+      <ConfirmationModal
+        isOpen={!!quizIdToDelete}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setQuizIdToDelete(null)}
+        message="Are you sure you want to delete this quiz?"
+        loading={isDeleting}
+      />
+
+>>>>>>> due-date
       <ToastContainer />
     </div>
   );

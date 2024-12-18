@@ -38,6 +38,7 @@ public class AzureTextRecognitionService {
 
             ResponseEntity<Map> resultResponse = restTemplate.exchange(resultUrl, HttpMethod.GET,
                     new HttpEntity<>(headers), Map.class);
+            System.out.println(extractText(resultResponse.getBody()));
             return extractText(resultResponse.getBody());
         } else {
             return extractText(response.getBody());

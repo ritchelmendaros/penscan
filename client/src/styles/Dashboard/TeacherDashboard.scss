@@ -24,6 +24,44 @@
       }
     }
 
+<<<<<<< HEAD
+=======
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-top: 20px;
+    
+      .tab {
+        padding: 10px 20px;
+        background-color: #3f4045;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        width: 120px;
+        text-align: center;
+        border-right: 1px solid #616266;
+    
+        &:first-child {
+          border-radius: 5px 0 0 5px;
+        }
+    
+        &:last-child {
+          border-radius: 0 5px 5px 0;
+          border-right: none;
+        }
+    
+        &.active {
+          background-color: #436edc;
+          color: white;
+        }
+    
+        &:hover {
+          background-color: #616266;
+        }
+      }
+    }    
+
+>>>>>>> due-date
     .classes {
       display: grid;
       gap: 20px;
@@ -136,6 +174,7 @@
       gap: 30px;
       margin-top: 20px;
 
+<<<<<<< HEAD
       .modal-button {
         padding: 10px 20px;
         border-radius: 5px;
@@ -148,16 +187,38 @@
           background-color: #2980b9;
         }
       }
+=======
+>>>>>>> due-date
       .modal-buttonsubmit {
         padding: 10px 20px;
         border-radius: 5px;
         border: none;
+<<<<<<< HEAD
         background-color: #03578f;
+=======
+        background-color: #436edc;
+>>>>>>> due-date
         color: white;
         cursor: pointer;
 
         &:hover {
+<<<<<<< HEAD
           background-color: #2980b9;
+=======
+          background-color: #134ad4;
+        }
+      }
+      .modal-button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #1e97dd;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #0b81c5;
+>>>>>>> due-date
         }
       }
     }

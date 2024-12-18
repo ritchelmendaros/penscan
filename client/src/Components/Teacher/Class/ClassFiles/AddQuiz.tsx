@@ -28,6 +28,7 @@ const AddQuiz = () => {
   const { user } = useCurrUser();
   const userId = user?.userid;
   const { clickedClass } = useClass();
+  const [isLoading, setIsLoading] = useState(false); 
   const classId = clickedClass?.classid;
 
   const handleQuizNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,12 +87,18 @@ const AddQuiz = () => {
       answer,
     }));
 
+    setIsLoading(true);
     try {
+<<<<<<< HEAD
       await addQuiz(classId, quizName, userId, answerArray, dueDate);
+=======
+      await addQuiz(classId, quizName, userId, answerArray, dueDate, numItems);
+>>>>>>> due-date
       navigate(`/dashboard/class`);
     } catch (error) {
       toast.error("Error adding quiz. Please try again.");
     } finally {
+      setIsLoading(false);
       setIsModalOpen(false);
     }
   };
@@ -106,7 +113,7 @@ const AddQuiz = () => {
       <main>
         <div className="content">
           <div className="quiz-creation-form">
-            <h2>Create New Quiz</h2>
+            <h2>Create Quiz Answer Key</h2>
             <form onSubmit={handleAddQuiz}>
               <div className="input-group">
                 <label htmlFor="quiz-title">Quiz Title</label>
@@ -197,6 +204,7 @@ const AddQuiz = () => {
         onConfirm={confirmAddQuiz}
         onCancel={cancelAddQuiz}
         message={modalMessage}
+        loading={isLoading} 
       />
     </div>
   );

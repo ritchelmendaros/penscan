@@ -18,6 +18,7 @@ import Analysis from "./Analysis";
 import noDataGif from "../../../../assets/nodata.gif";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ConfirmationModal from "../../../Modal/ConfirmationModal";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -29,9 +30,13 @@ const Quiz = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [analysisTab, setAnalysisTab] = useState(false);
   const [refreshScores, setRefreshScores] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState<StudentQuiz | null>(
+    null
+  );
 
   useEffect(() => {
     if (selectedQuiz?.quizid) {
@@ -95,10 +100,14 @@ const Quiz = () => {
     if (selectedFile && selectedQuiz) {
       setIsLoading(true);
       try {
+<<<<<<< HEAD
         await uploadStudentQuiz(
           selectedQuiz.quizid,
           selectedFile
         );
+=======
+        await uploadStudentQuiz(selectedQuiz.quizid, selectedFile);
+>>>>>>> due-date
         toast.success("File uploaded successfully!");
         setSelectedFile(null);
         setIsModalOpen(false);
@@ -119,16 +128,25 @@ const Quiz = () => {
     }
   };
 
-  const handleDeleteStudentScore = async (student: StudentQuiz) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this score?"
-    );
-    if (confirmDelete && selectedQuiz?.quizid) {
+  const handleDeleteStudentScore = (student: StudentQuiz) => {
+    setStudentToDelete(student);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (studentToDelete && selectedQuiz?.quizid) {
       try {
+<<<<<<< HEAD
         await deleteStudentQuiz(student.userId, selectedQuiz.quizid);
+=======
+        await deleteStudentQuiz(studentToDelete.userId, selectedQuiz.quizid);
+>>>>>>> due-date
         setRefreshScores(true);
       } catch (error) {
         toast.error("Failed to delete the score.");
+      } finally {
+        setIsDeleteModalOpen(false);
+        setStudentToDelete(null);
       }
     }
   };
@@ -194,7 +212,13 @@ const Quiz = () => {
               <li className="th">
                 <p className="td">Student Name</p>
                 <p className="td">Score</p>
+<<<<<<< HEAD
                 <p className="td"></p>
+=======
+                <p className="td" style={{ marginLeft: "-5px" }}>
+                  Status
+                </p>
+>>>>>>> due-date
                 <p className="td" style={{ marginLeft: "-5px" }}>
                   Last Modified
                 </p>
@@ -296,6 +320,14 @@ const Quiz = () => {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={confirmDelete}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        message="Are you sure you want to delete this student quiz?"
+        loading={isLoading}
+      />
 
       <SmilingRobot />
       <Gradients />

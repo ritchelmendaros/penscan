@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Header from '../Common/Header';
-import TeacherDashboard from './TeacherDashboard';
+import TeacherDashboardUI from "./TeacherDashboardUI";
 import robot from '../../assets/robot.svg';
 import Gradients from '../Common/Gradients';
 import StudentDashboard from './StudentDashboard';
@@ -12,7 +12,7 @@ import {
 import { ClassInterface } from '../Interface/ClassInterface';
 import { useClass } from '../Context/ClassContext';
 import { getDetailsByUsername } from '../../apiCalls/userApi';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
@@ -30,8 +30,8 @@ const Dashboard = () => {
                         setClasses(classes);
                         setClassList(classes);
                     })
-                    .catch((error) => {
-                        toast.error('Failed to get classes:', error);
+                    .catch(() => {
+                        // toast.error('Failed to get classes:', error);
                     });
             } else if (userType === 'Student') {
                 getDetailsByUsername(user.username)
@@ -42,8 +42,8 @@ const Dashboard = () => {
                         setClasses(userClasses);
                         setClassList(userClasses);
                     })
-                    .catch((error) => {
-                        toast.error('Failed to get user classes:', error);
+                    .catch(() => {
+                        // toast.error('Failed to get user classes:', error);
                     })
                     .finally(() => {
                             setLoading(false); 
@@ -68,7 +68,11 @@ const Dashboard = () => {
                 }
             }
         } catch (error) {
+<<<<<<< HEAD
             toast.error('Failed to fetch classes');
+=======
+            // toast.error('Failed to fetch classes');
+>>>>>>> due-date
         } finally {
             setLoading(false);
         }
@@ -79,21 +83,31 @@ const Dashboard = () => {
     }, [user, userType]);
 
     return (
-        <div className='Dashboard Main MainContent'>
+        <>
+      {userType === "Teacher" ? (
+        <TeacherDashboardUI />
+      ) : userType === "Student" ? (
+        <>
+          <div className="Dashboard Main MainContent">
             <Header />
             <main>
+<<<<<<< HEAD
                 {userType === 'Teacher' ? (
                     <TeacherDashboard classes={classes} fetchClasses={fetchClasses} />
                 ) : userType === 'Student' ? (
                     <StudentDashboard classes={classes} loading={loading} />
                 ) : null}
+=======
+              <StudentDashboard classes={classes} loading={loading} />
+>>>>>>> due-date
             </main>
-
-            <img src={robot} alt='' className='robot' />
-
+            <img src={robot} alt="" className="robot" />
             <Gradients />
             <ToastContainer />
-        </div>
+          </div>
+        </>
+      ) : null}
+    </>
     );
 };
 

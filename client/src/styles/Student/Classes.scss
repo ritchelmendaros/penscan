@@ -10,6 +10,7 @@
       }
     }
   .table {
+    width: 100%;
     .thead {
       background-color: $blue-btn;
       border-radius: 5px 5px 0 0;
@@ -88,8 +89,7 @@
               &:hover {
                 background-color: #f0f0f0;
               }
-            }
-            
+            } 
           }
         }
       }
@@ -105,7 +105,6 @@
         .no-data-content {
           text-align: center;
           padding: 70px;
-
           p {
             color: white;
             font-size: 18px;
@@ -120,6 +119,16 @@
     font-weight: 500;
     color: #d1d1d1;
     font-size: 1.5rem;
+  }
+
+  @media (max-width: 480px) { // Mobile screens
+    .td-status{
+      padding: 5px;
+      padding-top: 0;
+    }
+    .td-duedate{
+      padding-left: 10px;
+    }
   }
 }
 
@@ -188,4 +197,46 @@
     font-size: 18px;
     color: #666;
     margin-top: 10px;
+  }
+
+  .small-screen-menu {
+    position: relative;
+
+    .dropdown-menu {
+      position: absolute;
+      top: 30px;
+      right: 0;
+      background: #3d3b44;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+
+      button {
+        display: block;
+        width: 100%;
+        background: none;
+        color: white;
+        border: none;
+        padding: 10px;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+
+    .meatballs-button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+
+  .large-screen-buttons {
+    display: flex;
+    gap: 10px;
   }
