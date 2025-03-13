@@ -52,7 +52,7 @@ export const studentuploadStudentQuiz = async (quizid: string, userid: string, s
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      const errorMessage = error.response?.data[" "] || "Rate limit exceed. Please retry after a couple of seconds.";
+      const errorMessage = error.response?.data[" "] || "An unexpected error occurred.";
       toast.error(errorMessage);
     } else {
       toast.error("An unexpected error occurred");
