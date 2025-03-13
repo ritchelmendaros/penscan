@@ -21,6 +21,8 @@ import com.softeng.penscan.repository.QuizRepository;
 import com.softeng.penscan.repository.StudentQuizRepository;
 import com.softeng.penscan.repository.StudentRepository;
 import com.softeng.penscan.repository.UserRepository;
+import com.softeng.penscan.utils.ImagePreprocessing;
+import com.softeng.penscan.utils.MultipartFileUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -64,6 +66,9 @@ public class StudentQuizService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ImagePreprocessing imagePreprocessing;
 
     public String addStudentQuiz(String quizid, MultipartFile image) throws IOException, InterruptedException {
         String recognizedText = azureTextRecognitionService.recognizeText(image);
@@ -633,7 +638,18 @@ public class StudentQuizService {
     // student upload
     public String addStudentQuiz(String quizid, String userid, MultipartFile image)
             throws IOException, InterruptedException {
-        String recognizedText = azureTextRecognitionService.recognizeText(image);
+
+        byte[] preprocessedImageBytes = imagePreprocessing.preprocessImage(image.getBytes());
+        // Create a new MultipartFile from the preprocessed image
+        MultipartFile preprocessedImage = MultipartFileUtil.createMultipartFile(
+                preprocessedImageBytes,
+                image.getName(),
+                image.getOriginalFilename(),
+                image.getContentType());
+        // Perform OCR on the preprocessed image
+        String recognizedText = azureTextRecognitionService.recognizeText(preprocessedImage);
+
+        // String recognizedText = azureTextRecognitionService.recognizeText(image);
 
         String normalizedText = callGroqThroughExpress(recognizedText);
         System.out.println("Normalized Text:\n" + normalizedText);

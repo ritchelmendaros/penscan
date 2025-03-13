@@ -27,8 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.security:spring-security-core'
 	implementation 'com.google.code.gson:gson:2.8.8'  
+	implementation files('libs/opencv-4100.jar')
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
@@ -49,3 +50,6 @@ tasks.withType(JavaCompile) {
 bootJar {
     enabled = true
 }
+
+
+
